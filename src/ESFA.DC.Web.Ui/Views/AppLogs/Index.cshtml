@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DC.Web.Ui.Services.Models.AppLog>
+
+@{
+    ViewData["Title"] = "Application Logs";
+    var correlationId = ViewData["CorrelationId"];
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="govuk-box-highlight">
+            <h1 class="heading-large">
+                ILR Submission Process Logs
+            </h1>
+        </div>
+        <table class="table table-font-xsmall ">
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>DateTime</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+            {
+                <tr>
+                    <td style="width:80%">@Html.DisplayFor(model => log.Message)</td>
+                    <td style="width:20%;">@Html.DisplayFor(model => log.TimeStampUtc)</td>
+                </tr>
+
+        }
+            </tbody>
+        </table>
+        <p><a class="button" href="/IlrSubmission" role="button" id="upload-complete-button">Finished</a></p>
+    </div>
+</div>
+
+
