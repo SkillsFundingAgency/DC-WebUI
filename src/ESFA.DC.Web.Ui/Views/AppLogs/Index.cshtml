@@ -23,8 +23,8 @@
                 @foreach (var log in Model)
             {
                 <tr>
-                    <td style="width:80%">@Html.DisplayFor(model => log.Message)</td>
-                    <td style="width:20%;">@Html.DisplayFor(model => log.TimeStampUtc)</td>
+                    <td style="width:75%">@Html.DisplayFor(model => log.Message)</td>
+                    <td style="width:25%;">@Convert.ToDateTime(log.TimeStampUtc).ToString("MM/dd/yyyy hh:mm:ss.fff tt")</td>
                 </tr>
 
         }
