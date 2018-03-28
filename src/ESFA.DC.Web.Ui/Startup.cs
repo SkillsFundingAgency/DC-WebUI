@@ -12,6 +12,7 @@ using System.IO;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Settings.Models;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Ui
@@ -46,6 +47,13 @@ namespace DC.Web.Ui
         {
             var authSettings = _config.GetConfigSection<AuthenticationSettings>();
 
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = 524_288_000;
+                x.MultipartBodyLengthLimit = 524_288_000;
+                x.MultipartBoundaryLengthLimit = 524_288_000;
+            });
+
             if (!authSettings.Enabled)
             {
                 services.AddMvc(options =>
@@ -66,6 +74,7 @@ namespace DC.Web.Ui
             services.AddAndConfigureAuthorisation();
 
             services.AddMvc().AddControllersAsServices();
+         
 
             return ConfigureAutofac(services);
         }

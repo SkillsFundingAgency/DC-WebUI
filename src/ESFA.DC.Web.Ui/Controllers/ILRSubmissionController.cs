@@ -32,7 +32,7 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(500_000_000)]
+        [RequestSizeLimit(524_288_000)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)

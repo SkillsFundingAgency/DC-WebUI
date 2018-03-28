@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using DC.Web.Ui.Settings.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace DC.Web.Ui.StartupConfiguration
@@ -28,7 +29,11 @@ namespace DC.Web.Ui.StartupConfiguration
                     options.Events.OnSecurityTokenValidated = OnTokenValidated;
                     options.CallbackPath = "/Account/PostSignIn";
                 })
-                .AddCookie(options => { options.ReturnUrlParameter = "/Account/PostSignIn"; });
+                .AddCookie(options =>
+                {
+                    options.ReturnUrlParameter = "/Account/PostSignIn";
+                    options.AccessDeniedPath = new PathString("/"); 
+                });
         }
 
         private static Task OnTokenValidated(SecurityTokenValidatedContext context)
