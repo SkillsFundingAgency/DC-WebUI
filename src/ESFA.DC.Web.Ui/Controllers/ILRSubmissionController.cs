@@ -51,7 +51,7 @@ namespace DC.Web.Ui.Controllers
             var ilrFile = new IlrFileViewModel()
             {
                 Filename = file.FileName,
-                SubmissionDateTime = DateTime.Now,
+                SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
                 FileSize =(decimal)file.Length /1024,
                 CorrelationId = correlationId
             };
