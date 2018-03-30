@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DC.Web.Ui.Services.Models
+namespace DC.Web.Authorization
 {
     public class IdamsClaim
     {

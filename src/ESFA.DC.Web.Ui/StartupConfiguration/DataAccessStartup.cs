@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DC.Web.Ui.ClaimTypes;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.EntityFrameworkCore;

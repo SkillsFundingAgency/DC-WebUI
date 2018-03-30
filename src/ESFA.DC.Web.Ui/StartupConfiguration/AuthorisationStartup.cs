@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DC.Web.Ui.ClaimTypes;
-using DC.Web.Ui.Security;
-using DC.Web.Ui.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.WsFederation;
+﻿using DC.Web.Authorization;
+using DC.Web.Authorization.FileSubmissionPolicy;
+using DC.Web.Ui.AuthorizationHandlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DC.Web.Ui.StartupConfiguration
 {
     public static class AuthorisationStartup
     {
-        
         public static void AddAndConfigureAuthorisation(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
-                //options.AddPolicy(PolicyTypes.Ukprn, policy => policy.Requirements.Add(new UkprnRequirement()));
-                options.AddPolicy(PolicyTypes.FileSubmission, policy => policy.RequireClaim(IdamsClaimTypes.Ukprn));
+                options.AddPolicy(PolicyTypes.FileSubmission, policy => policy.Requirements.Add(new FileSubmissionPolicyRequirement()));
             });
+
+            services.AddSingleton<IAuthorizationHandler, FileSubmissionPolicyHandler>();
         }
-
-
     }
 }

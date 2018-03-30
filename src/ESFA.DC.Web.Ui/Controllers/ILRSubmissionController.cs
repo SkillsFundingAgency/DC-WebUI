@@ -1,5 +1,4 @@
-﻿using DC.Web.Ui.ClaimTypes;
-using DC.Web.Ui.Models;
+﻿using DC.Web.Ui.Models;
 using DC.Web.Ui.Services.ServiceBus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using DC.Web.Authorization;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
@@ -15,7 +15,7 @@ using DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Controllers
 {
-    [Authorize(Policy = PolicyTypes.FileSubmission)]
+    [Authorize]
     public class ILRSubmissionController : Controller
     {
         private readonly ISubmissionService _submissionService;
@@ -33,6 +33,7 @@ namespace DC.Web.Ui.Controllers
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
+        [Authorize(Policy = PolicyTypes.FileSubmission)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)

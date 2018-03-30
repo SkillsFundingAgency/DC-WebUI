@@ -1,8 +1,7 @@
 ﻿using Autofac;
+using DC.Web.Authorization.FileSubmissionPolicy;
 using DC.Web.Ui.Controllers;
-using DC.Web.Ui.Services;
 using DC.Web.Ui.Services.AppLogs;
-using DC.Web.Ui.Services.ClaimHandlerService;
 using DC.Web.Ui.Services.ServiceBus;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
@@ -14,23 +13,20 @@ namespace DC.Web.Ui.Ioc
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType(typeof(UkprnClaimHandlerService)).As(typeof(IUkprnClaimHandlerService))
-                .InstancePerLifetimeScope();
-            builder.RegisterType<ILRSubmissionController>().InstancePerLifetimeScope();
+            builder.RegisterType(typeof(FileSubmissionPolicyService)).As(typeof(IFileSubmissionPolicyService)).InstancePerLifetimeScope();
 
             builder.RegisterType<ServiceBusQueue>().As<IServiceBusQueue>().InstancePerLifetimeScope();
             builder.RegisterType<AppLogsReader>().As<IAppLogsReader>().InstancePerLifetimeScope();
             builder.RegisterType<SubmissionService>().As<ISubmissionService>().InstancePerLifetimeScope();
+            builder.RegisterType<FileSubmissionPolicyService>().As<IFileSubmissionPolicyService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
                 {
                     var queueSettings = context.Resolve<ServiceBusQueueSettings>();
-                    return new QueueClient(queueSettings.ConnectionString, queueSettings.Name); 
+                    return new QueueClient(queueSettings.ConnectionString, queueSettings.Name);
                 })
                 .As<IQueueClient>()
                 .InstancePerLifetimeScope();
-
         }
-
     }
 }
