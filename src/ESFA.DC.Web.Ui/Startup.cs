@@ -70,11 +70,10 @@ namespace DC.Web.Ui
 
             //Custom services
             services.AddAndConfigureDataAccess(_config);
-            services.AddAndConfigureAuthentication(authSettings);
             services.AddAndConfigureAuthorisation();
-
             services.AddMvc().AddControllersAsServices();
-         
+            services.AddAndConfigureAuthentication(authSettings);
+
 
             return ConfigureAutofac(services);
         }
@@ -85,13 +84,13 @@ namespace DC.Web.Ui
             containerBuilder.SetupConfigurations(_config);
 
             containerBuilder.RegisterModule<ServiceRegistrations>();
+            containerBuilder.RegisterModule<AuthorizationHandlerRegistrations>();
 
             containerBuilder.Populate(services);
             _applicationContainer = containerBuilder.Build();
 
             return new AutofacServiceProvider(_applicationContainer);
         }
-
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using DC.Web.Authorization;
+using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
@@ -33,7 +34,7 @@ namespace DC.Web.Ui.Controllers
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
-        [Authorize(Policy = PolicyTypes.FileSubmission)]
+        [Authorize(Policy = PermissionNames.SubmissionAllowed)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)

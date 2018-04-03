@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DC.Web.Authorization
+﻿namespace DC.Web.Authorization.Idams
 {
     public class IdamsClaim
     {

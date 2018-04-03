@@ -1,4 +1,4 @@
-﻿namespace DC.Web.Authorization.ClaimTypes
+﻿namespace DC.Web.Authorization.Idams
 {
     public class IdamsClaimTypes
     {

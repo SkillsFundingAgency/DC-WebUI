@@ -20,6 +20,10 @@ namespace DC.Web.Ui.Ioc
             builder.Register(c =>
                     configuration.GetConfigSection<ConnectionStrings>())
                 .As<ConnectionStrings>().SingleInstance();
+
+            builder.Register(c =>
+                    configuration.GetConfigSection<AuthenticationSettings>())
+                .As<AuthenticationSettings>().SingleInstance();
         }
     }
 }

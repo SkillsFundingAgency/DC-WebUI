@@ -1,7 +1,9 @@
 ﻿using DC.Web.Authorization;
+using DC.Web.Authorization.Data.Constants;
 using DC.Web.Authorization.FileSubmissionPolicy;
 using DC.Web.Ui.AuthorizationHandlers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DC.Web.Ui.StartupConfiguration
@@ -12,10 +14,9 @@ namespace DC.Web.Ui.StartupConfiguration
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(PolicyTypes.FileSubmission, policy => policy.Requirements.Add(new FileSubmissionPolicyRequirement()));
+                options.AddPolicy(PermissionNames.SubmissionAllowed, policy => policy.Requirements.Add(new OperationAuthorizationRequirement()));
             });
 
-            services.AddSingleton<IAuthorizationHandler, FileSubmissionPolicyHandler>();
         }
     }
 }

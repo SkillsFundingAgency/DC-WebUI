@@ -1,10 +1,13 @@
 ﻿using Autofac;
+using DC.Web.Authorization.Data.Query;
 using DC.Web.Authorization.FileSubmissionPolicy;
+using DC.Web.Ui.AuthorizationHandlers;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.ServiceBus;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Azure.ServiceBus;
 
 namespace DC.Web.Ui.Ioc
@@ -19,6 +22,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AppLogsReader>().As<IAppLogsReader>().InstancePerLifetimeScope();
             builder.RegisterType<SubmissionService>().As<ISubmissionService>().InstancePerLifetimeScope();
             builder.RegisterType<FileSubmissionPolicyService>().As<IFileSubmissionPolicyService>().InstancePerLifetimeScope();
+            builder.RegisterType<PermissionsQueryService>().As<IPermissionsQueryService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
                 {
@@ -27,6 +31,17 @@ namespace DC.Web.Ui.Ioc
                 })
                 .As<IQueueClient>()
                 .InstancePerLifetimeScope();
+
+            builder.Register(context =>
+                {
+                    var authSettings = context.Resolve<AuthenticationSettings>();
+                    var policy = context.Resolve<IFileSubmissionPolicyService>();
+                    return new FileSubmissionPolicyHandler(policy,authSettings);
+                })
+                .As<IAuthorizationHandler>()
+                .SingleInstance();
+
+
         }
     }
 }

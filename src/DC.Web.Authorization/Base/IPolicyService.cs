@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DC.Web.Authorization.Idams;
 
 namespace DC.Web.Authorization.Base
 {

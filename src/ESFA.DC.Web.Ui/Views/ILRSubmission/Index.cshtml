@@ -1,4 +1,5 @@
 ﻿@using DC.Web.Authorization
+@using DC.Web.Authorization.Data.Constants
 @{
     ViewData["Title"] = "Submit Ilr";
     ViewData["secondaryHeading"] = "ILR Submission";
@@ -43,7 +44,7 @@
                     </strong>
                 </p>
 
-                <div policy="@PolicyTypes.FileSubmission" id="upload-select-area">
+                <div policy="@PermissionNames.SubmissionAllowed" id="upload-select-area">
                     <label for="upload" class="button" role="button">
                         <span class="">Select ILR file</span>
                     </label>
@@ -79,7 +80,7 @@
                         <input type="hidden" name="ilr-submission-status" value="processed">
                         <input type="hidden" name="file-date" value="">
                         
-                        <input policy="@PolicyTypes.FileSubmission"  type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Confirm and upload ILR file" />
+                        <input policy="@PermissionNames.SubmissionAllowed"  type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Confirm and upload ILR file" />
                         
                     </div>
                 </div>
