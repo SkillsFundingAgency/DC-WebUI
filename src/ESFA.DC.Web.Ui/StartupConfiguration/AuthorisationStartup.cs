@@ -14,7 +14,7 @@ namespace DC.Web.Ui.StartupConfiguration
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(PermissionNames.SubmissionAllowed, policy => policy.Requirements.Add(new OperationAuthorizationRequirement()));
+                options.AddPolicy(PermissionNames.SubmissionAllowed, policy => policy.Requirements.Add(new FileSubmissionPolicyRequirement()));
             });
 
         }

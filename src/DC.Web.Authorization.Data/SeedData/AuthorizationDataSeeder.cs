@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DC.Web.Authorization.Data.Constants;
+﻿using DC.Web.Authorization.Data.Constants;
 using DC.Web.Authorization.Data.Models;
+using System.Linq;
 
 namespace DC.Web.Authorization.Data.SeedData
 {
@@ -53,7 +50,6 @@ namespace DC.Web.Authorization.Data.SeedData
                 context.RolePermissions.Add(rp);
             }
             context.SaveChanges();
-         
         }
     }
 }

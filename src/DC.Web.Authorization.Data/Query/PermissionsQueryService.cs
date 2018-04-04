@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace DC.Web.Authorization.Data.Query
 {
@@ -10,9 +11,11 @@ namespace DC.Web.Authorization.Data.Query
         {
             _dbContext = dbContext;
         }
-        public bool HasPermission(string role,string permission)
+
+        public bool HasPermission(string role, IEnumerable<string> permissions)
         {
-            return _dbContext.RolePermissions.Any(x => x.Role.Name == role && x.Permission.Name == permission);
+            return _dbContext.RolePermissions.Any(r => r.Role.Name == role &&
+                                                       permissions.Any(p => p == r.Permission.Name));
         }
     }
 }

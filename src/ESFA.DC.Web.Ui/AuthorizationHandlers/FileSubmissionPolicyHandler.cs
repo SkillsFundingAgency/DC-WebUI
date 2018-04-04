@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace DC.Web.Ui.AuthorizationHandlers
 {
-    public class FileSubmissionPolicyHandler : PolicyHandlerBase<OperationAuthorizationRequirement>
+    public class FileSubmissionPolicyHandler : PolicyHandlerBase<FileSubmissionPolicyRequirement>
     {
         private readonly IFileSubmissionPolicyService _policyService;
 
@@ -19,7 +19,7 @@ namespace DC.Web.Ui.AuthorizationHandlers
             _policyService = policyService;
         }
 
-        protected override Task HandleAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement)
+        protected override Task HandleAsync(AuthorizationHandlerContext context, FileSubmissionPolicyRequirement requirement)
         {
 
             if (context.User.Claims == null || !context.User.Claims.Any())
@@ -34,7 +34,7 @@ namespace DC.Web.Ui.AuthorizationHandlers
                 Value = x.Value
             });
 
-            if (_policyService.IsRequirementMet(idamsClaims))
+            if (_policyService.IsRequirementMet(idamsClaims,requirement))
             {
                 context.Succeed(requirement);
             }

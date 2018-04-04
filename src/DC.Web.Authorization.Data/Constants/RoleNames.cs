@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DC.Web.Authorization.Data.Constants
+﻿namespace DC.Web.Authorization.Data.Constants
 {
     public static class RoleNames
     {

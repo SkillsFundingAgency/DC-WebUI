@@ -4,7 +4,5 @@
     {
         public const string SubmissionAllowed = "SubmissionAllowed";
         public const string ReportViewing = "ReportViewing";
-
     }
-
 }
