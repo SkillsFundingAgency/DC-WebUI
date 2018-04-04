@@ -34,7 +34,7 @@ namespace DC.Web.Ui.Controllers
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
-        [Authorize(Policy = PermissionNames.SubmissionAllowed)]
+        [Authorize(Policy = FeatureNames.FileSubmission)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)

@@ -2,10 +2,10 @@
 
 namespace DC.Web.Authorization.Data.Models
 {
-    public class Permission
+    public class Feature
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int PermissionId { get; set; }
+        public int FeatureId { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; }

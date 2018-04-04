@@ -29,25 +29,25 @@ namespace DC.Web.Authorization.Data.SeedData
             }
             context.SaveChanges();
 
-            var permissions = new Permission[]
+            var features = new Feature[]
             {
-                new Permission {PermissionId = 1, Name = PermissionNames.SubmissionAllowed ,Description = "File Submission Allowed"},
-                new Permission {PermissionId = 2, Name = PermissionNames.ReportViewing ,Description = "Reports Viewer"}
+                new Feature() {FeatureId = 1, Name = FeatureNames.FileSubmission ,Description = "File Submission"},
+                new Feature() {FeatureId = 2, Name = FeatureNames.ReportViewing ,Description = "Reports Viewer"}
             };
-            foreach (var p in permissions)
+            foreach (var p in features)
             {
-                context.Permissions.Add(p);
+                context.Features.Add(p);
             }
             context.SaveChanges();
 
-            var rolePermissions = new RolePermission[]
+            var roleFeatures = new RoleFeature[]
             {
-                new RolePermission {PermissionId = 1, RoleId = 1},
-                new RolePermission {PermissionId = 2, RoleId = 1},
+                new RoleFeature {FeatureId = 1, RoleId = 1},
+                new RoleFeature {FeatureId = 2, RoleId = 1},
             };
-            foreach (var rp in rolePermissions)
+            foreach (var rp in roleFeatures)
             {
-                context.RolePermissions.Add(rp);
+                context.RoleFeatures.Add(rp);
             }
             context.SaveChanges();
         }

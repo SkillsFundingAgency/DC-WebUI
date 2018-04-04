@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Authorization.Data\DC.Web.Authorization.Data.csproj" />
+    <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
   </ItemGroup>
 
 </Project>

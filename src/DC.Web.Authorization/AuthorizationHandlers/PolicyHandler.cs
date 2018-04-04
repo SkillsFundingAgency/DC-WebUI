@@ -1,25 +1,25 @@
-﻿using DC.Web.Authorization;
-using DC.Web.Authorization.FileSubmissionPolicy;
-using Microsoft.AspNetCore.Authorization;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using DC.Web.Authorization.Base;
+using DC.Web.Authorization.FileSubmissionPolicy;
 using DC.Web.Authorization.Idams;
+using DC.Web.Authorization.Requirements;
 using DC.Web.Ui.Settings.Models;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
-namespace DC.Web.Ui.AuthorizationHandlers
+namespace DC.Web.Authorization.AuthorizationHandlers
 {
-    public class FileSubmissionPolicyHandler : PolicyHandlerBase<FileSubmissionPolicyRequirement>
+    public class PolicyHandler : PolicyHandlerBase<IPolicyRequirement>
     {
-        private readonly IFileSubmissionPolicyService _policyService;
+        private readonly IPolicyService _policyService;
 
-        public FileSubmissionPolicyHandler(IFileSubmissionPolicyService policyService, AuthenticationSettings authenticationSettings)
+        public PolicyHandler(IPolicyService policyService, AuthenticationSettings authenticationSettings)
             :base(authenticationSettings)
         {
             _policyService = policyService;
         }
 
-        protected override Task HandleAsync(AuthorizationHandlerContext context, FileSubmissionPolicyRequirement requirement)
+        protected override Task HandleAsync(AuthorizationHandlerContext context, IPolicyRequirement requirement)
         {
 
             if (context.User.Claims == null || !context.User.Claims.Any())

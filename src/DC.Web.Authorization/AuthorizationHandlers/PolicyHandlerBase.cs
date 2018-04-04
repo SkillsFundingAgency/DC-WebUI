@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace DC.Web.Ui.AuthorizationHandlers
+namespace DC.Web.Authorization.AuthorizationHandlers
 {
     public abstract class PolicyHandlerBase<T> : AuthorizationHandler<T> where T : IAuthorizationRequirement
     {

@@ -12,10 +12,10 @@ namespace DC.Web.Authorization.Data.Query
             _dbContext = dbContext;
         }
 
-        public bool HasPermission(string role, IEnumerable<string> permissions)
+        public bool HasPermission(string role, IEnumerable<string> features)
         {
-            return _dbContext.RolePermissions.Any(r => r.Role.Name == role &&
-                                                       permissions.Any(p => p == r.Permission.Name));
+            return _dbContext.RoleFeatures.Any(r => r.Role.Name == role &&
+                                                       features.Any(p => p == r.Feature.Name));
         }
     }
 }
