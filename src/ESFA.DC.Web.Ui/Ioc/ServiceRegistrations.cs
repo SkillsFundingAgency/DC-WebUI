@@ -31,17 +31,6 @@ namespace DC.Web.Ui.Ioc
                 })
                 .As<IQueueClient>()
                 .InstancePerLifetimeScope();
-
-            builder.Register(context =>
-                {
-                    var authSettings = context.Resolve<AuthenticationSettings>();
-                    var policy = context.Resolve<IFileSubmissionPolicyService>();
-                    return new FileSubmissionPolicyHandler(policy,authSettings);
-                })
-                .As<IAuthorizationHandler>()
-                .SingleInstance();
-
-
         }
     }
 }
