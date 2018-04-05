@@ -12,10 +12,12 @@ namespace DC.Web.Ui.Controllers
     public class AppLogsController : Controller
     {
         private readonly IAppLogsReader _appLogsReader;
+
         public AppLogsController(IAppLogsReader appLogsReader)
         {
             _appLogsReader = appLogsReader;
         }
+
         public IActionResult Index(string correlationId)
         {
             return View(_appLogsReader.GetApplicationLogs(correlationId));

@@ -7,6 +7,7 @@ namespace DC.Web.Ui.Services.SubmissionService
     public interface ISubmissionService
     {
         Task<CloudBlobStream> GetBlobStream(string fileName);
-        Task AddMessageToQueue(string fileName,Guid correlationId);
+
+        Task AddMessageToQueue(string fileName, Guid correlationId);
     }
 }

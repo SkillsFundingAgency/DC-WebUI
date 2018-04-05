@@ -1,11 +1,9 @@
-﻿using DC.Web.Ui.Settings;
+﻿using System.Threading.Tasks;
+using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DC.Web.Ui.StartupConfiguration
 {
@@ -13,7 +11,6 @@ namespace DC.Web.Ui.StartupConfiguration
     {
         public static void AddAndConfigureAuthentication(this IServiceCollection services, AuthenticationSettings authSettings)
         {
-
             services.AddAuthentication(sharedOptions =>
                 {
                     sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -32,7 +29,7 @@ namespace DC.Web.Ui.StartupConfiguration
                 .AddCookie(options =>
                 {
                     options.ReturnUrlParameter = "/Account/PostSignIn";
-                    options.AccessDeniedPath = new PathString("/"); 
+                    options.AccessDeniedPath = new PathString("/");
                 });
         }
 

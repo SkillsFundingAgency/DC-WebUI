@@ -1,14 +1,14 @@
-﻿using DC.Web.Ui.Settings.Models;
-using Microsoft.Azure.ServiceBus;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Azure.ServiceBus;
 
 namespace DC.Web.Ui.Services.ServiceBus
 {
     public class ServiceBusQueue : IServiceBusQueue
     {
         private readonly IQueueClient _queueClient;
+
         public ServiceBusQueue(IQueueClient queueClient)
         {
             _queueClient = queueClient;
@@ -18,7 +18,6 @@ namespace DC.Web.Ui.Services.ServiceBus
         {
             try
             {
-
                 var message = new Message(Encoding.UTF8.GetBytes(messageToSend))
                 {
                     SessionId = sessionId

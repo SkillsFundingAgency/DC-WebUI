@@ -5,25 +5,23 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>DC.Web.Ui.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>DC.Web.Authorization.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>DC.Web.Ui.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>DC.Web.Authorization.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.3" />
     <PackageReference Include="Moq" Version="4.8.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.Web.Ui\DC.Web.Ui.csproj" />
+    <ProjectReference Include="..\DC.Web.Authorization\DC.Web.Authorization.csproj" />
   </ItemGroup>
 
 </Project>

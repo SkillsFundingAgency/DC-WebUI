@@ -25,7 +25,6 @@ namespace DC.Web.Ui.Services.Tests
             task.IsCompletedSuccessfully.Should().BeTrue();
             queueClient.Verify(e => e.SendAsync(It.IsAny<Message>()), Times.Exactly(1));
             queueClient.Verify(e => e.CloseAsync(), Times.Exactly(1));
-
         }
 
         [Fact]
@@ -38,8 +37,6 @@ namespace DC.Web.Ui.Services.Tests
 
             queueClient.Verify(e => e.SendAsync(It.IsAny<Message>()), Times.Never);
             queueClient.Verify(e => e.CloseAsync(), Times.Never);
-
         }
-
     }
 }

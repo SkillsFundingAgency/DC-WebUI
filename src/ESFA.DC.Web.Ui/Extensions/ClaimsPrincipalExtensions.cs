@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Extensions
 
         public static string Name(this ClaimsPrincipal claimsPrincipal)
         {
-            return GetClaimValue(claimsPrincipal,IdamsClaimTypes.Name);
+            return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Name);
         }
 
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)

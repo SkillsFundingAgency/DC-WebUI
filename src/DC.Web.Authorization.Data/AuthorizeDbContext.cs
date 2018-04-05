@@ -11,7 +11,9 @@ namespace DC.Web.Authorization.Data
         }
 
         public DbSet<Role> Roles { get; set; }
+
         public DbSet<Feature> Features { get; set; }
+
         public DbSet<RoleFeature> RoleFeatures { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

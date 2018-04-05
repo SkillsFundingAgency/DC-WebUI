@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Ui.Tests", "DC.Web.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Ui.Services.Tests", "DC.Web.Ui.Services.Tests\DC.Web.Ui.Services.Tests.csproj", "{2CE02D63-694F-4A89-A979-C91D357E4210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC.Web.Authorization", "DC.Web.Authorization\DC.Web.Authorization.csproj", "{299CD7CD-76A2-4D32-B475-38C38E65EAC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization", "DC.Web.Authorization\DC.Web.Authorization.csproj", "{299CD7CD-76A2-4D32-B475-38C38E65EAC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC.Web.Authorization.Data", "DC.Web.Authorization.Data\DC.Web.Authorization.Data.csproj", "{9DE5E375-E714-4312-B35E-3DC4BDA858A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization.Data", "DC.Web.Authorization.Data\DC.Web.Authorization.Data.csproj", "{9DE5E375-E714-4312-B35E-3DC4BDA858A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC.Web.Authorization.Tests", "DC.Web.Authorization.Tests\DC.Web.Authorization.Tests.csproj", "{1EED1190-3C44-4268-8833-69EFFB925F0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{9DE5E375-E714-4312-B35E-3DC4BDA858A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DE5E375-E714-4312-B35E-3DC4BDA858A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DE5E375-E714-4312-B35E-3DC4BDA858A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EED1190-3C44-4268-8833-69EFFB925F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EED1190-3C44-4268-8833-69EFFB925F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EED1190-3C44-4268-8833-69EFFB925F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EED1190-3C44-4268-8833-69EFFB925F0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{199B6631-7B40-451F-8A79-055DFC32DF20} = {3F79B509-9627-4AA9-823A-53810E1C616A}
 		{2CE02D63-694F-4A89-A979-C91D357E4210} = {3F79B509-9627-4AA9-823A-53810E1C616A}
+		{1EED1190-3C44-4268-8833-69EFFB925F0D} = {3F79B509-9627-4AA9-823A-53810E1C616A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E224BC0-6DEA-4892-9583-6CD5C07A0849}

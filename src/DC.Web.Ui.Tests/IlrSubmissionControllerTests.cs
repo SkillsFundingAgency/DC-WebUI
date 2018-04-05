@@ -23,7 +23,7 @@ namespace DC.Web.Ui.Tests
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
             submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(It.IsAny<Task<CloudBlobStream>>());
-            submissionServiceMock.Setup(x => x.AddMessageToQueue("test file",It.IsAny<Guid>()));
+            submissionServiceMock.Setup(x => x.AddMessageToQueue("test file", It.IsAny<Guid>()));
 
             var controller = new ILRSubmissionController(submissionServiceMock.Object);
 
@@ -39,7 +39,8 @@ namespace DC.Web.Ui.Tests
             result.Should().BeOfType(typeof(RedirectToActionResult));
 
             controller.TempData.ContainsKey("ilrSubmission").Should().BeTrue();
-            //controller.TempData["ilrSubmission"].Should().BeAssignableTo<IlrFileViewModel>();
+
+            // controller.TempData["ilrSubmission"].Should().BeAssignableTo<IlrFileViewModel>();
             var ilrFile = JsonConvert.DeserializeObject<IlrFileViewModel>(controller.TempData["ilrSubmission"].ToString());
             ilrFile.Should().BeAssignableTo<IlrFileViewModel>();
 
@@ -47,7 +48,6 @@ namespace DC.Web.Ui.Tests
             ilrFile.CorrelationId.Should().NotBeEmpty();
             ilrFile.SubmissionDateTime.Should().BeBefore(DateTime.Now);
             ilrFile.FileSize.Should().Be(1);
-
         }
 
         [Fact]
@@ -56,10 +56,8 @@ namespace DC.Web.Ui.Tests
             var submissionServiceMock = new Mock<ISubmissionService>();
             var controller = new ILRSubmissionController(submissionServiceMock.Object);
 
-
             var result = controller.Submit(null).Result;
             result.Should().BeOfType(typeof(ViewResult));
-
         }
 
         [Fact]
@@ -74,7 +72,6 @@ namespace DC.Web.Ui.Tests
 
             var result = controller.Submit(mockFile.Object).Result;
             result.Should().BeOfType(typeof(ViewResult));
-
         }
     }
 }

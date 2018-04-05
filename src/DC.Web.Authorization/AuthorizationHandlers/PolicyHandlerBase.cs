@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DC.Web.Authorization.AuthorizationHandlers
 {
-    public abstract class PolicyHandlerBase<T> : AuthorizationHandler<T> where T : IAuthorizationRequirement
+    public abstract class PolicyHandlerBase<T> : AuthorizationHandler<T>
+        where T : IAuthorizationRequirement
     {
         private readonly AuthenticationSettings _authenticationSettings;
+
         protected PolicyHandlerBase(AuthenticationSettings authenticationSettings)
         {
             _authenticationSettings = authenticationSettings;

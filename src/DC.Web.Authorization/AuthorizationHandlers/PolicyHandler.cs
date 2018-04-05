@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Base;
-using DC.Web.Authorization.FileSubmissionPolicy;
 using DC.Web.Authorization.Idams;
 using DC.Web.Authorization.Requirements;
 using DC.Web.Ui.Settings.Models;
@@ -14,15 +13,14 @@ namespace DC.Web.Authorization.AuthorizationHandlers
         private readonly IPolicyService _policyService;
 
         public PolicyHandler(IPolicyService policyService, AuthenticationSettings authenticationSettings)
-            :base(authenticationSettings)
+            : base(authenticationSettings)
         {
             _policyService = policyService;
         }
 
         protected override Task HandleAsync(AuthorizationHandlerContext context, IPolicyRequirement requirement)
         {
-
-            if (context.User.Claims == null || !context.User.Claims.Any())
+            if (context.User?.Claims == null || !context.User.Claims.Any())
             {
                 context.Fail();
                 return Task.CompletedTask;
@@ -34,7 +32,7 @@ namespace DC.Web.Authorization.AuthorizationHandlers
                 Value = x.Value
             });
 
-            if (_policyService.IsRequirementMet(idamsClaims,requirement))
+            if (_policyService.IsRequirementMet(idamsClaims, requirement))
             {
                 context.Succeed(requirement);
             }

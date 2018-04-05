@@ -10,7 +10,7 @@ namespace DC.Web.Ui.Ioc
     {
         public static void SetupConfigurations(this ContainerBuilder builder, IConfiguration configuration)
         {
-            builder.Register(c =>configuration.GetConfigSection<CloudStorageSettings>())
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>())
                 .As<CloudStorageSettings>().SingleInstance();
 
             builder.Register(c =>

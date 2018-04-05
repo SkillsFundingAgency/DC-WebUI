@@ -1,10 +1,9 @@
-﻿using DC.Web.Ui.Settings.Models;
-using FluentAssertions;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.ServiceBus;
-using Microsoft.Azure.ServiceBus;
+using DC.Web.Ui.Settings.Models;
+using FluentAssertions;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using Xunit;
 
@@ -31,7 +30,7 @@ namespace DC.Web.Ui.Services.Tests
         {
             var cloudStorageSettings = new CloudStorageSettings()
             {
-                ConnectionString = "",
+                ConnectionString = string.Empty,
                 ContainerName = "test"
             };
 
@@ -52,7 +51,6 @@ namespace DC.Web.Ui.Services.Tests
             await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream(null));
         }
 
-
         [Fact]
         public async Task AddMessageToQueue_Success()
         {
@@ -61,7 +59,6 @@ namespace DC.Web.Ui.Services.Tests
                 ConnectionString = "DefaultEndpointsProtocol=https;AccountName=xxxxxxxxxxxxxxx;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx==;EndpointSuffix=core.windows.net",
                 ContainerName = "test"
             };
-            var queueClient = new Mock<IQueueClient>();
 
             var queue = new Mock<IServiceBusQueue>();
 
@@ -69,7 +66,6 @@ namespace DC.Web.Ui.Services.Tests
             await submisisionService.AddMessageToQueue(It.IsAny<string>(), It.IsAny<Guid>());
 
             queue.Verify(x => x.SendMessagesAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-
         }
     }
 }

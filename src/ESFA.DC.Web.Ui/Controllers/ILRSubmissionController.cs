@@ -1,18 +1,14 @@
-﻿using DC.Web.Ui.Models;
-using DC.Web.Ui.Services.ServiceBus;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using DC.Web.Authorization.Data.Constants;
+using DC.Web.Ui.Extensions;
+using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using DC.Web.Authorization;
-using DC.Web.Authorization.Data.Constants;
-using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.SubmissionService;
-using DC.Web.Ui.Settings.Models;
-using DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Controllers
 {
@@ -28,7 +24,6 @@ namespace DC.Web.Ui.Controllers
 
         public IActionResult Index()
         {
-
             return View();
         }
 
@@ -54,22 +49,21 @@ namespace DC.Web.Ui.Controllers
             {
                 Filename = file.FileName,
                 SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
-                FileSize =(decimal)file.Length /1024,
+                FileSize = (decimal)file.Length / 1024,
                 CorrelationId = correlationId
             };
-           
-            //push file to Storage
+
+            // push file to Storage
             using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
             {
                 await file.CopyToAsync(outputStream);
             }
 
-            //add to the queue
+            // add to the queue
             await _submissionService.AddMessageToQueue(fileNameForSubmssion, correlationId);
 
             TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
-            return RedirectToAction("Index","Confirmation");
+            return RedirectToAction("Index", "Confirmation");
         }
-
     }
 }
