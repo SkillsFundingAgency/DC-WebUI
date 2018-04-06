@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DC.Web.Authorization.Data.Constants;
-using DC.Web.Authorization.Data.Models;
+using DC.Web.Authorization.Data.Entities;
 
 namespace DC.Web.Authorization.Data.SeedData
 {
@@ -18,10 +18,10 @@ namespace DC.Web.Authorization.Data.SeedData
 
             var roles = new Role[]
             {
-                new Role { RoleId = 1, Name = RoleNames.DAA, Description = "Data Collections Admin" },
-                new Role { RoleId = 2, Name = RoleNames.DCS, Description = "Data Collections Support" },
-                new Role { RoleId = 3, Name = RoleNames.BI, Description = "Reports and BI" },
-                new Role { RoleId = 4, Name = RoleNames.DCI, Description = "Data Collections Information Officer" },
+                new Role { Id = 1, Name = RoleNames.DAA, Description = "Data Collections Admin" },
+                new Role { Id = 2, Name = RoleNames.DCS, Description = "Data Collections Support" },
+                new Role { Id = 3, Name = RoleNames.BI, Description = "Reports and BI" },
+                new Role { Id = 4, Name = RoleNames.DCI, Description = "Data Collections Information Officer" },
             };
             foreach (var role in roles)
             {
@@ -32,8 +32,8 @@ namespace DC.Web.Authorization.Data.SeedData
 
             var features = new Feature[]
             {
-                new Feature() { FeatureId = 1, Name = FeatureNames.FileSubmission, Description = "File Submission" },
-                new Feature() { FeatureId = 2, Name = FeatureNames.ReportViewing, Description = "Reports Viewer" }
+                new Feature() { Id = 1, Name = FeatureNames.FileSubmission, Description = "File Submission" },
+                new Feature() { Id = 2, Name = FeatureNames.ReportViewing, Description = "Reports Viewer" }
             };
             foreach (var p in features)
             {

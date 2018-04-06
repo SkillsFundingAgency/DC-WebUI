@@ -1,6 +1,9 @@
-﻿namespace DC.Web.Authorization.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+namespace DC.Web.Authorization.Data.Entities
 {
-    public class RoleFeature
+    public class RoleFeature : BaseEntity
     {
         public int RoleId { get; set; }
 

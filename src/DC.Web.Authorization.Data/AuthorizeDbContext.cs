@@ -1,10 +1,14 @@
-﻿using DC.Web.Authorization.Data.Models;
+﻿using DC.Web.Authorization.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Authorization.Data
 {
     public class AuthorizeDbContext : DbContext
     {
+        public AuthorizeDbContext()
+        {
+        }
+
         public AuthorizeDbContext(DbContextOptions<AuthorizeDbContext> options)
             : base(options)
         {
@@ -23,12 +27,15 @@ namespace DC.Web.Authorization.Data
             modelBuilder.Entity<RoleFeature>().ToTable("RoleFeature");
 
             modelBuilder.Entity<Role>()
-                .HasKey(c => c.RoleId);
+                .HasKey(c => c.Id);
 
             modelBuilder.Entity<Feature>()
-                .HasKey(c => c.FeatureId);
+                .HasKey(c => c.Id);
+
             modelBuilder.Entity<RoleFeature>()
                     .HasKey(c => new { c.RoleId, c.FeatureId });
+
+            modelBuilder.Entity<RoleFeature>().Ignore(x => x.Id);
         }
     }
 }

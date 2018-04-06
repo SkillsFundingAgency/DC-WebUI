@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DC.Web.Ui.Tests
+namespace DC.Web.Authorization.Data.Tests
 {
-    public class FileSubmissionPolicyHandlerTests
+    public class AuthorizeRepositoryTests
     {
     }
 }

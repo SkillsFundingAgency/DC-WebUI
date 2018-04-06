@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DC.Web.Authorization.Base;
-using DC.Web.Authorization.Data.Query;
 using DC.Web.Authorization.Idams;
+using DC.Web.Authorization.Query;
 using DC.Web.Authorization.Requirements;
 
 namespace DC.Web.Authorization.FileSubmissionPolicy

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DC.Web.Authorization.Data.Query
+namespace DC.Web.Authorization.Query
 {
     public interface IPermissionsQueryService
     {
