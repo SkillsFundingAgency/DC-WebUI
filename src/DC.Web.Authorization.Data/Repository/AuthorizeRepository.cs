@@ -7,9 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Authorization.Data.Repository
 {
-    public class AuthorizeRepository : IAuthorizeRepository
+    public class AuthorizeRepository : IAuthorizeRepository, IDisposable
     {
         private readonly AuthorizeDbContext _context;
+        private bool _disposed = false;
 
         public AuthorizeRepository(AuthorizeDbContext context)
         {
@@ -22,6 +23,25 @@ namespace DC.Web.Authorization.Data.Repository
                 .Include(x => x.Feature)
                 .Include(x => x.Role)
                 .AsEnumerable();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+
+            _disposed = true;
         }
     }
 }
