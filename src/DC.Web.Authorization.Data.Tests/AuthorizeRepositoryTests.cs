@@ -15,7 +15,7 @@ namespace DC.Web.Authorization.Data.Tests
         public void GetAllRoleFeatures_Test_Success()
         {
             var options = new DbContextOptionsBuilder<AuthorizeDbContext>()
-                .UseInMemoryDatabase("Test_Database_RoleFeature")
+                .UseInMemoryDatabase("GetAllRoleFeatures_Test_Success")
                 .Options;
 
             using (var context = new AuthorizeDbContext(options))
@@ -48,7 +48,7 @@ namespace DC.Web.Authorization.Data.Tests
         public void GetAllRoleFeatures_Test_Null()
         {
             var options = new DbContextOptionsBuilder<AuthorizeDbContext>()
-                .UseInMemoryDatabase("Test_Database_RoleFeature")
+                .UseInMemoryDatabase("GetAllRoleFeatures_Test_Null")
                 .Options;
 
             var context = new AuthorizeDbContext(options);

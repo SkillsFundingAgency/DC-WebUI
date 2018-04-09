@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.SubmissionService;
@@ -14,7 +12,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace DC.Web.Ui.Tests
+namespace DC.Web.Ui.Tests.Controllers
 {
     public class IlrSubmissionControllerTests
     {

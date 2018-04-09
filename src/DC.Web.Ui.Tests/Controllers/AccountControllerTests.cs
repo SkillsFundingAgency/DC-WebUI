@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using Xunit;
 
-namespace DC.Web.Ui.Tests
+namespace DC.Web.Ui.Tests.Controllers
 {
     public class AccountControllerTests
     {
