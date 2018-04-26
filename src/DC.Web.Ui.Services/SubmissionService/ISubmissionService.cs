@@ -8,6 +8,6 @@ namespace DC.Web.Ui.Services.SubmissionService
     {
         Task<CloudBlobStream> GetBlobStream(string fileName);
 
-        Task AddMessageToQueue(string fileName, Guid correlationId);
+        Task SubmitIlrJob(string fileName, long ukprn);
     }
 }

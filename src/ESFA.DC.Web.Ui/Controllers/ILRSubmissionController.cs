@@ -60,7 +60,7 @@ namespace DC.Web.Ui.Controllers
             }
 
             // add to the queue
-            await _submissionService.AddMessageToQueue(fileNameForSubmssion, correlationId);
+            await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
 
             TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
             return RedirectToAction("Index", "Confirmation");

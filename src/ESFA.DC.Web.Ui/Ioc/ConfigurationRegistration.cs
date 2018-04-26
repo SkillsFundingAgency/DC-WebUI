@@ -14,16 +14,16 @@ namespace DC.Web.Ui.Ioc
                 .As<CloudStorageSettings>().SingleInstance();
 
             builder.Register(c =>
-                    configuration.GetConfigSection<ServiceBusQueueSettings>())
-                .As<ServiceBusQueueSettings>().SingleInstance();
-
-            builder.Register(c =>
                     configuration.GetConfigSection<ConnectionStrings>())
                 .As<ConnectionStrings>().SingleInstance();
 
             builder.Register(c =>
                     configuration.GetConfigSection<AuthenticationSettings>())
                 .As<AuthenticationSettings>().SingleInstance();
+
+            builder.Register(c =>
+                    configuration.GetConfigSection<JobQueueApiSettings>())
+                .As<JobQueueApiSettings>().SingleInstance();
         }
     }
 }

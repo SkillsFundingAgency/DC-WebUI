@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.ServiceBus;
+using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Settings.Models;
 using FluentAssertions;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -60,12 +60,12 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var queue = new Mock<IServiceBusQueue>();
+            var queue = new Mock<IJobQueueService>();
 
             var submisisionService = new SubmissionService.SubmissionService(queue.Object, cloudStorageSettings);
-            await submisisionService.AddMessageToQueue(It.IsAny<string>(), It.IsAny<Guid>());
+            await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<long>());
 
-            queue.Verify(x => x.SendMessagesAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            queue.Verify(x => x.AddJobAsync(It.IsAny<Job>()), Times.Once);
         }
     }
 }

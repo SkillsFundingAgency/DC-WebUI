@@ -10,9 +10,10 @@ namespace DC.Web.Ui.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static string Ukprn(this ClaimsPrincipal claimsPrincipal)
+        public static long Ukprn(this ClaimsPrincipal claimsPrincipal)
         {
-            return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Ukprn);
+            long.TryParse(GetClaimValue(claimsPrincipal, IdamsClaimTypes.Ukprn), out var result);
+            return result;
         }
 
         public static string DisplayName(this ClaimsPrincipal claimsPrincipal)
@@ -27,7 +28,7 @@ namespace DC.Web.Ui.Extensions
 
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)
         {
-            return claimsPrincipal.Claims.FirstOrDefault(claim => claim.Type == claimType)?.Value;
+            return claimsPrincipal?.Claims?.FirstOrDefault(claim => claim.Type == claimType)?.Value;
         }
     }
 }

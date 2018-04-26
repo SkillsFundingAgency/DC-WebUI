@@ -2,7 +2,7 @@
 
 namespace DC.Web.Ui.Settings.Models
 {
-    public class AuthenticationSettings
+    public class AuthenticationSettings : ISettings
     {
         [JsonRequired]
         public string WtRealm { get; set; }

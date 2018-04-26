@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.Models;
-using DC.Web.Ui.Services.ServiceBus;
+using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Services.SubmissionService
 {
     public class SubmissionService : ISubmissionService
     {
-        private readonly IServiceBusQueue _serviceBusQueue;
+        private readonly IJobQueueService _jobQueueService;
         private readonly CloudStorageSettings _cloudStorageSettings;
 
-        public SubmissionService(IServiceBusQueue serviceBusQueue, CloudStorageSettings cloudStorageSettings)
+        public SubmissionService(IJobQueueService jobQueueService, CloudStorageSettings cloudStorageSettings)
         {
-            _serviceBusQueue = serviceBusQueue;
+            _jobQueueService = jobQueueService;
             _cloudStorageSettings = cloudStorageSettings;
         }
 
@@ -33,15 +28,17 @@ namespace DC.Web.Ui.Services.SubmissionService
             return await cloudBlockBlob.OpenWriteAsync();
         }
 
-        public async Task AddMessageToQueue(string fileName, Guid correlationId)
+        public async Task SubmitIlrJob(string fileName, long ukprn)
         {
-            var ilrFile = new IlrSubmissionMessage()
+            var job = new Job()
             {
-                CorrelationId = correlationId,
-                ContainerReference = _cloudStorageSettings.ContainerName,
-                Filename = fileName,
+                Ukprn = ukprn,
+                DateTimeSubmittedUtc = DateTime.UtcNow,
+                FileName = fileName,
+                StorageReference = _cloudStorageSettings.ContainerName
             };
-            await _serviceBusQueue.SendMessagesAsync(JsonConvert.SerializeObject(ilrFile), ilrFile.CorrelationId.ToString());
+
+            await _jobQueueService.AddJobAsync(job);
         }
     }
 }

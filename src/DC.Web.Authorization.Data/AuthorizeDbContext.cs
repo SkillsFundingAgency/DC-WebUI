@@ -5,6 +5,8 @@ namespace DC.Web.Authorization.Data
 {
     public class AuthorizeDbContext : DbContext
     {
+        private bool _disposed = false;
+
         public AuthorizeDbContext()
         {
         }
