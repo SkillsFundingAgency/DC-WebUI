@@ -16,10 +16,10 @@ namespace DC.Web.Ui.Tests.Controllers
         public void Index_Test()
         {
             var mockReader = new Mock<IAppLogsReader>();
-            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<string>())).Returns(It.IsAny<IEnumerable<AppLog>>());
+            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLog>>());
 
             var controller = new AppLogsController(mockReader.Object);
-            var result = controller.Index(It.IsAny<string>());
+            var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(ViewResult));
         }
@@ -33,10 +33,10 @@ namespace DC.Web.Ui.Tests.Controllers
                 new AppLog()
             };
             var mockReader = new Mock<IAppLogsReader>();
-            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<string>())).Returns(appLogs);
+            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(appLogs);
 
             var controller = new AppLogsController(mockReader.Object);
-            var result = controller.Index(It.IsAny<string>());
+            var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(ViewResult));
             var modelresult = ((ViewResult)result).Model;

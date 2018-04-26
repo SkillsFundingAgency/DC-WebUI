@@ -8,6 +8,6 @@ namespace DC.Web.Ui.Services.SubmissionService
     {
         Task<CloudBlobStream> GetBlobStream(string fileName);
 
-        Task SubmitIlrJob(string fileName, long ukprn);
+        Task<long> SubmitIlrJob(string fileName, long ukprn);
     }
 }

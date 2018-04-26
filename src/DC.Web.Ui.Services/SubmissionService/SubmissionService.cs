@@ -28,7 +28,7 @@ namespace DC.Web.Ui.Services.SubmissionService
             return await cloudBlockBlob.OpenWriteAsync();
         }
 
-        public async Task SubmitIlrJob(string fileName, long ukprn)
+        public async Task<long> SubmitIlrJob(string fileName, long ukprn)
         {
             var job = new Job()
             {
@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Services.SubmissionService
                 StorageReference = _cloudStorageSettings.ContainerName
             };
 
-            await _jobQueueService.AddJobAsync(job);
+            return await _jobQueueService.AddJobAsync(job);
         }
     }
 }

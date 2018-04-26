@@ -43,14 +43,12 @@ namespace DC.Web.Ui.Controllers
             }
 
             var fileNameForSubmssion = $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
-            var correlationId = Guid.NewGuid();
 
             var ilrFile = new IlrFileViewModel()
             {
                 Filename = file.FileName,
                 SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
-                FileSize = (decimal)file.Length / 1024,
-                CorrelationId = correlationId
+                FileSize = (decimal)file.Length / 1024
             };
 
             // push file to Storage
@@ -60,7 +58,8 @@ namespace DC.Web.Ui.Controllers
             }
 
             // add to the queue
-            await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
+           var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
+            ilrFile.JobId = jobId;
 
             TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
             return RedirectToAction("Index", "Confirmation");

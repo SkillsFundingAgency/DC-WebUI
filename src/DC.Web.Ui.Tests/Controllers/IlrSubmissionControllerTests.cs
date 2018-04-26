@@ -43,7 +43,6 @@ namespace DC.Web.Ui.Tests.Controllers
             ilrFile.Should().BeAssignableTo<IlrFileViewModel>();
 
             ilrFile.Filename.Should().Be("test file");
-            ilrFile.CorrelationId.Should().NotBeEmpty();
             ilrFile.SubmissionDateTime.Should().BeBefore(DateTime.Now);
             ilrFile.FileSize.Should().Be(1);
         }

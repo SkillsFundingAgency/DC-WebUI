@@ -18,9 +18,9 @@ namespace DC.Web.Ui.Controllers
             _appLogsReader = appLogsReader;
         }
 
-        public IActionResult Index(string correlationId)
+        public IActionResult Index(long jobId)
         {
-            return View(_appLogsReader.GetApplicationLogs(correlationId));
+            return View(_appLogsReader.GetApplicationLogs(jobId));
         }
     }
 }

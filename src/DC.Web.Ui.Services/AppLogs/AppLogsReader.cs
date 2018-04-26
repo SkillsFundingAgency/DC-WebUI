@@ -18,9 +18,9 @@ namespace DC.Web.Ui.Services.AppLogs
             _context = appLogsContext;
         }
 
-        public IEnumerable<AppLog> GetApplicationLogs(string correlationId)
+        public IEnumerable<AppLog> GetApplicationLogs(long jobId)
         {
-            return _context.Logs.Where(x => x.JobId == correlationId).OrderByDescending(x => x.TimeStampUtc);
+            return _context.Logs.Where(x => x.JobId == jobId.ToString()).OrderByDescending(x => x.TimeStampUtc);
         }
     }
 }

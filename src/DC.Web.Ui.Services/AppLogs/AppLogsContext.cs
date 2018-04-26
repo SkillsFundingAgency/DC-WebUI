@@ -9,7 +9,7 @@ namespace DC.Web.Ui.Services.AppLogs
         {
         }
 
-        public AppLogsContext(DbContextOptions options)
+        public AppLogsContext(DbContextOptions<AppLogsContext> options)
         : base(options)
         {
         }
