@@ -17,7 +17,7 @@ Web UI relies on Information Management Services (IDAMS) for authentication, how
 ## Requirements
 * Working service fabric insatnce configured to recieve messages from a queue configured in the appsettings.json file "CloudStorageSettings".
 * For writing debug logs and errors, connection string pointing to an empty database mentioned in the "Applogs" section in connection strings.
-
+* Working  web api instance to receive job request. Code will be available in git hub for the webapi project in github.
 
 
 ## App Settings
