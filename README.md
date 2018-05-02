@@ -24,7 +24,7 @@ Web UI relies on Information Management Services (IDAMS) for authentication, how
 ```
 {
   "AuthenticationSettings": {
-    "Enabled": "true",
+    "Enabled": "true", * For local development this can be set to enabled false and authentication will be skipped.
     "WtRealm": "",
     "MetadataAddress": "https://adfs.preprod.skillsfunding.service.gov.uk/FederationMetadata/2007-06/FederationMetadata.xml"
   },
