@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.JobQueueManager.Models;
 using Polly;
 using Polly.Registry;
 

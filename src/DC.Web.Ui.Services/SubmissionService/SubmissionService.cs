@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.JobQueueManager.Models;
+using ESFA.DC.JobQueueManager.Models.Enums;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -35,7 +37,10 @@ namespace DC.Web.Ui.Services.SubmissionService
                 Ukprn = ukprn,
                 DateTimeSubmittedUtc = DateTime.UtcNow,
                 FileName = fileName,
-                StorageReference = _cloudStorageSettings.ContainerName
+                StorageReference = _cloudStorageSettings.ContainerName,
+                Priority = 1,
+                Status = JobStatus.Ready,
+                JobType = JobType.IlrSubmission
             };
 
             return await _jobQueueService.AddJobAsync(job);

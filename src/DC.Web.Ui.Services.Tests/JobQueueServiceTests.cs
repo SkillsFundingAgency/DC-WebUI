@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.JobQueueManager.Models;
 using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;

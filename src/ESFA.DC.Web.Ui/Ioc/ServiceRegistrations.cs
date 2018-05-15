@@ -9,8 +9,10 @@ using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Services.SubmissionService;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
+using ILogger = ESFA.DC.Logging.Interfaces.ILogger;
 
 namespace DC.Web.Ui.Ioc
 {
@@ -25,6 +27,11 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                return ESFA.DC.Logging.LoggerManager.CreateDefaultLogger();
+            }).As<ILogger>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

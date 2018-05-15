@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Extensions;
+using DC.Web.Ui.Models;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +22,12 @@ namespace DC.Web.Ui.Controllers
     public class ILRSubmissionController : Controller
     {
         private readonly ISubmissionService _submissionService;
+        private readonly ILogger _logger;
 
-        public ILRSubmissionController(ISubmissionService submissionService)
+        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger)
         {
             _submissionService = submissionService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -42,27 +50,38 @@ namespace DC.Web.Ui.Controllers
                 return Index();
             }
 
-            var fileNameForSubmssion = $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
-
-            var ilrFile = new IlrFileViewModel()
+            try
             {
-                Filename = file.FileName,
-                SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
-                FileSize = (decimal)file.Length / 1024
-            };
+                var fileNameForSubmssion =
+                    $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
 
-            // push file to Storage
-            using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
-            {
-                await file.CopyToAsync(outputStream);
+                var ilrFile = new IlrFileViewModel()
+                {
+                    Filename = file.FileName,
+                    SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(
+                        DateTime.UtcNow,
+                        TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
+                    FileSize = (decimal)file.Length / 1024
+                };
+
+                // push file to Storage
+                using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
+                {
+                    await file.CopyToAsync(outputStream);
+                }
+
+                // add to the queue
+                var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
+                ilrFile.JobId = jobId;
+
+                TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
+                return RedirectToAction("Index", "Confirmation");
             }
-
-            // add to the queue
-           var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
-            ilrFile.JobId = jobId;
-
-            TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
-            return RedirectToAction("Index", "Confirmation");
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                return View("Error", new ErrorViewModel());
+            }
         }
     }
 }
