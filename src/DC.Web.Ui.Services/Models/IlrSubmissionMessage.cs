@@ -4,9 +4,10 @@ namespace DC.Web.Ui.Services.Models
 {
     public class IlrSubmissionMessage
     {
-        public string Filename;
-        public string ContainerReference;
-        public Guid CorrelationId;
+        public string Filename { get; set; }
 
+        public string ContainerReference { get; set; }
+
+        public Guid CorrelationId { get; set; }
     }
 }

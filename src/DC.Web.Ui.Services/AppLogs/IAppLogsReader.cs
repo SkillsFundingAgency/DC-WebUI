@@ -5,6 +5,6 @@ namespace DC.Web.Ui.Services.AppLogs
 {
     public interface IAppLogsReader
     {
-        IEnumerable<AppLog> GetApplicationLogs(string correlationId);
+        IEnumerable<AppLog> GetApplicationLogs(long jobId);
     }
 }

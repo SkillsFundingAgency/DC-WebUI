@@ -10,10 +10,10 @@ namespace DC.Web.Ui.Extensions
     {
         public static T GetConfigSection<T>(this IConfiguration configuration)
         {
-            return  configuration.GetSection(typeof(T).Name).Get<T>();
+            return configuration.GetSection(typeof(T).Name).Get<T>();
         }
 
-        public static T GetConfigSection<T>(this IConfiguration configuration,string sectionName)
+        public static T GetConfigSection<T>(this IConfiguration configuration, string sectionName)
         {
             return configuration.GetSection(sectionName).Get<T>();
         }

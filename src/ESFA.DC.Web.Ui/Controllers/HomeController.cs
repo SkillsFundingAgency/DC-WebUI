@@ -9,15 +9,12 @@ namespace DC.Web.Ui.Controllers
     {
         public IActionResult Index()
         {
-            if (User.Identity !=null && User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "IlrSubmission");
             }
-           
-            return View();
-            
-            
-        }
 
+            return View();
+        }
     }
 }
