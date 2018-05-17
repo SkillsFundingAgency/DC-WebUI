@@ -32,7 +32,7 @@
                 </tr>
                 <tr>
                     <td><span class="bold">Submission reference</span></td>
-                    <td id="file-correlationId" >@Html.DisplayFor(model => model.CorrelationId)</td>
+                    <td id="file-correlationId" >@Html.DisplayFor(model => model.JobId)</td>
                 </tr>
                 <tr>
                     <td><span class="bold">File size</span></td>
@@ -45,7 +45,7 @@
             </tbody>
         </table>
         <p>
-            @Html.ActionLink("Click here to see detailed status", "Index", "AppLogs", new { id="detailed-link", correlationId = Model.CorrelationId })
+            @Html.ActionLink("Click here to see detailed status", "Index", "AppLogs", new { id="detailed-link", jobId = Model.JobId })
         </p>
         <h2 class="heading-medium">What happens next?</h2>
         <p>You will receive an email notification once your file has been processed.</p>

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Threading.Tasks;
-using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -23,15 +19,12 @@ namespace DC.Web.Ui.Tests
             // Arrange
             var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>());
-            
+
             var client = server.CreateClient();
-            
+
             var response = await client.GetAsync(url);
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().Contain("https://adfs.");
-            
         }
     }
-
-    
 }

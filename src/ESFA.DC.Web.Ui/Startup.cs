@@ -1,19 +1,17 @@
-﻿using Autofac;
+﻿using System;
+using System.IO;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Ioc;
+using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.StartupConfiguration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.AppLogs;
-using DC.Web.Ui.Settings.Models;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Ui
 {
@@ -68,30 +66,14 @@ namespace DC.Web.Ui
 
             services.AddSession();
 
-            //Custom services
+            // Custom services
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthorisation();
             services.AddMvc().AddControllersAsServices();
             services.AddAndConfigureAuthentication(authSettings);
 
-
             return ConfigureAutofac(services);
         }
-
-        private IServiceProvider ConfigureAutofac(IServiceCollection services)
-        {
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.SetupConfigurations(_config);
-
-            containerBuilder.RegisterModule<ServiceRegistrations>();
-            containerBuilder.RegisterModule<AuthorizationHandlerRegistrations>();
-
-            containerBuilder.Populate(services);
-            _applicationContainer = containerBuilder.Build();
-
-            return new AutofacServiceProvider(_applicationContainer);
-        }
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -118,6 +100,20 @@ namespace DC.Web.Ui
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private IServiceProvider ConfigureAutofac(IServiceCollection services)
+        {
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.SetupConfigurations(_config);
+
+            containerBuilder.RegisterModule<ServiceRegistrations>();
+            containerBuilder.RegisterModule<AuthorizationHandlerRegistrations>();
+
+            containerBuilder.Populate(services);
+            _applicationContainer = containerBuilder.Build();
+
+            return new AutofacServiceProvider(_applicationContainer);
         }
     }
 }

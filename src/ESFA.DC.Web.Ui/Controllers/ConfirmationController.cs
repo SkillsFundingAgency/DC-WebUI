@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Controllers
         {
             IlrFileViewModel ilrSubmission = null;
             var tempData = TempData["ilrSubmission"];
-            if (tempData  != null)
+            if (tempData != null)
             {
                 ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
             }

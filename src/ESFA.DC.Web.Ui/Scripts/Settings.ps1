@@ -2,7 +2,7 @@
     [string]$ProjDirectory = ""
 )
 
-$privateFilesPath =  [io.path]::combine($(get-item $ProjDirectory).parent.parent.parent.FullName,"DC-Configs","DCWebSettings",$env:UserName)
+$privateFilesPath =  [io.path]::combine($(get-item $ProjDirectory).parent.parent.parent.FullName,"DC-Configs","DCJobWebApiSettings",$env:UserName)
 Write-Host $privateFilesPath 
  
 $destination = [io.path]::combine($(get-item $ProjDirectory ).FullName)
