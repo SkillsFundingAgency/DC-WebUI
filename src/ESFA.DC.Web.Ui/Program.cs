@@ -1,9 +1,9 @@
-﻿using DC.Web.Authorization.Data;
+﻿using System;
+using DC.Web.Authorization.Data;
 using DC.Web.Authorization.Data.SeedData;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace DC.Web.Ui
 {
@@ -22,7 +22,7 @@ namespace DC.Web.Ui
                 }
                 catch (Exception ex)
                 {
-                    //logger.LogError(ex, "An error occurred while seeding the database.");
+                    // logger.LogError(ex, "An error occurred while seeding the database.");
                 }
             }
 

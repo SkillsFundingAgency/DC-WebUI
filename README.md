@@ -15,29 +15,31 @@ Source code is based on .Net core 2.0.
 Web UI relies on Information Management Services (IDAMS) for authentication, however this can be disabled for local testing by setting the "Enabled" flag to false in "AuthenticationSettings" of appsettings.json file. If disabled application will use 
 
 ## Requirements
-* Working service fabric insatnce configured to recieve messages from a queue configured in the appsettings.json file "ServiceBusQueueSettings" secton.
-* Cloud storage account configured and using the same container used by the service fabric instance and specified in the "CloudStorageSettings".
-* For writing debug logs and errors, connection string pointing to an empty database.
+* Working service fabric insatnce configured to recieve messages from a queue configured in the appsettings.json file "CloudStorageSettings".
+* For writing debug logs and errors, connection string pointing to an empty database mentioned in the "Applogs" section in connection strings.
+* Working  web api instance to receive job request. Code will be available in git hub for the webapi project in github.
 
 
 ## App Settings
 ```
 {
   "AuthenticationSettings": {
-    "Enabled": "true",
-    "WtRealm": "https://localhost",
-    "MetadataAddress": ""
-  },
-  "ServiceBusQueueSettings": {
-    "Name": "",
-    "ConnectionString": ""
+    "Enabled": "true", * For local development this can be set to enabled false and authentication will be skipped.
+    "WtRealm": "",
+    "MetadataAddress": "https://adfs.preprod.skillsfunding.service.gov.uk/FederationMetadata/2007-06/FederationMetadata.xml"
   },
   "CloudStorageSettings": {
     "ConnectionString": "",
     "ContainerName": ""
   },
   "ConnectionStrings": {
-    "AppLogs": ""
+    "AppLogs": "",
+    "Permissions": ""
+
+  },
+  "JobQueueApiSettings": {
+    "BaseUrl": "http://localhost:2088/api"
   }
+}
 ```
 

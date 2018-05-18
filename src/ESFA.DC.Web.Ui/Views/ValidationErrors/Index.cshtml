@@ -1,0 +1,50 @@
+﻿
+@model IEnumerable<DC.Web.Ui.Services.Models.ValidationError>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="govuk-box-highlight">
+            <h1 class="heading-large">
+                Validation Errors
+            </h1>
+        </div>
+        <table class="table table-font-xsmall ">
+            <thead>
+                <tr>
+                    <th>Learn ref number</th>
+                    <th>Aim Seq number</th>
+                    <th>Message</th>
+                    <th>Severity</th>
+                    <th>Rule</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LearnRefNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AimSequenceNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ErrorMessage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Severity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RuleId)
+                    </td>
+
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

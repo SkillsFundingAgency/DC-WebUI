@@ -10,12 +10,8 @@ namespace DC.Web.Ui.Ioc
     {
         public static void SetupConfigurations(this ContainerBuilder builder, IConfiguration configuration)
         {
-            builder.Register(c =>configuration.GetConfigSection<CloudStorageSettings>())
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>())
                 .As<CloudStorageSettings>().SingleInstance();
-
-            builder.Register(c =>
-                    configuration.GetConfigSection<ServiceBusQueueSettings>())
-                .As<ServiceBusQueueSettings>().SingleInstance();
 
             builder.Register(c =>
                     configuration.GetConfigSection<ConnectionStrings>())
@@ -24,6 +20,10 @@ namespace DC.Web.Ui.Ioc
             builder.Register(c =>
                     configuration.GetConfigSection<AuthenticationSettings>())
                 .As<AuthenticationSettings>().SingleInstance();
+
+            builder.Register(c =>
+                    configuration.GetConfigSection<JobQueueApiSettings>())
+                .As<JobQueueApiSettings>().SingleInstance();
         }
     }
 }

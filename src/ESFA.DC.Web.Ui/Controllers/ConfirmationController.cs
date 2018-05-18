@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DC.Web.Ui.Models;
 using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +17,7 @@ namespace DC.Web.Ui.Controllers
         {
             IlrFileViewModel ilrSubmission = null;
             var tempData = TempData["ilrSubmission"];
-            if (tempData  != null)
+            if (tempData != null)
             {
                 ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
             }

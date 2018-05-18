@@ -1,18 +1,19 @@
-﻿using DC.Web.Ui.Models;
-using DC.Web.Ui.Services.ServiceBus;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using DC.Web.Authorization.Data.Constants;
+using DC.Web.Ui.Extensions;
+using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.ViewModels;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using DC.Web.Authorization;
-using DC.Web.Authorization.Data.Constants;
-using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.SubmissionService;
-using DC.Web.Ui.Settings.Models;
-using DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Controllers
 {
@@ -20,21 +21,22 @@ namespace DC.Web.Ui.Controllers
     public class ILRSubmissionController : Controller
     {
         private readonly ISubmissionService _submissionService;
+        private readonly ILogger _logger;
 
-        public ILRSubmissionController(ISubmissionService submissionService)
+        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger)
         {
             _submissionService = submissionService;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
-
             return View();
         }
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
-        [Authorize(Policy = PermissionNames.SubmissionAllowed)]
+        [Authorize(Policy = FeatureNames.FileSubmission)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)
@@ -47,29 +49,38 @@ namespace DC.Web.Ui.Controllers
                 return Index();
             }
 
-            var fileNameForSubmssion = $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
-            var correlationId = Guid.NewGuid();
+            try
+            {
+                var fileNameForSubmssion =
+                    $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
 
-            var ilrFile = new IlrFileViewModel()
-            {
-                Filename = file.FileName,
-                SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
-                FileSize =(decimal)file.Length /1024,
-                CorrelationId = correlationId
-            };
-           
-            //push file to Storage
-            using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
-            {
-                await file.CopyToAsync(outputStream);
+                var ilrFile = new IlrFileViewModel()
+                {
+                    Filename = file.FileName,
+                    SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(
+                        DateTime.UtcNow,
+                        TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
+                    FileSize = (decimal)file.Length / 1024
+                };
+
+                // push file to Storage
+                using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
+                {
+                    await file.CopyToAsync(outputStream);
+                }
+
+                // add to the queue
+                var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
+                ilrFile.JobId = jobId;
+
+                TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
+                return RedirectToAction("Index", "Confirmation");
             }
-
-            //add to the queue
-            await _submissionService.AddMessageToQueue(fileNameForSubmssion, correlationId);
-
-            TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
-            return RedirectToAction("Index","Confirmation");
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                return View("Error", new ErrorViewModel());
+            }
         }
-
     }
 }

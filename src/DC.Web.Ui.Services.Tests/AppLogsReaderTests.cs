@@ -19,16 +19,16 @@ namespace DC.Web.Ui.Services.Tests
         {
             var logs = new List<AppLog>()
             {
-                new AppLog(){JobId = "TestJob", Message = "test message"},
-                new AppLog(){JobId = "TestJob2", Message = "test message"},
-                new AppLog(){JobId = "TestJob", Message = "test message3"},
-                new AppLog(){JobId = "TestJob", Message = "test message4"},
+                new AppLog() { JobId = "1", Message = "test message" },
+                new AppLog() { JobId = "2", Message = "test message" },
+                new AppLog() { JobId = "1", Message = "test message3" },
+                new AppLog() { JobId = "1", Message = "test message4" },
             }.AsQueryable();
 
             var mockContext = SetupMockContext(logs);
 
             var service = new AppLogsReader(mockContext.Object);
-            service.GetApplicationLogs("TestJob").Count().Should().Be(3);
+            service.GetApplicationLogs(1).Count().Should().Be(3);
         }
 
         [Fact]
@@ -36,13 +36,13 @@ namespace DC.Web.Ui.Services.Tests
         {
             var logs = new List<AppLog>()
             {
-                new AppLog(){JobId = "TestJob2", Message = "test message"},
+                new AppLog() { JobId = "2", Message = "test message" },
             }.AsQueryable();
 
             var mockContext = SetupMockContext(logs);
 
             var service = new AppLogsReader(mockContext.Object);
-            service.GetApplicationLogs("TestJob").Count().Should().Be(0);
+            service.GetApplicationLogs(1).Count().Should().Be(0);
         }
 
         private Mock<AppLogsContext> SetupMockContext(IQueryable<AppLog> logs)

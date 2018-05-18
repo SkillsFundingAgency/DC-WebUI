@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using DC.Web.Authorization.Data.Constants;
-using DC.Web.Authorization.Data.Models;
+using DC.Web.Authorization.Data.Entities;
 
 namespace DC.Web.Authorization.Data.SeedData
 {
@@ -13,47 +10,62 @@ namespace DC.Web.Authorization.Data.SeedData
         {
             context.Database.EnsureCreated();
 
-            // Look for any students.
+            // Look for any roles
             if (context.Roles.Any())
             {
                 return;   // DB has been seeded
             }
 
+            AddRoles(context);
+            AddFeatures(context);
+            AddRoleFeatures(context);
+        }
+
+        public static void AddRoleFeatures(AuthorizeDbContext context)
+        {
+            var roleFeatures = new RoleFeature[]
+            {
+                new RoleFeature { FeatureId = 1, RoleId = 1 },
+                new RoleFeature { FeatureId = 2, RoleId = 1 },
+            };
+            foreach (var rp in roleFeatures)
+            {
+                context.RoleFeatures.Add(rp);
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddFeatures(AuthorizeDbContext context)
+        {
+            var features = new Feature[]
+            {
+                new Feature() { Id = 1, Name = FeatureNames.FileSubmission, Description = "File Submission" },
+                new Feature() { Id = 2, Name = FeatureNames.ReportViewing, Description = "Reports Viewer" }
+            };
+            foreach (var p in features)
+            {
+                context.Features.Add(p);
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddRoles(AuthorizeDbContext context)
+        {
             var roles = new Role[]
             {
-                new Role {RoleId = 1, Name = RoleNames.DAA,Description = "Data Collections Admin"},
-                new Role {RoleId = 2, Name = RoleNames.DCS,Description = "Data Collections Support"},
-                new Role {RoleId = 3, Name = RoleNames.BI,Description = "Reports and BI"},
-                new Role {RoleId = 4, Name = RoleNames.DCI,Description = "Data Collections Information Officer"},
+                new Role { Id = 1, Name = RoleNames.DAA, Description = "Data Collections Admin" },
+                new Role { Id = 2, Name = RoleNames.DCS, Description = "Data Collections Support" },
+                new Role { Id = 3, Name = RoleNames.BI, Description = "Reports and BI" },
+                new Role { Id = 4, Name = RoleNames.DCI, Description = "Data Collections Information Officer" },
             };
             foreach (var role in roles)
             {
                 context.Roles.Add(role);
             }
-            context.SaveChanges();
 
-            var permissions = new Permission[]
-            {
-                new Permission {PermissionId = 1, Name = PermissionNames.SubmissionAllowed ,Description = "File Submission Allowed"},
-                new Permission {PermissionId = 2, Name = PermissionNames.ReportViewing ,Description = "Reports Viewer"}
-            };
-            foreach (var p in permissions)
-            {
-                context.Permissions.Add(p);
-            }
             context.SaveChanges();
-
-            var rolePermissions = new RolePermission[]
-            {
-                new RolePermission {PermissionId = 1, RoleId = 1},
-                new RolePermission {PermissionId = 2, RoleId = 1},
-            };
-            foreach (var rp in rolePermissions)
-            {
-                context.RolePermissions.Add(rp);
-            }
-            context.SaveChanges();
-         
         }
     }
 }
