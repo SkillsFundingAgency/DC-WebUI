@@ -9,6 +9,9 @@ using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Services.ValidationErrors;
+using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Serialization.Json;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
@@ -27,6 +30,8 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
+            builder.RegisterType<ValidationErrorsService>().As<IValidationErrorsService>().InstancePerLifetimeScope();
+            builder.RegisterType<JsonSerializationService>().As<ISerializationService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

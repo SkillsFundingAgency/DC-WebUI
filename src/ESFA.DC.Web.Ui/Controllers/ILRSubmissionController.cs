@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Models;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Logging;

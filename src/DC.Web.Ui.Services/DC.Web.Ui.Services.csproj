@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="ESFA.DC.JobQueueManager" Version="0.1.4-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.2-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.2-beta0001" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />

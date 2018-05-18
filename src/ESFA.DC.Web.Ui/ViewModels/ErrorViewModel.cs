@@ -1,4 +1,4 @@
-namespace DC.Web.Ui.Models
+namespace DC.Web.Ui.ViewModels
 {
     public class ErrorViewModel
     {
