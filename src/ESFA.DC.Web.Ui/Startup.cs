@@ -28,14 +28,14 @@ namespace DC.Web.Ui
 
             builder.SetBasePath(Directory.GetCurrentDirectory());
 
-            if (env.IsDevelopment())
-            {
-                builder.AddJsonFile($"appsettings.{Environment.UserName}.json");
-            }
-            else
-            {
+            //if (env.IsDevelopment())
+            //{
+            //    builder.AddJsonFile($"appsettings.{Environment.UserName}.json");
+            //}
+            //else
+            //{
                 builder.AddJsonFile("appsettings.json");
-            }
+            //}
 
             _config = builder.Build();
         }
