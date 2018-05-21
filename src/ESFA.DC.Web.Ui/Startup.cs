@@ -8,10 +8,12 @@ using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.StartupConfiguration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DC.Web.Ui
 {
@@ -71,7 +73,7 @@ namespace DC.Web.Ui
             services.AddAndConfigureAuthorisation();
             services.AddMvc().AddControllersAsServices();
             services.AddAndConfigureAuthentication(authSettings);
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return ConfigureAutofac(services);
         }
 

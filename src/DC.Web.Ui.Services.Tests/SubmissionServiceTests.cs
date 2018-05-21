@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings, null, null, null);
 
             submisisionService.GetBlobStream("test file").Should().BeAssignableTo<Task<CloudBlobStream>>();
         }
@@ -35,7 +35,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings, null, null, null);
             await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream("test file"));
         }
 
@@ -48,7 +48,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings, null, null, null);
             await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream(null));
         }
 
@@ -63,7 +63,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var queue = new Mock<IJobQueueService>();
 
-            var submisisionService = new SubmissionService.SubmissionService(queue.Object, cloudStorageSettings);
+            var submisisionService = new SubmissionService.SubmissionService(queue.Object, cloudStorageSettings, null, null, null);
             await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<long>());
 
             queue.Verify(x => x.AddJobAsync(It.IsAny<Job>()), Times.Once);
