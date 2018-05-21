@@ -67,6 +67,7 @@ namespace DC.Web.Ui
             services.AddSession();
 
             // Custom services
+            services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthorisation();
             services.AddMvc().AddControllersAsServices();
