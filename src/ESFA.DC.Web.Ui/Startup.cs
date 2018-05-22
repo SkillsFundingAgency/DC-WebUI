@@ -111,6 +111,7 @@ namespace DC.Web.Ui
 
             containerBuilder.RegisterModule<ServiceRegistrations>();
             containerBuilder.RegisterModule<AuthorizationHandlerRegistrations>();
+            containerBuilder.RegisterModule<LoggerRegistrations>();
 
             containerBuilder.Populate(services);
             _applicationContainer = containerBuilder.Build();

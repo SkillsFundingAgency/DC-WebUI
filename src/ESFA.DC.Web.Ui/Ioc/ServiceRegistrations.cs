@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using Autofac;
 using DC.Web.Authorization.Base;
@@ -10,6 +11,10 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Services.ValidationErrors;
+using DC.Web.Ui.Settings.Models;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using Microsoft.Extensions.Logging;
@@ -35,7 +40,17 @@ namespace DC.Web.Ui.Ioc
 
             builder.Register(context =>
             {
-                return ESFA.DC.Logging.LoggerManager.CreateDefaultLogger();
+                var config = new ApplicationLoggerSettings()
+                {
+                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>()
+                    {
+                        new MsSqlServerApplicationLoggerOutputSettings()
+                        {
+                            ConnectionString = context.Resolve<ConnectionStrings>().AppLogs
+                        }
+                    }
+                };
+                return new SeriLogger(config, new ExecutionContext() { JobId = "1" });
             }).As<ILogger>().InstancePerLifetimeScope();
 
             builder.Register(context =>
