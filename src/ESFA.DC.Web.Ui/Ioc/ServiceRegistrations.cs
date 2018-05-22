@@ -54,20 +54,21 @@ namespace DC.Web.Ui.Ioc
             }).As<ILogger>().InstancePerLifetimeScope();
 
             builder.Register(context =>
-            {
-                var registry = new PolicyRegistry();
-                registry.Add(
-                    "HttpRetryPolicy",
-                    Policy.Handle<HttpRequestException>()
-                        .WaitAndRetryAsync(
-                            3, // number of retries
-                            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // exponential backoff
-                            (exception, timeSpan, retryCount, executionContext) =>
-                            {
-                                // TODO: log the error
-                            }));
-                return registry;
-            }).As<IReadOnlyPolicyRegistry<string>>()
+                {
+                    var logger = context.Resolve<ILogger>();
+                    var registry = new PolicyRegistry();
+                    registry.Add(
+                        "HttpRetryPolicy",
+                        Policy.Handle<HttpRequestException>()
+                            .WaitAndRetryAsync(
+                                3, // number of retries
+                                retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // exponential backoff
+                                (exception, timeSpan, retryCount, executionContext) =>
+                                {
+                                    logger.LogError("Error occured trying to send message to api", exception);
+                                }));
+                    return registry;
+                }).As<IReadOnlyPolicyRegistry<string>>()
                 .SingleInstance();
         }
     }
