@@ -8,6 +8,6 @@ namespace DC.Web.Ui.Services.ValidationErrors
 {
     public interface IValidationErrorsService
     {
-        Task<IEnumerable<ValidationError>> GetValidationErrors(long jobId);
+        Task<IEnumerable<ValidationError>> GetValidationErrors(long ukprn, long jobId);
     }
 }

@@ -23,9 +23,9 @@ namespace DC.Web.Ui.Services.ValidationErrors
             _serializationService = serializationService;
         }
 
-        public async Task<IEnumerable<ValidationError>> GetValidationErrors(long jobId)
+        public async Task<IEnumerable<ValidationError>> GetValidationErrors(long ukprn, long jobId)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/validationerrors/{jobId}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/validationerrors/{ukprn}/{jobId}");
             return _serializationService.Deserialize<IEnumerable<ValidationError>>(data);
         }
     }

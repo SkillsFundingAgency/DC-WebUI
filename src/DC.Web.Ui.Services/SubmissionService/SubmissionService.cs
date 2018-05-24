@@ -61,10 +61,16 @@ namespace DC.Web.Ui.Services.SubmissionService
             return await _jobQueueService.AddJobAsync(job);
         }
 
-        public async Task<Job> GetJob(long jobId)
+        public async Task<Job> GetJob(long ukprn, long jobId)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{jobId}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}/{jobId}");
             return _serializationService.Deserialize<Job>(data);
+        }
+
+        public async Task<IEnumerable<Job>> GetAllJobs(long ukprn)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}");
+            return _serializationService.Deserialize<IEnumerable<Job>>(data);
         }
     }
 }

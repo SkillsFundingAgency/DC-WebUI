@@ -5,6 +5,7 @@ using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Settings.Models;
 using ESFA.DC.JobQueueManager.Models;
 using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
@@ -25,7 +26,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockReader = new Mock<IAppLogsReader>();
             mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLog>>());
 
-            var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object);
+            var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object, new AuthenticationSettings());
             var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(Task<ViewResult>));
@@ -46,9 +47,9 @@ namespace DC.Web.Ui.Tests.Controllers
             mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
 
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>())).Returns(Task.FromResult(new Job()));
+            submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).Returns(Task.FromResult(new Job()));
 
-            var controller = new AppLogsController(mockReader.Object, submissionServiceMock.Object, mockLogger.Object);
+            var controller = new AppLogsController(mockReader.Object, submissionServiceMock.Object, mockLogger.Object, new AuthenticationSettings());
             var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(Task<ViewResult>));
