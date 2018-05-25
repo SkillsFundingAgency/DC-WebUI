@@ -1354,15 +1354,15 @@ table caption {
 
 .table-font-xsmall th {
     font-family: "nta", Arial, sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: none;
-    font-size: 14px;
+    font-size: 10px;
     line-height: 1.14286;
 }
 
 @media (min-width: 641px) {
     .table-font-xsmall th {
-        font-size: 16px;
+        font-size: 12px;
         line-height: 1.25;
     }
 }
@@ -1371,13 +1371,13 @@ table caption {
     font-family: "nta", Arial, sans-serif;
     font-weight: 400;
     text-transform: none;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.14286;
 }
 
 @media (min-width: 641px) {
     .table-font-xsmall td {
-        font-size: 16px;
+        font-size: 12px;
         line-height: 1.25;
     }
 }
