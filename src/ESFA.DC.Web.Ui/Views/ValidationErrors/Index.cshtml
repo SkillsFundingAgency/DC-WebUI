@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<DC.Web.Ui.Services.Models.ValidationError>
+@model IEnumerable<ESFA.DC.ILR.ValidationErrorReport.Model.ReportValidationError>
 
 @{
     ViewData["Title"] = "Index";
@@ -42,7 +42,7 @@
                             @Html.DisplayFor(modelItem => item.Severity)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.RuleId)
+                            @Html.DisplayFor(modelItem => item.RuleName)
                         </td>
 
                     </tr>

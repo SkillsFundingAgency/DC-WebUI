@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Data.Constants;
@@ -8,9 +7,6 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
-using ESFA.DC.Logging;
-using ESFA.DC.Logging.Config;
-using ESFA.DC.Logging.Config.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

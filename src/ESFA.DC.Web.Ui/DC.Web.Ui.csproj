@@ -47,6 +47,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ESFA.DC.ILR.ValidationErrorReport.Model">
+      <HintPath>..\..\..\DC-ILR-ValidationErrorReport-Model\src\ESFA.DC.ILR.ValidationErrorReport.Model\bin\Debug\netstandard2.0\ESFA.DC.ILR.ValidationErrorReport.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

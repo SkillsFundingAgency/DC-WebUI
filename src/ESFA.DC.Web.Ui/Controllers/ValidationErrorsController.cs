@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using DC.Web.Ui.Base;
-using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Services.ValidationErrors;
 using DC.Web.Ui.Settings.Models;
-using DC.Web.Ui.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 
 namespace DC.Web.Ui.Controllers
 {

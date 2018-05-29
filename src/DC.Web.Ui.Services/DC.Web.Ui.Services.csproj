@@ -30,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ESFA.DC.ILR.ValidationErrorReport.Model">
+      <HintPath>..\..\..\DC-ILR-ValidationErrorReport-Model\src\ESFA.DC.ILR.ValidationErrorReport.Model\bin\Debug\netstandard2.0\ESFA.DC.ILR.ValidationErrorReport.Model.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\10.0.1\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
     </Reference>
