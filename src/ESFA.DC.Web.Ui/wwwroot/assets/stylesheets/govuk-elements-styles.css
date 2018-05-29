@@ -1354,15 +1354,15 @@ table caption {
 
 .table-font-xsmall th {
     font-family: "nta", Arial, sans-serif;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: none;
-    font-size: 10px;
+    font-size: 14px;
     line-height: 1.14286;
 }
 
 @media (min-width: 641px) {
     .table-font-xsmall th {
-        font-size: 12px;
+        font-size: 16px;
         line-height: 1.25;
     }
 }
@@ -1371,13 +1371,13 @@ table caption {
     font-family: "nta", Arial, sans-serif;
     font-weight: 400;
     text-transform: none;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.14286;
 }
 
 @media (min-width: 641px) {
     .table-font-xsmall td {
-        font-size: 12px;
+        font-size: 16px;
         line-height: 1.25;
     }
 }
@@ -1984,11 +1984,11 @@ input[type=number] {
     padding: 15px 10px;
 }
 
-.error-summary .error-summary-list a {
-    color: #b10e1e;
-    font-weight: bold;
-    text-decoration: underline;
-}
+    .error-summary .error-summary-list a {
+        color: #b10e1e;
+        font-weight: bold;
+        text-decoration: underline;
+    }
 
 
 

@@ -23,6 +23,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
     <PackageReference Include="CsvHelper" Version="7.1.0" />
+    <PackageReference Include="ESFA.DC.ILR.ValidationErrorReport.Model" Version="0.1.0-beta0001" />
     <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.2-beta0001" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
@@ -30,7 +31,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="2.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
@@ -44,12 +45,6 @@
     <ProjectReference Include="..\DC.Web.Authorization\DC.Web.Authorization.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Services\DC.Web.Ui.Services.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ESFA.DC.ILR.ValidationErrorReport.Model">
-      <HintPath>..\..\..\DC-ILR-ValidationErrorReport-Model\src\ESFA.DC.ILR.ValidationErrorReport.Model\bin\Debug\netstandard2.0\ESFA.DC.ILR.ValidationErrorReport.Model.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
