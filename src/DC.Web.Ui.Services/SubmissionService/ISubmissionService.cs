@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.JobQueueManager.Models;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -11,6 +12,8 @@ namespace DC.Web.Ui.Services.SubmissionService
 
         Task<long> SubmitIlrJob(string fileName, long ukprn);
 
-        Task<Job> GetJob(long jobId);
+        Task<Job> GetJob(long ukprn, long jobId);
+
+        Task<IEnumerable<Job>> GetAllJobs(long ukprn);
     }
 }

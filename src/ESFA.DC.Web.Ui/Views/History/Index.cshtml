@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ESFA.DC.JobQueueManager.Models.Job>
+
+@{
+    ViewData["Title"] = "Application Logs";
+    var correlationId = ViewData["CorrelationId"];
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="govuk-box-highlight">
+            <h1 class="heading-small">
+                Jobs List
+            </h1>
+        </div>
+        <table class="table table-font-xsmall ">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>File name</th>
+                    <th>DateTime Submitted</th>
+                    <th>Status</th>
+                    <th>Report</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var job in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => job.JobId)</td>
+                    <td>@Html.DisplayFor(model => job.FileName)</td>
+                    <td>@Convert.ToDateTime(job.DateTimeSubmittedUtc).ToString("MM/dd/yyyy hh:mm:ss.fff tt")</td>
+                    <td>@Html.DisplayFor(model => job.Status)</td>
+                    <td>@Html.ActionLink("Validation Errors","Index","ValidationErrors",new {jobId = job.JobId})</td>
+                </tr>
+
+            }
+            </tbody>
+        </table>
+        <p><a class="button" href="/IlrSubmission" role="button" id="upload-complete-button">Finished</a></p>
+    </div>
+</div>
+
+
