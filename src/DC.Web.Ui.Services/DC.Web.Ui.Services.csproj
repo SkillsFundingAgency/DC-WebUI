@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.ILR.ValidationErrorReport.Model" Version="0.1.0-beta0001" />
+    <PackageReference Include="ESFA.DC.ILR.ValidationErrors.Interface" Version="0.1.2-beta0001" />
     <PackageReference Include="ESFA.DC.JobQueueManager" Version="0.1.4-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.2-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.2-beta0001" />

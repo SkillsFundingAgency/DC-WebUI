@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
-using ESFA.DC.ILR.ValidationErrorReport.Model;
+using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Serialization.Interfaces;
 using Newtonsoft.Json;
 
@@ -24,10 +24,10 @@ namespace DC.Web.Ui.Services.ValidationErrors
             _serializationService = serializationService;
         }
 
-        public async Task<IEnumerable<ReportValidationError>> GetValidationErrors(long ukprn, long jobId)
+        public async Task<IEnumerable<ValidationErrorDto>> GetValidationErrors(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/validationerrors/{ukprn}/{jobId}");
-            return _serializationService.Deserialize<IEnumerable<ReportValidationError>>(data);
+            return _serializationService.Deserialize<IEnumerable<ValidationErrorDto>>(data);
         }
     }
 }
