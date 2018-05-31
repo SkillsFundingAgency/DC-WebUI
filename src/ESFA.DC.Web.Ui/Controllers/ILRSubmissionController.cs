@@ -49,9 +49,6 @@ namespace DC.Web.Ui.Controllers
 
             try
             {
-                var fileNameForSubmssion =
-                    $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
-
                 var ilrFile = new IlrFileViewModel()
                 {
                     Filename = file.FileName,
@@ -62,13 +59,13 @@ namespace DC.Web.Ui.Controllers
                 };
 
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
+                using (var outputStream = await _submissionService.GetBlobStream(file.FileName))
                 {
                     await file.CopyToAsync(outputStream);
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, Ukprn);
+                var jobId = await _submissionService.SubmitIlrJob(file.FileName, Ukprn);
                 ilrFile.JobId = jobId;
 
                 TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
