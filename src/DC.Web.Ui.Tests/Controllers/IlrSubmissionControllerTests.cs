@@ -22,8 +22,9 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(It.IsAny<Task<CloudBlobStream>>());
-            submissionServiceMock.Setup(x => x.SubmitIlrJob("test file", It.IsAny<long>()));
+            var mockCloudBlob = new Mock<CloudBlobStream>();
+            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(Task.FromResult(mockCloudBlob.Object));
+            submissionServiceMock.Setup(x => x.SubmitIlrJob("test file", It.IsAny<long>())).Returns(Task.FromResult((long)1));
 
             var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>(), new AuthenticationSettings());
 
