@@ -13,11 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ESFA.DC.ILR.ValidationErrors.Interface" Version="0.1.2-beta0001" />
     <PackageReference Include="ESFA.DC.JobQueueManager" Version="0.1.4-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.2-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.2-beta0001" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.0" />
@@ -25,12 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\10.0.1\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

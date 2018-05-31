@@ -1,26 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using DC.Web.Ui.Base;
 using DC.Web.Ui.Services.AppLogs;
-using Microsoft.AspNetCore.Authorization;
+using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Settings.Models;
+using DC.Web.Ui.ViewModels;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
-    [Authorize]
-    public class AppLogsController : Controller
+    public class AppLogsController : BaseController
     {
         private readonly IAppLogsReader _appLogsReader;
+        private readonly ISubmissionService _submissionService;
+        private readonly ILogger _logger;
 
-        public AppLogsController(IAppLogsReader appLogsReader)
+        public AppLogsController(IAppLogsReader appLogsReader, ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings)
+            : base(authenticationSettings)
         {
             _appLogsReader = appLogsReader;
+            _submissionService = submissionService;
+            _logger = logger;
         }
 
-        public IActionResult Index(long jobId)
+        public async Task<ViewResult> Index(long jobId)
         {
-            return View(_appLogsReader.GetApplicationLogs(jobId));
+            try
+            {
+                var job = await _submissionService.GetJob(Ukprn, jobId);
+                ViewBag.JobStatus = job.Status;
+
+                return View(_appLogsReader.GetApplicationLogs(jobId));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error trying to get app logs errors ukprn : {jobId}", e);
+                return View("Error", new ErrorViewModel());
+            }
         }
     }
 }

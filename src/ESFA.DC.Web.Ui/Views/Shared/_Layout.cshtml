@@ -1,4 +1,5 @@
-﻿@using DC.Web.Ui.Extensions
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Extensions
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -40,6 +41,7 @@
 
 
 
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
@@ -90,11 +92,12 @@
                 <li><a href="/"> Home </a></li>
                 <li> <a href="/IlrSubmission">ILR Submission</a></li>
                 <li> <a href="/Claims">User Claims</a></li>
+                <li> <a href="/History">Jobs History</a></li>
             </ol>
         </div>
         @if (@User.Identity.IsAuthenticated)
         {
-            <h1 class="heading-large" id="display-name">
+            <h1 class="heading-small" id="display-name">
                 @User.DisplayName()
                 <span class="heading-secondary" id="ukprn">
                     UKPRN: @User.Ukprn()

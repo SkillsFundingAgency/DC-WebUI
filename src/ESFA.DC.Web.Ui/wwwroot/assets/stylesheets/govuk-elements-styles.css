@@ -1984,11 +1984,11 @@ input[type=number] {
     padding: 15px 10px;
 }
 
-.error-summary .error-summary-list a {
-    color: #b10e1e;
-    font-weight: bold;
-    text-decoration: underline;
-}
+    .error-summary .error-summary-list a {
+        color: #b10e1e;
+        font-weight: bold;
+        text-decoration: underline;
+    }
 
 
 

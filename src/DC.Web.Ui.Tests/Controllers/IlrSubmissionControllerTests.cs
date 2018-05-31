@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
@@ -21,10 +22,11 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(It.IsAny<Task<CloudBlobStream>>());
-            submissionServiceMock.Setup(x => x.SubmitIlrJob("test file", It.IsAny<long>()));
+            var mockCloudBlob = new Mock<CloudBlobStream>();
+            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(Task.FromResult(mockCloudBlob.Object));
+            submissionServiceMock.Setup(x => x.SubmitIlrJob("test file", It.IsAny<long>())).Returns(Task.FromResult((long)1));
 
-            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>());
+            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>(), new AuthenticationSettings());
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -52,7 +54,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_NullFile()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>());
+            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>(), new AuthenticationSettings());
 
             var result = controller.Submit(null).Result;
             result.Should().BeOfType(typeof(ViewResult));
@@ -62,7 +64,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_EmptyFile()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>());
+            var controller = new ILRSubmissionController(submissionServiceMock.Object, It.IsAny<ILogger>(), new AuthenticationSettings());
 
             var mockFile = new Mock<IFormFile>();
             mockFile.SetupGet(x => x.FileName).Returns("test file");

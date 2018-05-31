@@ -11,9 +11,16 @@ namespace DC.Web.Ui.Services.BespokeHttpClient
         private bool _disposed = false;
         private HttpClient _httpClient = new HttpClient();
 
-        public async Task<string> SendDataAsync(string url, Job job)
+        public async Task<string> SendDataAsync(string url, object data)
         {
-            var response = await _httpClient.PostAsJsonAsync(url, job);
+            var response = await _httpClient.PostAsJsonAsync(url, data);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> GetDataAsync(string url)
+        {
+            var response = await _httpClient.GetAsync(new Uri(url));
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }

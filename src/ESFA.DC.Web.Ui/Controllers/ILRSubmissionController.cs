@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Data.Constants;
+using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Models;
 using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
-using ESFA.DC.Logging;
-using ESFA.DC.Logging.Config;
-using ESFA.DC.Logging.Config.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,13 +15,13 @@ using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Controllers
 {
-    [Authorize]
-    public class ILRSubmissionController : Controller
+    public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
         private readonly ILogger _logger;
 
-        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger)
+        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings)
+            : base(authenticationSettings)
         {
             _submissionService = submissionService;
             _logger = logger;
@@ -52,9 +49,6 @@ namespace DC.Web.Ui.Controllers
 
             try
             {
-                var fileNameForSubmssion =
-                    $" {Path.GetFileNameWithoutExtension(file.FileName).AppendRandomString(5)}.xml";
-
                 var ilrFile = new IlrFileViewModel()
                 {
                     Filename = file.FileName,
@@ -65,13 +59,13 @@ namespace DC.Web.Ui.Controllers
                 };
 
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(fileNameForSubmssion))
+                using (var outputStream = await _submissionService.GetBlobStream(file.FileName))
                 {
                     await file.CopyToAsync(outputStream);
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(fileNameForSubmssion, User.Ukprn());
+                var jobId = await _submissionService.SubmitIlrJob(file.FileName, Ukprn);
                 ilrFile.JobId = jobId;
 
                 TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
