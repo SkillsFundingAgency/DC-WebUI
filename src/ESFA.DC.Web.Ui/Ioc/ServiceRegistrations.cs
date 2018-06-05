@@ -12,6 +12,8 @@ using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Services.ValidationErrors;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTime.Provider;
+using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ESFA.DC.Logging.Config.Interfaces;
@@ -36,7 +38,8 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
             builder.RegisterType<ValidationErrorsService>().As<IValidationErrorsService>().InstancePerLifetimeScope();
-            builder.RegisterType<JsonSerializationService>().As<ISerializationService>().InstancePerLifetimeScope();
+            builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
+            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

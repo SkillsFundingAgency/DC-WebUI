@@ -15,9 +15,9 @@ namespace DC.Web.Ui.Services.ValidationErrors
     {
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
-        private readonly ISerializationService _serializationService;
+        private readonly IJsonSerializationService _serializationService;
 
-        public ValidationErrorsService(IBespokeHttpClient httpClient, JobQueueApiSettings apiSettings, ISerializationService serializationService)
+        public ValidationErrorsService(IBespokeHttpClient httpClient, JobQueueApiSettings apiSettings, IJsonSerializationService serializationService)
         {
             _httpClient = httpClient;
             _baseUrl = apiSettings.BaseUrl;
