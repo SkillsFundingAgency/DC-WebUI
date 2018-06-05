@@ -19,14 +19,14 @@ namespace DC.Web.Ui.Services.SubmissionService
         private readonly CloudStorageSettings _cloudStorageSettings;
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
-        private readonly ISerializationService _serializationService;
+        private readonly IJsonSerializationService _serializationService;
 
         public SubmissionService(
             IJobQueueService jobQueueService,
             CloudStorageSettings cloudStorageSettings,
             IBespokeHttpClient httpClient,
             JobQueueApiSettings apiSettings,
-            ISerializationService serializationService)
+            IJsonSerializationService serializationService)
         {
             _jobQueueService = jobQueueService;
             _cloudStorageSettings = cloudStorageSettings;

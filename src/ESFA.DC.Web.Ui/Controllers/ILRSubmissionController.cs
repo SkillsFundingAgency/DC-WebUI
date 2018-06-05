@@ -7,7 +7,9 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Serialization.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +21,16 @@ namespace DC.Web.Ui.Controllers
     {
         private readonly ISubmissionService _submissionService;
         private readonly ILogger _logger;
+        private readonly IJsonSerializationService _serializationService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings)
+        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings, IJsonSerializationService serializationService, IDateTimeProvider dateTimeProvider)
             : base(authenticationSettings)
         {
             _submissionService = submissionService;
             _logger = logger;
+            _serializationService = serializationService;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public IActionResult Index()
@@ -52,9 +58,7 @@ namespace DC.Web.Ui.Controllers
                 var ilrFile = new IlrFileViewModel()
                 {
                     Filename = file.FileName,
-                    SubmissionDateTime = TimeZoneInfo.ConvertTimeFromUtc(
-                        DateTime.UtcNow,
-                        TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time")),
+                    SubmissionDateTime = _dateTimeProvider.GetNowUtc(),
                     FileSize = (decimal)file.Length / 1024
                 };
 
@@ -68,7 +72,7 @@ namespace DC.Web.Ui.Controllers
                 var jobId = await _submissionService.SubmitIlrJob(file.FileName, Ukprn);
                 ilrFile.JobId = jobId;
 
-                TempData["ilrSubmission"] = JsonConvert.SerializeObject(ilrFile);
+                TempData["ilrSubmission"] = _serializationService.Serialize(ilrFile);
                 return RedirectToAction("Index", "Confirmation");
             }
             catch (Exception ex)
