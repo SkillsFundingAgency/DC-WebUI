@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
@@ -11,31 +12,23 @@ namespace DC.Web.Ui.StartupConfiguration
     {
         public static void AddAndConfigureAuthentication(this IServiceCollection services, AuthenticationSettings authSettings)
         {
-            services.AddAuthentication(sharedOptions =>
+            services.AddAuthentication(options =>
                 {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignOutScheme = WsFederationDefaults.AuthenticationScheme;
-                })
-                .AddWsFederation(options =>
-                {
-                    options.Wtrealm = authSettings.WtRealm;
-                    options.MetadataAddress = authSettings.MetadataAddress;
-
-                    options.Events.OnSecurityTokenValidated = OnTokenValidated;
-                    options.CallbackPath = "/Account/PostSignIn";
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
                 })
                 .AddCookie(options =>
                 {
-                    options.ReturnUrlParameter = "/Account/PostSignIn";
                     options.AccessDeniedPath = new PathString("/");
+                })
+                .AddWsFederation(options =>
+                {
+                    options.MetadataAddress = authSettings.MetadataAddress;
+                    options.RequireHttpsMetadata = false;
+                    options.Wtrealm = authSettings.WtRealm;
+                    options.CallbackPath = "/";
+                    options.SkipUnrecognizedRequests = true;
                 });
-        }
-
-        private static Task OnTokenValidated(SecurityTokenValidatedContext context)
-        {
-            return Task.CompletedTask;
         }
     }
 }

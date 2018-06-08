@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization.Data",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization.Tests", "DC.Web.Authorization.Tests\DC.Web.Authorization.Tests.csproj", "{1EED1190-3C44-4268-8833-69EFFB925F0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC.Web.Authorization.Data.Tests", "DC.Web.Authorization.Data.Tests\DC.Web.Authorization.Data.Tests.csproj", "{CDC32DCA-7DD9-43B9-8847-B6F900EE4F41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization.Data.Tests", "DC.Web.Authorization.Data.Tests\DC.Web.Authorization.Data.Tests.csproj", "{CDC32DCA-7DD9-43B9-8847-B6F900EE4F41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
