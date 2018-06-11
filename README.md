@@ -1,3 +1,4 @@
+
 # DC-WebUI
 
 This repository contains source code for Web UI used by data collection system. This application will allow users to authenticate and submit Ilr files.This application works in conjuction with a running service fabric instance which will be resposible for processing the files.
@@ -18,6 +19,7 @@ Web UI relies on Information Management Services (IDAMS) for authentication, how
 * Working service fabric insatnce configured to recieve messages from a queue configured in the appsettings.json file "CloudStorageSettings".
 * For writing debug logs and errors, connection string pointing to an empty database mentioned in the "Applogs" section in connection strings.
 * Working  web api instance to receive job request. Code will be available in git hub for the webapi project in github.
+* If authentication is enabled, for local development you can use the DC identity server available from VSTS repo.
 
 
 ## App Settings
