@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
+using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.JobQueueManager.Models;
 using ESFA.DC.JobQueueManager.Models.Enums;
+using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -13,11 +17,22 @@ namespace DC.Web.Ui.Services.SubmissionService
     {
         private readonly IJobQueueService _jobQueueService;
         private readonly CloudStorageSettings _cloudStorageSettings;
+        private readonly IBespokeHttpClient _httpClient;
+        private readonly string _baseUrl;
+        private readonly IJsonSerializationService _serializationService;
 
-        public SubmissionService(IJobQueueService jobQueueService, CloudStorageSettings cloudStorageSettings)
+        public SubmissionService(
+            IJobQueueService jobQueueService,
+            CloudStorageSettings cloudStorageSettings,
+            IBespokeHttpClient httpClient,
+            JobQueueApiSettings apiSettings,
+            IJsonSerializationService serializationService)
         {
             _jobQueueService = jobQueueService;
             _cloudStorageSettings = cloudStorageSettings;
+            _httpClient = httpClient;
+            _baseUrl = apiSettings?.BaseUrl;
+            _serializationService = serializationService;
         }
 
         public async Task<CloudBlobStream> GetBlobStream(string fileName)
@@ -44,6 +59,18 @@ namespace DC.Web.Ui.Services.SubmissionService
             };
 
             return await _jobQueueService.AddJobAsync(job);
+        }
+
+        public async Task<Job> GetJob(long ukprn, long jobId)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}/{jobId}");
+            return _serializationService.Deserialize<Job>(data);
+        }
+
+        public async Task<IEnumerable<Job>> GetAllJobs(long ukprn)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}");
+            return _serializationService.Deserialize<IEnumerable<Job>>(data);
         }
     }
 }

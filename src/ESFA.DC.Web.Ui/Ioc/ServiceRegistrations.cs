@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using Autofac;
 using DC.Web.Authorization.Base;
@@ -9,6 +10,15 @@ using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.JobQueue;
 using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Services.ValidationErrors;
+using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTime.Provider;
+using ESFA.DC.DateTime.Provider.Interface;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Serialization.Json;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
@@ -27,27 +37,41 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
+            builder.RegisterType<ValidationErrorsService>().As<IValidationErrorsService>().InstancePerLifetimeScope();
+            builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
+            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                return ESFA.DC.Logging.LoggerManager.CreateDefaultLogger();
+                var config = new ApplicationLoggerSettings()
+                {
+                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>()
+                    {
+                        new MsSqlServerApplicationLoggerOutputSettings()
+                        {
+                            ConnectionString = context.Resolve<ConnectionStrings>().AppLogs
+                        }
+                    }
+                };
+                return new SeriLogger(config, new ExecutionContext() { JobId = "1" });
             }).As<ILogger>().InstancePerLifetimeScope();
 
             builder.Register(context =>
-            {
-                var registry = new PolicyRegistry();
-                registry.Add(
-                    "HttpRetryPolicy",
-                    Policy.Handle<HttpRequestException>()
-                        .WaitAndRetryAsync(
-                            3, // number of retries
-                            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // exponential backoff
-                            (exception, timeSpan, retryCount, executionContext) =>
-                            {
-                                // TODO: log the error
-                            }));
-                return registry;
-            }).As<IReadOnlyPolicyRegistry<string>>()
+                {
+                    var logger = context.Resolve<ILogger>();
+                    var registry = new PolicyRegistry();
+                    registry.Add(
+                        "HttpRetryPolicy",
+                        Policy.Handle<HttpRequestException>()
+                            .WaitAndRetryAsync(
+                                3, // number of retries
+                                retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // exponential backoff
+                                (exception, timeSpan, retryCount, executionContext) =>
+                                {
+                                    logger.LogError("Error occured trying to send message to api", exception);
+                                }));
+                    return registry;
+                }).As<IReadOnlyPolicyRegistry<string>>()
                 .SingleInstance();
         }
     }

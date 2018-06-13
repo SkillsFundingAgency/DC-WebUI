@@ -5,6 +5,8 @@
     <AssemblyName>DC.Web.Ui</AssemblyName>
     <RootNamespace>DC.Web.Ui</RootNamespace>
     <UserSecretsId>08fa5945-0c7a-49b8-bb56-c3ec9b0961d9</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/12f72527-6622-45d3-90a4-0a5d3644c45c/resourcegroups/DC-CI-AppSrvEnv-WEU/providers/microsoft.insights/components/DC-CI-WebTest-WEU</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/12f72527-6622-45d3-90a4-0a5d3644c45c/resourcegroups/DC-CI-AppSrvEnv-WEU/providers/microsoft.insights/components/DC-CI-WebTest-WEU</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -20,12 +22,17 @@
     <PackageReference Include="Autofac.Configuration" Version="4.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
+    <PackageReference Include="CsvHelper" Version="7.1.0" />
+    <PackageReference Include="ESFA.DC.DateTime.Provider" Version="0.1.1-beta0001" />
+    <PackageReference Include="ESFA.DC.ILR.ValidationErrors.Interface" Version="0.1.2-beta0001" />
     <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.4-beta0001" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="2.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
@@ -51,6 +58,10 @@
     <Content Update="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
