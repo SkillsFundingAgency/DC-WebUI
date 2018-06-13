@@ -27,6 +27,7 @@ namespace DC.Web.Ui.Controllers
 
         public async Task<FileResult> Download(long jobId)
         {
+            //TODO:This will be removed/refactored based on actual report requirement
             var data = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
             var stream = new MemoryStream();
             var csvWriter = new StreamWriter(stream, Encoding.GetEncoding("shift-jis"));
@@ -36,7 +37,7 @@ namespace DC.Web.Ui.Controllers
             csv.Flush();
 
             stream.Seek(0, SeekOrigin.Begin);
-            return File(stream, "text/csv");
+            return File(stream, "text/csv", $"{Ukprn}_{jobId}_ValidationErrors.csv");
         }
     }
 }
