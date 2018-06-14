@@ -30,14 +30,14 @@ namespace DC.Web.Ui
 
             builder.SetBasePath(Directory.GetCurrentDirectory());
 
-            //if (env.IsDevelopment())
-            //{
-            //    builder.AddJsonFile($"appsettings.{Environment.UserName}.json");
-            //}
-            //else
-            //{
+            if (env.IsDevelopment())
+            {
+                builder.AddJsonFile($"appsettings.{Environment.UserName}.json");
+            }
+            else
+            {
                 builder.AddJsonFile("appsettings.json");
-            //}
+            }
 
             _config = builder.Build();
         }
@@ -53,26 +53,12 @@ namespace DC.Web.Ui
                 x.MultipartBodyLengthLimit = 524_288_000;
                 x.MultipartBoundaryLengthLimit = 524_288_000;
             });
-
-            if (!authSettings.Enabled)
-            {
-                services.AddMvc(options =>
-                {
-                    options.Filters.Add(new AllowAnonymousFilter());
-                });
-            }
-            else
-            {
-                services.AddMvc();
-            }
-
-            services.AddSession();
+            services.AddMvc();
+            //services.AddSession();
 
             // Custom services
-            services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthorisation();
-            services.AddMvc().AddControllersAsServices();
             services.AddAndConfigureAuthentication(authSettings);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return ConfigureAutofac(services);
@@ -91,18 +77,12 @@ namespace DC.Web.Ui
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
 
-                app.UseSession();
-                app.UseAuthentication();
+                //app.UseSession();
             }
 
             app.UseStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseAuthentication();
+            app.UseMvcWithDefaultRoute();
         }
 
         private IServiceProvider ConfigureAutofac(IServiceCollection services)
