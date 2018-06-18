@@ -32,6 +32,13 @@
     <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="~/assets/images/opengraph-image.png">
+
+    @if (ViewBag.AutoRefresh != null)
+    {
+        <meta http-equiv="refresh" content="5">
+    }
+   
+
     <environment include="Development">
         <link rel="stylesheet" media="all" href="~/css/site.css" />
     </environment>

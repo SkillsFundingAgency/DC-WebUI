@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
+    [Route("validation-errors")]
     public class ValidationErrorsController : BaseController
     {
         private readonly IValidationErrorsService _validationErrorsService;

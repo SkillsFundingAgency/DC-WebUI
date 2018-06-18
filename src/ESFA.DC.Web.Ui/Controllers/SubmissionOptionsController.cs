@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
+    [Route("submission-options")]
     public class SubmissionOptionsController : Controller
     {
         public IActionResult Index()

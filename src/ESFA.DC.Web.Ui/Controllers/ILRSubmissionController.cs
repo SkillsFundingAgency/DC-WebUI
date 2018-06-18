@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Controllers
 {
+    [Route("ilr-submission")]
     public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -73,7 +74,7 @@ namespace DC.Web.Ui.Controllers
                 ilrFile.JobId = jobId;
 
                 TempData["ilrSubmission"] = _serializationService.Serialize(ilrFile);
-                return RedirectToAction("Index", "Confirmation");
+                return RedirectToAction("Index", "InProgress");
             }
             catch (Exception ex)
             {
