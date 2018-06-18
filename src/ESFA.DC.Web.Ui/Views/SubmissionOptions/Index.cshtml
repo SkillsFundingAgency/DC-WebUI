@@ -1,0 +1,30 @@
+﻿@using DC.Web.Ui.Enums
+
+@{
+    ViewData["Title"] = "SubmissionOptions";
+}
+
+<div class="column-two-thirds">
+
+    <form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
+        <div class="form-group">
+            <fieldset>
+                <h1 class="heading-large">Choose data you need to submit</h1>
+
+                <div class="multiple-choice">
+
+                    <input id="ilr" type="radio" name="submissionType" value="@SubmissionTypes.Ilr" required="">
+                    <label for="ilr">Individualised Learner Record (ILR)</label>
+                </div>
+
+                <div class="multiple-choice">
+                    <input id="eas" type="radio" name="submissionType" value="@SubmissionTypes.Eas" required="">
+                    <label for="eas">Earnings Adjustment Statement (EAS)</label>
+                </div>
+
+            </fieldset>
+        </div>
+
+        <input type="submit" value="Start submitting data" class="button">
+    </form>
+</div>

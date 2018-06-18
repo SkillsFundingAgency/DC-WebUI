@@ -27,8 +27,8 @@
     <link rel="apple-touch-icon" sizes="152x152" href="~/assets/images/apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="~/assets/images/apple-touch-icon.png">
     <link href="~/assets/stylesheets/govuk-elements-styles.css" rel="stylesheet" type="text/css">
-    <!--[if IE 6]><link href="/public/stylesheets/govuk-elements-styles-ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 8]><link href="/public/stylesheets/govuk-elements-styles-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 6]><link href="~/assets/stylesheets/govuk-elements-styles-ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 8]><link href="~/assets/stylesheets/govuk-elements-styles-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
     <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="~/assets/images/opengraph-image.png">
@@ -82,8 +82,8 @@
     <div id="content" role="main">
         <div class="phase-banner">
             <p>
-                <strong class="phase-tag">Alpha</strong>
-                <span>This service is being used for Alpha testing only.</span>
+                <strong class="phase-tag">BETA</strong>
+                <span>This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
             </p>
         </div>
         @if (@User.Identity.IsAuthenticated)
@@ -94,18 +94,11 @@
                 </ol>
             </div>
         }
-        <div class="breadcrumbs">
-            <ol>
-                <li><a href="/">GOV.UK </a></li>
-                <li><a href="/"> Home </a></li>
-                <li> <a href="/IlrSubmission">ILR Submission</a></li>
-                <li> <a href="/History">Jobs History</a></li>
-            </ol>
-        </div>
+        
        
         @RenderBody()
     </div>
-    <footer class="group js-footer" id="footer" role="contentinfo">
+    <footer class="group footer" id="footer" role="contentinfo">
         <div class="footer-wrapper">
 
             <div class="footer-meta">
