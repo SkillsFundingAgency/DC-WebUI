@@ -71,7 +71,7 @@
     <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\ILRSubmission\" />
-    <Folder Include="Views\ValidationErrors\" />
+    <Folder Include="Views\ValidationResults\" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -19,15 +19,15 @@ namespace DC.Web.Ui.Controllers
 
         public IActionResult Index()
         {
-            IlrFileViewModel ilrSubmission = null;
-            var tempData = TempData["ilrSubmission"];
-            if (tempData != null)
-            {
-                ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
-                ilrSubmission.SubmissionDateTime = _dateTimeProvider.ConvertUtcToUk(ilrSubmission.SubmissionDateTime);
-            }
+           //// IlrFileViewModel ilrSubmission = null;
+           // var tempData = TempData["ilrSubmission"];
+           // if (tempData != null)
+           // {
+           //     ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
+           //     ilrSubmission.SubmissionDateTime = _dateTimeProvider.ConvertUtcToUk(ilrSubmission.SubmissionDateTime);
+           // }
 
-            return View(ilrSubmission);
+            return View(null);
         }
     }
 }
