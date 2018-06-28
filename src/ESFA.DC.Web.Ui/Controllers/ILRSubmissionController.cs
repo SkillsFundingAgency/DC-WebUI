@@ -63,7 +63,7 @@ namespace DC.Web.Ui.Controllers
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(file.FileName, Ukprn);
+                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn);
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)

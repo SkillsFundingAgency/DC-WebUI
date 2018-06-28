@@ -8,6 +8,7 @@ using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Services.ValidationErrors;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.Jobs.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -40,11 +41,11 @@ namespace DC.Web.Ui.Controllers
             var result = new ValidationResultViewModel
             {
                 JobId = jobId,
-                FileSize = 1111111, //|TODO: Job table/entity needs to be updated to include this,
+                FileSize = job.FileSize / 1024,
                 Filename = job.FileName,
                 SubmissionDateTime = job.DateTimeSubmittedUtc,
-                TotalLearners = 0,
-                UploadedBy = User.Name()
+                TotalLearners = job.TotalLearners,
+                UploadedBy = job.SubmittedBy
             };
 
             return View(result);

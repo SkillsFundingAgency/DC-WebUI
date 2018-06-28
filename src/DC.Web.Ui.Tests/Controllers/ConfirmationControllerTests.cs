@@ -17,7 +17,6 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_ValidData()
         {
-
             var controller = new ConfirmationController(new AuthenticationSettings(), new Mock<IDateTimeProvider>().Object);
 
             var httpContext = new DefaultHttpContext();

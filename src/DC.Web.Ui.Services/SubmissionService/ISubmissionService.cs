@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ESFA.DC.JobQueueManager.Models;
+using ESFA.DC.Jobs.Model;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DC.Web.Ui.Services.SubmissionService
@@ -10,10 +10,10 @@ namespace DC.Web.Ui.Services.SubmissionService
     {
         Task<CloudBlobStream> GetBlobStream(string fileName);
 
-        Task<long> SubmitIlrJob(string fileName, long ukprn);
+        Task<long> SubmitIlrJob(string fileName, decimal fileSizeBytes, string submittedBy, long ukprn);
 
-        Task<Job> GetJob(long ukprn, long jobId);
+        Task<IlrJob> GetJob(long ukprn, long jobId);
 
-        Task<IEnumerable<Job>> GetAllJobs(long ukprn);
+        Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
     }
 }
