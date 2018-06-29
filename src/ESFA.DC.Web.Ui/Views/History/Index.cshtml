@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ESFA.DC.JobQueueManager.Models.Job>
+﻿@model IEnumerable<ESFA.DC.Jobs.Model.IlrJob>
 
 @{
     ViewData["Title"] = "Application Logs";
@@ -30,7 +30,7 @@
                     <td>@Html.DisplayFor(model => job.FileName)</td>
                     <td>@Convert.ToDateTime(job.DateTimeSubmittedUtc).ToString("MM/dd/yyyy hh:mm:ss.fff tt")</td>
                     <td>@Html.DisplayFor(model => job.Status)</td>
-                    <td>@Html.ActionLink("Validation Errors","Index","ValidationErrors",new {jobId = job.JobId})</td>
+                    <td>@Html.ActionLink("Validation Errors","Index","ValidationResults",new {jobId = job.JobId})</td>
                 </tr>
 
             }
