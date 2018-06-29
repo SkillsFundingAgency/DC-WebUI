@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Settings.Models;
-using ESFA.DC.JobQueueManager.Models;
+using ESFA.DC.Jobs.Model;
 using Polly;
 using Polly.Registry;
 
@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Services.JobQueue
             _httpClient = httpClient;
         }
 
-        public async Task<long> AddJobAsync(Job job)
+        public async Task<long> AddJobAsync(IlrJob job)
         {
             var policy = _pollyRegistry.Get<IAsyncPolicy>("HttpRetryPolicy");
             var response = await policy.ExecuteAsync(

@@ -27,6 +27,11 @@ namespace DC.Web.Ui.Services.ValidationErrors
         public async Task<IEnumerable<ValidationErrorDto>> GetValidationErrors(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/validationerrors/{ukprn}/{jobId}");
+            if (string.IsNullOrEmpty(data))
+            {
+                return null;
+            }
+
             return _serializationService.Deserialize<IEnumerable<ValidationErrorDto>>(data);
         }
     }

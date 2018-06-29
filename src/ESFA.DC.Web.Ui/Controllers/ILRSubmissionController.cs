@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Controllers
 {
+    [Route("ilr-submission")]
     public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -55,13 +56,6 @@ namespace DC.Web.Ui.Controllers
 
             try
             {
-                var ilrFile = new IlrFileViewModel()
-                {
-                    Filename = file.FileName,
-                    SubmissionDateTime = _dateTimeProvider.GetNowUtc(),
-                    FileSize = (decimal)file.Length / 1024
-                };
-
                 // push file to Storage
                 using (var outputStream = await _submissionService.GetBlobStream(file.FileName))
                 {
@@ -69,11 +63,8 @@ namespace DC.Web.Ui.Controllers
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(file.FileName, Ukprn);
-                ilrFile.JobId = jobId;
-
-                TempData["ilrSubmission"] = _serializationService.Serialize(ilrFile);
-                return RedirectToAction("Index", "Confirmation");
+                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn);
+                return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)
             {

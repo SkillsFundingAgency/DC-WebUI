@@ -9,12 +9,12 @@
 <div class="grid-row">
     <div class="column-two-thirds">
 
-        <h1 class="heading-xlarge">
-            Submit ILR data
+        <h1 class="heading-large">
+            Check learner data for errors
         </h1>
-        <div class="error-summary hidden" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1" id="error">
+        <div class="error-summary hidden" role="alert" aria-labelledby="error-summary-heading-1" tabindex="-1" id="error">
 
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading-1">
                 Invalid Filename
             </h2>
 
@@ -30,25 +30,25 @@
             Use this page to upload and submit an <abbr title="Individual Learner Record">ILR</abbr> file for the current return period.
         </p>
 
-        <p>Before submitting a file, make sure:</p>
+        <p>Make sure:</p>
         <ul class="list list-bullet">
-            <li>Learner data should be entered correctly</li>
-            <li>ILR files must be either <abbr title="Extensible Markup Language">XML</abbr> file format or a compressed ZIP file</li>
+            <li>learner data is entered correctly</li>
+            <li>the file is an <abbr title="Extensible Markup Language">XML</abbr> file format or a compressed ZIP file</li>
         </ul>
-
-        <form asp-controller="ILRSubmission" asp-action="Submit" method="post" enctype="multipart/form-data" id="ilrform"   >
+        <p>You can check your data for errors multiple times.</p>
+        <div class="panel panel-border-wide">
+            <p>
+                Learner records with errors will not be funded. Your funding may not be calculated correctly if we find any errors or warnings in your data.
+            </p>
+        </div>
+        <form asp-controller="ILRSubmission" asp-action="Submit" method="post" enctype="multipart/form-data" id="ilrform">
             <div id="upload-v2">
-                <p class="panel panel-border-narrow">
-                    <strong class="bold-small">
-                        WARNING: Any files currently being processed will be deleted
-                    </strong>
-                </p>
 
                 <div policy="@FeatureNames.FileSubmission" id="upload-select-area">
                     <label for="upload" class="button" role="button">
-                        <span class="">Select ILR file</span>
+                        <span class="">Select a file to check</span>
                     </label>
-                    <input  accept="text/xml" id="upload" class="choose-file" name="file" aria-controls="progress-container" aria-required="true" type="file" />
+                    <input accept="text/xml" id="upload" class="choose-file" name="file" aria-controls="progress-container" aria-required="true" type="file" />
                 </div>
 
                 <div id="file-details" class="hidden">
@@ -66,22 +66,11 @@
                     </div>
 
                     <div id="submit-file-area">
-                        <div class="form-group">
-                            <div class="multiple-choice" data-target="contact-by-email">
-                                <input id="email-confirmation" name="email-confirmation" type="checkbox" value="email-confirmation" checked="" aria-controls="contact-by-email" aria-expanded="true">
-                                <label for="email-confirmation">Send an email when the ILR file has been processed</label>
-                            </div>
-                            <div class="panel panel-border-narrow" id="contact-by-email" aria-hidden="false">
-                                <label class="form-label" for="contact-email">Email address</label>
-                                <input class="form-control" name="contact-email" type="text" id="contact-email" value="your.name@youremail.com">
-                            </div>
-                        </div>
-
                         <input type="hidden" name="ilr-submission-status" value="processed">
                         <input type="hidden" name="file-date" value="">
-                        
-                        <input policy="@FeatureNames.FileSubmission"  type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Confirm and upload ILR file" />
-                        
+
+                        <input policy="@FeatureNames.FileSubmission" type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Check File" />
+
                     </div>
                 </div>
             </div>
@@ -89,24 +78,21 @@
     </div>
 
     <div class="column-one-third">
-        <aside class="govuk-related-items">
-            <h2 class="heading-medium" id="return-period">
-                Return period 1
-
-                (R01)
-                closes on Tuesday 6th February 2018 at 6.00 PM
+        <div class="govuk-related-items">
+            <h2 class="heading-small">
+                Help and support
             </h2>
-            <!-- <h2 class="heading-medium">Return period 6 (R06)</h2> -->
+            <a href="/support" class="font-xsmall">
+                Contact the ESFA service desk
+            </a>
+        </div>
+
+        <aside class="interruption-card">
             <div class="data">
-                <span class="data-item bold-large" id="return-period-days">15 days</span>
-                <span class="data-item font-small">until close</span>
+                <span class="data-item bold-xlarge">15 days</span>
+                <p>until the current return period ends</p>
             </div>
-
-            <!-- <div class="panel panel-border-wide">
-                <p class="font-small">R06 ends on Tuesday 6th February 2018 at 6.00 PM</p>
-            </div> -->
-
-            <a href="/" id="ilr-dates">See all Return dates</a>
+            <p><a href="/ilr-submission/dates">See all return dates</a></p>
         </aside>
     </div>
 </div>
@@ -116,15 +102,11 @@
 <environment include="Development">
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/assets/javascripts/govuk/selection-buttons.js"></script>
-    <script src="~/assets/javascripts/govuk/details.polyfill.js"></script>
-    <script src="~/assets/javascripts/govuk/shim-links-with-button-role.js"></script>
-    <script src="~/assets/javascripts/govuk/show-hide-content.js"></script>
+  
 </environment>
 <environment exclude="Development">
 
     <script src="~/js/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/js/govuk.min.js" asp-append-version="true"></script>
 </environment>
 
 <script>
@@ -138,27 +120,9 @@
 
             // write the file details to the page
             var fileName = e.target.files[0].name;
-            var timestamp = new Date();
-            var monthNames = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"
-            ];
-            var time = timestamp.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-            var fileDate = timestamp.getDate() + " " + monthNames[timestamp.getMonth()] + " " + timestamp.getFullYear() + " at " + time;
+            
             $('.file-name').text(fileName);
-            $('.file-date').text(fileDate);
-            $('input[name="file-date"]').val(fileDate);
-
+            
             // revert the page when clicking the change button
             var changeButton = $('#change-file');
             changeButton.on('click', function () {
@@ -170,33 +134,8 @@
             })
         })
 
-        // uploading page timeout
-        if ($('#uploading-content').length) {
-            var currentPage = window.location.href.split("?")[0];
-            setTimeout(function () {
-                window.location.href = currentPage + "/../../ilr-upload-complete";
-            }, 9500);
-
-            var times = [
-                '14 minutes',
-                '8 minutes',
-                '5 minutes',
-                '2 minutes',
-                '1 minute',
-                '36 seconds',
-                '12 seconds',
-                '11 seconds',
-                '2 seconds',
-                '1 second'
-            ];
-
-            (function cycle() {
-                var time = times.shift();
-                $('#countdown').html(time);
-                times.push(time);
-                setTimeout(cycle, 1000);
-            })();
-        }
+        
+        
 
     })
 </script>

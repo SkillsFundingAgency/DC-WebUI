@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DC.Web.Ui.ViewModels
 {
-    public class IlrFileViewModel
+    public class ValidationResultViewModel
     {
         public string Filename { get; set; }
 
@@ -13,5 +13,11 @@ namespace DC.Web.Ui.ViewModels
         public decimal FileSize { get; set; }
 
         public long JobId { get; set; }
+
+        public string UploadedBy { get; set; }
+
+        public int TotalLearners { get; set; }
+
+        public int TotalErrors { get; set; }
     }
 }
