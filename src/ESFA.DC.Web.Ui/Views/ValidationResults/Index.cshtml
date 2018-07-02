@@ -83,7 +83,7 @@
         <p></p>
 
 
-        <form method="post">
+        <form asp-controller="ValidationResults" asp-action="Submit" method="post" id="valForm">
             <div class="form-group">
                 <fieldset>
                     <legend>
@@ -94,7 +94,7 @@
                     </legend>
 
                     <div class="multiple-choice" data-target="contact-by-email">
-                        <input id="radio-inline-1" type="radio" name="submit-file" value="true" aria-controls="contact-by-email" aria-expanded="false">
+                        <input id="radio-inline-1" type="radio" name="submitFile" value="true" aria-controls="contact-by-email" aria-expanded="false">
                         <label for="radio-inline-1">Yes, submit this data</label>
                     </div>
                     <div class="panel panel-border-narrow js-hidden" id="contact-by-email" aria-hidden="true">
@@ -106,12 +106,14 @@
                     </div>
 
                     <div class="multiple-choice">
-                        <input id="radio-inline-2" type="radio" name="submit-file" value="false">
+                        <input id="radio-inline-2" type="radio" name="submitFile" value="false">
                         <label for="radio-inline-2">No, I need to check the data again</label>
                     </div>
 
                 </fieldset>
             </div>
+            <input type="hidden" value=@Model.JobId id="jobId" name="jobId"/>
+            <input type="hidden" value=@Model.TotalLearners id="totalLearners" name="totalLearners"/>
 
             <div class="form-group">
                 <input class="button" type="submit" role="button" id="upload-complete-button" value="Continue">

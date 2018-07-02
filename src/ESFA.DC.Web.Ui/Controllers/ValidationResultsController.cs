@@ -9,6 +9,7 @@ using DC.Web.Ui.Services.ValidationErrors;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.JobStatus.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -49,6 +50,21 @@ namespace DC.Web.Ui.Controllers
             };
 
             return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult Submit(bool submitFile, long jobId, int totalLearners)
+        {
+            if (!submitFile)
+            {
+                _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed, totalLearners);
+                return RedirectToAction("Index", "SubmissionOptions");
+            }
+            else
+            {
+                _submissionService.UpdateJobStatus(jobId, JobStatusType.Ready, totalLearners);
+                return RedirectToAction("Index", "Confirmation");
+            }
         }
 
         [Route("Download")]

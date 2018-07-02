@@ -26,7 +26,7 @@ namespace DC.Web.Ui.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "ValidationResults");
+            return RedirectToAction("Index", "ValidationResults", new { jobId });
         }
     }
 }
