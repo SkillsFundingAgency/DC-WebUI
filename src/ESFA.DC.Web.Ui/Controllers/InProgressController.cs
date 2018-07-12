@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
+using DC.Web.Ui.Services.SubmissionService;
 using DC.Web.Ui.Services.ValidationErrors;
+using ESFA.DC.JobStatus.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
-    public class InProgressController : Controller
+    public class InProgressController : BaseController
     {
-        private readonly IValidationErrorsService _validationErrorsService;
+        private readonly ISubmissionService _submissionService;
 
-        public InProgressController(IValidationErrorsService validationErrorsService)
+        public InProgressController(ISubmissionService submissionService)
         {
-            _validationErrorsService = validationErrorsService;
+            _submissionService = submissionService;
         }
 
         public async Task<IActionResult> Index(long jobId)
         {
             ViewBag.AutoRefresh = true;
-            var valErrors = await _validationErrorsService.GetValidationErrors(User.Ukprn(), jobId);
-            if (valErrors == null)
+            var jobStatus = await _submissionService.GetJobStatus(jobId);
+            if (jobStatus != JobStatusType.Waiting)
             {
                 return View();
             }

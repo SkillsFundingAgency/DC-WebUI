@@ -18,5 +18,7 @@ namespace DC.Web.Ui.Services.SubmissionService
         Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
 
         Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners);
+
+        Task<JobStatusType> GetJobStatus(long jobId);
     }
 }

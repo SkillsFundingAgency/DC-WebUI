@@ -1,9 +1,6 @@
-﻿@using DC.Web.Ui.Services.Models
-@model DC.Web.Ui.ViewModels.ValidationResultViewModel
-
+﻿
 @{
     ViewData["Title"] = "Confirmation";
-    var correlationId = ViewData["CorrelationId"];
 }
 
 <div class="grid-row">
@@ -14,45 +11,20 @@
             </h1>
 
             <p class="font-medium" id="progress-update">
-                Your ILR submission for Return period 1
-
-                (R01)
-                is being processed. This should take around 15 minutes.
+                Your ILR submission for [Return Period] is being processed. Your data will take about [Time] to complete.
             </p>
         </div>
 
-        <h3 class="heading-medium">
-            Upload details
-        </h3>
-        <table class="table-font-xsmall">
-            <tbody>
-                <tr>
-                    <td><span class="bold">File name</span></td>
-                    <td id="file-name" >@Html.DisplayFor(model => model.Filename)</td>
-                </tr>
-                <tr>
-                    <td><span class="bold">Submission reference</span></td>
-                    <td id="file-correlationId" >@Html.DisplayFor(model => model.JobId)</td>
-                </tr>
-                <tr>
-                    <td><span class="bold">File size</span></td>
-                    <td id="file-size">@Html.DisplayFor(model => model.FileSize) KB</td>
-                </tr>
-                <tr>
-                    <td><span class="bold">Date and time</span></td>
-                    <td id="file-submissiondate" >@Html.DisplayFor(model => model.SubmissionDateTime)</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>
-           @* @Html.ActionLink("Click here to see validation report", "Index", "ValidationResults", new { jobId = Model.JobId })*@
-        </p>
-        <h2 class="heading-medium">What happens next?</h2>
-        <p>You will receive an email notification once your file has been processed.</p>
-
-        <p>If any warnings or errors are found in the data you submitted they will be listed in a report file which can be downloaded once your submission has been processed.</p>
-
-        <p><a class="button" href="/IlrSubmission" role="button" id="upload-complete-button">Finished</a></p>
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">What happens next?</h2>
+            <p>You will be able to <a href="ilr-submission-details?ilr-submission-status=processing">view details about this submission</a> once the data has been processed, including:</p>
+            <ul class="list list-bullet">
+                <li>calculated funding amounts</li>
+                <li>details about issues that might affect your funding</li>
+                <li>a detailed breakdown of learner funding in your organisation</li>
+            </ul>
+            <p>An email will be sent to <span class="bold">[EMAIL]</span> when your file has been processed.</p>
+        </div>
     </div>
 </div>
 

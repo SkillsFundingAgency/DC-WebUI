@@ -70,6 +70,12 @@ namespace DC.Web.Ui.Services.SubmissionService
             return _serializationService.Deserialize<IlrJob>(data);
         }
 
+        public async Task<JobStatusType> GetJobStatus(long jobId)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{jobId}/status");
+            return _serializationService.Deserialize<JobStatusType>(data);
+        }
+
         public async Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}");

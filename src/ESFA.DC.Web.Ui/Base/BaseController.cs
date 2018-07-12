@@ -8,13 +8,6 @@ namespace DC.Web.Ui.Base
     [Authorize]
     public abstract class BaseController : Controller
     {
-        private readonly AuthenticationSettings _authenticationSettings;
-
-        protected BaseController(AuthenticationSettings authenticationSettings)
-        {
-            _authenticationSettings = authenticationSettings;
-        }
-
-        protected long Ukprn => _authenticationSettings.Enabled == false ? 9999 : User.Ukprn();
+        protected long Ukprn => User.Ukprn();
     }
 }

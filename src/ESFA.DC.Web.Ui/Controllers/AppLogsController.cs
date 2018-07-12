@@ -16,8 +16,7 @@ namespace DC.Web.Ui.Controllers
         private readonly ISubmissionService _submissionService;
         private readonly ILogger _logger;
 
-        public AppLogsController(IAppLogsReader appLogsReader, ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings)
-            : base(authenticationSettings)
+        public AppLogsController(IAppLogsReader appLogsReader, ISubmissionService submissionService, ILogger logger)
         {
             _appLogsReader = appLogsReader;
             _submissionService = submissionService;

@@ -11,23 +11,14 @@ namespace DC.Web.Ui.Controllers
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ConfirmationController(AuthenticationSettings authenticationSettings, IDateTimeProvider dateTimeProvider)
-            : base(authenticationSettings)
+        public ConfirmationController(IDateTimeProvider dateTimeProvider)
         {
             _dateTimeProvider = dateTimeProvider;
         }
 
         public IActionResult Index()
         {
-           //// IlrFileViewModel ilrSubmission = null;
-           // var tempData = TempData["ilrSubmission"];
-           // if (tempData != null)
-           // {
-           //     ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
-           //     ilrSubmission.SubmissionDateTime = _dateTimeProvider.ConvertUtcToUk(ilrSubmission.SubmissionDateTime);
-           // }
-
-            return View(null);
+            return View();
         }
     }
 }
