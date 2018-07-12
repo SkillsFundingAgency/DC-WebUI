@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
@@ -9,6 +10,7 @@ using DC.Web.Ui.Services.ValidationErrors;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.JobStatus.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -20,8 +22,7 @@ namespace DC.Web.Ui.Controllers
         private readonly IValidationErrorsService _validationErrorsService;
         private readonly ISubmissionService _submissionService;
 
-        public ValidationResultsController(IValidationErrorsService validationErrorsService, ISubmissionService submissionService, AuthenticationSettings authenticationSettings)
-            : base(authenticationSettings)
+        public ValidationResultsController(IValidationErrorsService validationErrorsService, ISubmissionService submissionService)
         {
             _validationErrorsService = validationErrorsService;
             _submissionService = submissionService;
@@ -38,6 +39,8 @@ namespace DC.Web.Ui.Controllers
                 return View(new ValidationResultViewModel());
             }
 
+            var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
+
             var result = new ValidationResultViewModel
             {
                 JobId = jobId,
@@ -45,10 +48,26 @@ namespace DC.Web.Ui.Controllers
                 Filename = job.FileName,
                 SubmissionDateTime = job.DateTimeSubmittedUtc,
                 TotalLearners = job.TotalLearners,
-                UploadedBy = job.SubmittedBy
+                UploadedBy = job.SubmittedBy,
+                TotalErrors = valErrors.Count()
             };
 
             return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult Submit(bool submitFile, long jobId, int totalLearners)
+        {
+            if (!submitFile)
+            {
+                _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed, totalLearners);
+                return RedirectToAction("Index", "SubmissionOptions");
+            }
+            else
+            {
+                _submissionService.UpdateJobStatus(jobId, JobStatusType.Ready, totalLearners);
+                return RedirectToAction("Index", "Confirmation");
+            }
         }
 
         [Route("Download")]

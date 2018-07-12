@@ -25,8 +25,7 @@ namespace DC.Web.Ui.Controllers
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, AuthenticationSettings authenticationSettings, IJsonSerializationService serializationService, IDateTimeProvider dateTimeProvider)
-            : base(authenticationSettings)
+        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, IJsonSerializationService serializationService, IDateTimeProvider dateTimeProvider)
         {
             _submissionService = submissionService;
             _logger = logger;

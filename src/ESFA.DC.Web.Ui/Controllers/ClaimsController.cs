@@ -6,12 +6,7 @@ namespace DC.Web.Ui.Controllers
 {
     public class ClaimsController : BaseController
     {
-        public ClaimsController(AuthenticationSettings authenticationSettings)
-            : base(authenticationSettings)
-        {
-        }
-
-        public IActionResult Index()
+       public IActionResult Index()
         {
             return View();
         }

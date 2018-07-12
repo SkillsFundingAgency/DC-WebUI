@@ -26,7 +26,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockReader = new Mock<IAppLogsReader>();
             mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLog>>());
 
-            var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object, new AuthenticationSettings());
+            var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object);
             var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(Task<ViewResult>));
@@ -49,7 +49,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var submissionServiceMock = new Mock<ISubmissionService>();
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).Returns(Task.FromResult(new IlrJob()));
 
-            var controller = new AppLogsController(mockReader.Object, submissionServiceMock.Object, mockLogger.Object, new AuthenticationSettings());
+            var controller = new AppLogsController(mockReader.Object, submissionServiceMock.Object, mockLogger.Object);
             var result = controller.Index(It.IsAny<long>());
 
             result.Should().BeOfType(typeof(Task<ViewResult>));

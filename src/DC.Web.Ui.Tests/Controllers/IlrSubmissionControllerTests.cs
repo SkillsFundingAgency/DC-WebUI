@@ -34,7 +34,6 @@ namespace DC.Web.Ui.Tests.Controllers
             var controller = new ILRSubmissionController(
                 submissionServiceMock.Object,
                                 It.IsAny<ILogger>(),
-                                new AuthenticationSettings(),
                                 serialisationService,
                                 new Mock<IDateTimeProvider>().Object);
 
@@ -67,7 +66,6 @@ namespace DC.Web.Ui.Tests.Controllers
             var controller = new ILRSubmissionController(
                 submissionServiceMock.Object,
                 It.IsAny<ILogger>(),
-                new AuthenticationSettings(),
                 new Mock<IJsonSerializationService>().Object,
                 new Mock<IDateTimeProvider>().Object);
 
@@ -82,7 +80,6 @@ namespace DC.Web.Ui.Tests.Controllers
             var controller = new ILRSubmissionController(
                 submissionServiceMock.Object,
                 It.IsAny<ILogger>(),
-                new AuthenticationSettings(),
                 new Mock<IJsonSerializationService>().Object,
                 new Mock<IDateTimeProvider>().Object);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.JobStatus.Interface;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DC.Web.Ui.Services.SubmissionService
@@ -15,5 +16,9 @@ namespace DC.Web.Ui.Services.SubmissionService
         Task<IlrJob> GetJob(long ukprn, long jobId);
 
         Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
+
+        Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners);
+
+        Task<JobStatusType> GetJobStatus(long jobId);
     }
 }

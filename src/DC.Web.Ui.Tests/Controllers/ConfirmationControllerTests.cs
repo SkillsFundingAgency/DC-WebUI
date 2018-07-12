@@ -17,7 +17,7 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_ValidData()
         {
-            var controller = new ConfirmationController(new AuthenticationSettings(), new Mock<IDateTimeProvider>().Object);
+            var controller = new ConfirmationController(new Mock<IDateTimeProvider>().Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -34,7 +34,7 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_InValidData()
         {
-            var controller = new ConfirmationController(new AuthenticationSettings(), new Mock<IDateTimeProvider>().Object);
+            var controller = new ConfirmationController(new Mock<IDateTimeProvider>().Object);
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;

@@ -7,6 +7,7 @@ using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
+using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
@@ -69,10 +70,27 @@ namespace DC.Web.Ui.Services.SubmissionService
             return _serializationService.Deserialize<IlrJob>(data);
         }
 
+        public async Task<JobStatusType> GetJobStatus(long jobId)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{jobId}/status");
+            return _serializationService.Deserialize<JobStatusType>(data);
+        }
+
         public async Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}");
             return _serializationService.Deserialize<IEnumerable<IlrJob>>(data);
+        }
+
+        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners)
+        {
+            var job = new JobStatusDto()
+            {
+                JobId = jobId,
+                JobStatus = (int)status,
+                NumberOfLearners = totalLearners
+            };
+            return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
         }
     }
 }

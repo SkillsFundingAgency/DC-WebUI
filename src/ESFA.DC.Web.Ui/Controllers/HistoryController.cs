@@ -11,8 +11,7 @@ namespace DC.Web.Ui.Controllers
     {
         private readonly ISubmissionService _submissionService;
 
-        public HistoryController(ISubmissionService submissionService, AuthenticationSettings authenticationSettings)
-            : base(authenticationSettings)
+        public HistoryController(ISubmissionService submissionService)
         {
             _submissionService = submissionService;
         }
