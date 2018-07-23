@@ -32,7 +32,7 @@ namespace DC.Web.Ui.Ioc
         {
             builder.RegisterType<AppLogsReader>().As<IAppLogsReader>().InstancePerLifetimeScope();
             builder.RegisterType<SubmissionService>().As<ISubmissionService>().InstancePerLifetimeScope();
-            builder.RegisterType<PolicyService>().As<IPolicyService>().InstancePerLifetimeScope();
+            builder.RegisterType<AuthorizationPolicyService>().As<IAuthorizationPolicyService>().InstancePerLifetimeScope();
             builder.RegisterType<PermissionsQueryService>().As<IPermissionsQueryService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
