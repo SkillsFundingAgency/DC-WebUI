@@ -1,4 +1,5 @@
-﻿@using DC.Web.Ui.Enums
+﻿@model IEnumerable<DC.Web.Ui.Services.Models.SubmissionOption>
+
 
 @{
     ViewData["Title"] = "SubmissionOptions";
@@ -11,16 +12,15 @@
             <fieldset>
                 <h1 class="heading-large">Choose data you need to submit</h1>
 
-                <div class="multiple-choice">
+                @foreach (var so in Model)
+                {
+                    <div class="multiple-choice">
 
-                    <input id="ilr" type="radio" name="submissionType" value="@SubmissionTypes.Ilr" required="">
-                    <label for="ilr">Individualised Learner Record (ILR)</label>
-                </div>
-
-                <div class="multiple-choice">
-                    <input id="eas" type="radio" name="submissionType" value="@SubmissionTypes.Eas" required="">
-                    <label for="eas">Earnings Adjustment Statement (EAS)</label>
-                </div>
+                        <input id="@so.Name" type="radio" name="submissionType" value="@so.Name" required="">
+                        <label for="@so.Name">@so.Title</label>
+                    </div>
+                }
+                
 
             </fieldset>
         </div>

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using CsvHelper;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.SubmissionService;
-using DC.Web.Ui.Services.ValidationErrors;
+using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Jobs.Model;
@@ -36,12 +36,12 @@ namespace DC.Web.Ui.Controllers
             var job = await _submissionService.GetJob(User.Ukprn(), jobId);
             if (job == null)
             {
-                return View(new ValidationResultViewModel());
+                return View(new ValidationResult());
             }
 
             var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
 
-            var result = new ValidationResultViewModel
+            var result = new ValidationResult
             {
                 JobId = jobId,
                 FileSize = job.FileSize / 1024,

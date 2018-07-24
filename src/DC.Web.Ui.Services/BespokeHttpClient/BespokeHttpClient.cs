@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.JobQueue;
 
 namespace DC.Web.Ui.Services.BespokeHttpClient
 {

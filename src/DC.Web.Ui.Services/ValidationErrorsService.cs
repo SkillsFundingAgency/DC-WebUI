@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Serialization.Interfaces;
 using Newtonsoft.Json;
 
-namespace DC.Web.Ui.Services.ValidationErrors
+namespace DC.Web.Ui.Services
 {
     public class ValidationErrorsService : IValidationErrorsService
     {
@@ -17,10 +18,10 @@ namespace DC.Web.Ui.Services.ValidationErrors
         private readonly string _baseUrl;
         private readonly IJsonSerializationService _serializationService;
 
-        public ValidationErrorsService(IBespokeHttpClient httpClient, JobQueueApiSettings apiSettings, IJsonSerializationService serializationService)
+        public ValidationErrorsService(IBespokeHttpClient httpClient, ApiSettings apiSettings, IJsonSerializationService serializationService)
         {
             _httpClient = httpClient;
-            _baseUrl = apiSettings.BaseUrl;
+            _baseUrl = apiSettings.JobQueueBaseUrl;
             _serializationService = serializationService;
         }
 

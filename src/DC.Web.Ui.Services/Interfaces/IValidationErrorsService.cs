@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Services.Models;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 
-namespace DC.Web.Ui.Services.ValidationErrors
+namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IValidationErrorsService
     {

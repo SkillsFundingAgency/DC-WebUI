@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
-using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider;
@@ -47,16 +47,6 @@ namespace DC.Web.Ui.Tests.Controllers
 
             var result = controller.Submit(mockFile.Object).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
-
-            //controller.TempData.ContainsKey("ilrSubmission").Should().BeTrue();
-
-            // controller.TempData["ilrSubmission"].Should().BeAssignableTo<IlrFileViewModel>();
-            //var ilrFile = serialisationService.Deserialize<IlrFileViewModel>(controller.TempData["ilrSubmission"].ToString());
-            //ilrFile.Should().BeAssignableTo<IlrFileViewModel>();
-
-            //ilrFile.Filename.Should().Be("test file");
-            //ilrFile.SubmissionDateTime.Should().BeBefore(DateTime.Now);
-            //ilrFile.FileSize.Should().Be(1);
         }
 
         [Fact]

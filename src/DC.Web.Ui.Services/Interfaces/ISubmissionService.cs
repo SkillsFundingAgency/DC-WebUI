@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace DC.Web.Ui.Services.SubmissionService
+namespace DC.Web.Ui.Services.Interfaces
 {
     public interface ISubmissionService
     {

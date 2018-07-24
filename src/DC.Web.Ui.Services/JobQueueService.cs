@@ -4,12 +4,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using Polly;
 using Polly.Registry;
 
-namespace DC.Web.Ui.Services.JobQueue
+namespace DC.Web.Ui.Services
 {
     public class JobQueueService : IJobQueueService
     {
@@ -17,9 +18,9 @@ namespace DC.Web.Ui.Services.JobQueue
         private readonly IReadOnlyPolicyRegistry<string> _pollyRegistry;
         private readonly IBespokeHttpClient _httpClient;
 
-        public JobQueueService(JobQueueApiSettings apiSettings, IReadOnlyPolicyRegistry<string> pollyRegistry, IBespokeHttpClient httpClient)
+        public JobQueueService(ApiSettings apiSettings, IReadOnlyPolicyRegistry<string> pollyRegistry, IBespokeHttpClient httpClient)
         {
-            _apiBaseUrl = apiSettings.BaseUrl;
+            _apiBaseUrl = apiSettings.JobQueueBaseUrl;
             _pollyRegistry = pollyRegistry;
             _httpClient = httpClient;
         }

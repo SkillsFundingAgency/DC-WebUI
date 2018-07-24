@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Services.AppLogs;
-using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Logging.Interfaces;
