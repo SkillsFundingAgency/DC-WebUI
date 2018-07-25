@@ -6,9 +6,11 @@ using DC.Web.Ui.Base;
 using DC.Web.Ui.Enums;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Models;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DC.Web.Ui.Controllers
 {
@@ -41,25 +43,33 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(string submissionType)
         {
             _logger.LogInfo($"Ukprn : {User.Ukprn()}, submission option receievd {submissionType}");
 
             var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
-            if (data.Any(x => x.Name == submissionType))
+
+            if (!string.IsNullOrEmpty(submissionType))
             {
-                switch (submissionType)
+                if (data.Any(x => x.Name == submissionType))
                 {
-                    case "ILR":
-                        return RedirectToAction("Index", "ILRSubmission");
-                    default:
-                        throw new Exception("Not supported");
+                    switch (submissionType)
+                    {
+                        case "ILR":
+                            return RedirectToAction("Index", "ILRSubmission");
+                        default:
+                            throw new Exception("Not supported");
+                    }
                 }
             }
             else
             {
+                ViewData["IsValid"] = false;
                 _logger.LogInfo($"Ukprn : {User.Ukprn()}, Invalid submittion type selected for the provider{submissionType}");
             }
+
+            return View("Index", data);
         }
     }
 }

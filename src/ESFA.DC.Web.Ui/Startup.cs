@@ -54,7 +54,8 @@ namespace DC.Web.Ui
                 x.MultipartBodyLengthLimit = 524_288_000;
                 x.MultipartBoundaryLengthLimit = 524_288_000;
             });
-            services.AddMvc();
+            services.AddMvc()
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
             // Custom services
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthentication(authSettings);
