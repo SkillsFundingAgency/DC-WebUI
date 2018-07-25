@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.SubmissionService;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider.Interface;
@@ -40,7 +40,6 @@ namespace DC.Web.Ui.Controllers
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
-        [Authorize(Policy = FeatureNames.FileSubmission)]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)

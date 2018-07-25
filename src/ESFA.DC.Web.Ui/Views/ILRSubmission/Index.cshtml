@@ -44,7 +44,7 @@
         <form asp-controller="ILRSubmission" asp-action="Submit" method="post" enctype="multipart/form-data" id="ilrform">
             <div id="upload-v2">
 
-                <div policy="@FeatureNames.FileSubmission" id="upload-select-area">
+                <div id="upload-select-area">
                     <label for="upload" class="button" role="button">
                         <span class="">Select a file to check</span>
                     </label>
@@ -69,7 +69,7 @@
                         <input type="hidden" name="ilr-submission-status" value="processed">
                         <input type="hidden" name="file-date" value="">
 
-                        <input policy="@FeatureNames.FileSubmission" type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Check File" />
+                        <input type="submit" class="button" name="confirm-upload" id="confirm-upload" value="Check File" />
 
                     </div>
                 </div>

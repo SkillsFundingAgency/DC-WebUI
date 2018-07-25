@@ -2,23 +2,22 @@
 using System.Threading.Tasks;
 using DC.Web.Authorization.Base;
 using DC.Web.Authorization.Idams;
-using DC.Web.Authorization.Requirements;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DC.Web.Authorization.AuthorizationHandlers
 {
-    public class PolicyHandler : PolicyHandlerBase<IPolicyRequirement>
+    public class AuthorizationAuthorizationPolicyHandler : AuthorizationPolicyHandlerBase<IAuthorizationRequirement>
     {
-        private readonly IPolicyService _policyService;
+        private readonly IAuthorizationPolicyService _authorizationPolicyService;
 
-        public PolicyHandler(IPolicyService policyService, AuthenticationSettings authenticationSettings)
+        public AuthorizationAuthorizationPolicyHandler(IAuthorizationPolicyService authorizationPolicyService, AuthenticationSettings authenticationSettings)
             : base(authenticationSettings)
         {
-            _policyService = policyService;
+            _authorizationPolicyService = authorizationPolicyService;
         }
 
-        protected override Task HandleAsync(AuthorizationHandlerContext context, IPolicyRequirement requirement)
+        protected override Task HandleAsync(AuthorizationHandlerContext context, IAuthorizationRequirement requirement)
         {
             if (context.User?.Claims == null || !context.User.Claims.Any())
             {
@@ -32,7 +31,7 @@ namespace DC.Web.Authorization.AuthorizationHandlers
                 Value = x.Value
             });
 
-            if (_policyService.IsRequirementMet(idamsClaims, requirement))
+            if (_authorizationPolicyService.IsRequirementMet(idamsClaims, requirement))
             {
                 context.Succeed(requirement);
             }

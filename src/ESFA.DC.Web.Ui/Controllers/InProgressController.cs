@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.SubmissionService;
-using DC.Web.Ui.Services.ValidationErrors;
+using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.JobStatus.Interface;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
-using DC.Web.Ui.Services.JobQueue;
-using DC.Web.Ui.Services.Models;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
-using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace DC.Web.Ui.Services.SubmissionService
+namespace DC.Web.Ui.Services
 {
     public class SubmissionService : ISubmissionService
     {
@@ -27,13 +25,13 @@ namespace DC.Web.Ui.Services.SubmissionService
             IJobQueueService jobQueueService,
             CloudStorageSettings cloudStorageSettings,
             IBespokeHttpClient httpClient,
-            JobQueueApiSettings apiSettings,
+            ApiSettings apiSettings,
             IJsonSerializationService serializationService)
         {
             _jobQueueService = jobQueueService;
             _cloudStorageSettings = cloudStorageSettings;
             _httpClient = httpClient;
-            _baseUrl = apiSettings?.BaseUrl;
+            _baseUrl = apiSettings?.JobQueueBaseUrl;
             _serializationService = serializationService;
         }
 
