@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.AppLogs;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Models;
+using DC.Web.Ui.Settings.Models;
+using ESFA.DC.Jobs.Model;
+using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -15,13 +20,16 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void Index_Test()
         {
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
+
             var mockReader = new Mock<IAppLogsReader>();
             mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLog>>());
 
-            var controller = new AppLogsController(mockReader.Object);
+            var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object);
             var result = controller.Index(It.IsAny<long>());
 
-            result.Should().BeOfType(typeof(ViewResult));
+            result.Should().BeOfType(typeof(Task<ViewResult>));
         }
 
         [Fact]
@@ -35,11 +43,17 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockReader = new Mock<IAppLogsReader>();
             mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(appLogs);
 
-            var controller = new AppLogsController(mockReader.Object);
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
+
+            var submissionServiceMock = new Mock<ISubmissionService>();
+            submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).Returns(Task.FromResult(new IlrJob()));
+
+            var controller = new AppLogsController(mockReader.Object, submissionServiceMock.Object, mockLogger.Object);
             var result = controller.Index(It.IsAny<long>());
 
-            result.Should().BeOfType(typeof(ViewResult));
-            var modelresult = ((ViewResult)result).Model;
+            result.Should().BeOfType(typeof(Task<ViewResult>));
+            var modelresult = ((ViewResult)result.Result).Model;
             Assert.IsAssignableFrom<IEnumerable<AppLog>>(modelresult);
             ((IEnumerable<AppLog>)modelresult).Count().Should().Be(2);
         }

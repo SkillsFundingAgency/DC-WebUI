@@ -1,5 +1,4 @@
 ﻿using System;
-using DC.Web.Authorization.Requirements;
 using DC.Web.Authorization.Tests.HelperClasses;
 using DC.Web.Ui.Settings.Models;
 using FluentAssertions;
@@ -15,8 +14,8 @@ namespace DC.Web.Authorization.Tests
         public void AutenticationEnabled_False()
         {
             var authSettings = new AuthenticationSettings { Enabled = false };
-            var policyhandlerBaseMock = new PolicyBaseHandlerMock(authSettings);
-            var requirementMock = new Mock<IPolicyRequirement>();
+            var policyhandlerBaseMock = new AuthorizationPolicyBaseHandlerMock(authSettings);
+            var requirementMock = new Mock<IAuthorizationRequirement>();
             var authorizationHandlerContext = new AuthorizationHandlerContext(new[] { requirementMock.Object }, null, null);
 
             var result = policyhandlerBaseMock.HandleRequirementAsyncTest(
@@ -30,8 +29,8 @@ namespace DC.Web.Authorization.Tests
         public void AutenticationEnabled_True()
         {
             var authSettings = new AuthenticationSettings { Enabled = true };
-            var policyhandlerBaseMock = new PolicyBaseHandlerMock(authSettings);
-            var requirementMock = new Mock<IPolicyRequirement>();
+            var policyhandlerBaseMock = new AuthorizationPolicyBaseHandlerMock(authSettings);
+            var requirementMock = new Mock<IAuthorizationRequirement>();
             var authorizationHandlerContext = new AuthorizationHandlerContext(new[] { requirementMock.Object }, null, null);
 
            Assert.Throws<NotImplementedException>(() => policyhandlerBaseMock.HandleRequirementAsyncTest(

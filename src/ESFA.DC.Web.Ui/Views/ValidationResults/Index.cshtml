@@ -1,0 +1,134 @@
+﻿@model DC.Web.Ui.Services.Models.ValidationResult
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h1 class="heading-large">
+            Submit your data
+        </h1>
+
+        @if (Model.TotalErrors == 0)
+        {
+            <div class="success-summary">
+                <h3 class="heading-medium">Your data has no errors.</h3>
+                <p>There may be warnings to address about your data. <a href="#">Download the error report (CSV, 87kB)</a>. </p>
+            </div>
+        }
+        else
+        {
+        <div class="error-summary">
+            <h2 class="heading-medium">Your data has errors:</h2>
+
+            <br>
+
+            <ul class="list list-bullet">
+                <li>
+                    <h3 class="heading-small error-summary-heading">
+                        data required to calculate your funding is missing
+                    </h3>
+                    <p>
+                        <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018#how-to-submit-an-ilr-data-return">What data is required for each learner</a>
+                    </p>
+                </li>
+
+                <li>
+                    <h3 class="heading-small">
+                        the file is not formatted correctly
+                    </h3>
+                    <p>
+                        <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018#how-to-submit-an-ilr-data-return">How to format your ILR data file correctly</a>
+                    </p>
+                </li>
+            </ul>
+            
+            <p class="error-summary-list">
+                <a href="error-report">View more detail about the errors</a>.
+            </p>
+        </div>
+        }
+        <p>
+        </p><details>
+            <summary><span class="summary">View ILR file details</span></summary>
+            <table class="table-font-xsmall">
+                <caption class="heading-small">
+                    ILR file details
+                </caption>
+                <tbody>
+                    <tr>
+                        <td>Learners detected</td>
+                        <td class="file-name">@Model.TotalLearners</td>
+                    </tr>
+                    <tr>
+                        <td>File name</td>
+                        <td class="file-name">@Model.Filename</td>
+                    </tr>
+                    <tr>
+                        <td>File size</td>
+                        <td>@Model.FileSize kb</td>
+                    </tr>
+                    <tr>
+                        <td>Upload date and time</td>
+                        <td class="file-date">@Model.SubmissionDateTime</td>
+                    </tr>
+                    <tr>
+                        <td>Uploaded by</td>
+                        <td>@Model.UploadedBy</td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        <p></p>
+
+
+        <form asp-controller="ValidationResults" asp-action="Submit" method="post" id="valForm">
+            <div class="form-group">
+                <fieldset>
+                    <legend>
+                        <h3 class="heading-medium">
+                            Do you want to submit this data?
+                        </h3>
+
+                    </legend>
+
+                    <div class="multiple-choice" data-target="contact-by-email">
+                        <input id="radio-inline-1" type="radio" name="submitFile" value="true" aria-controls="contact-by-email" aria-expanded="false">
+                        <label for="radio-inline-1">Yes, submit this data</label>
+                    </div>
+                    <div class="panel panel-border-narrow js-hidden" id="contact-by-email" aria-hidden="true">
+                        <label class="form-label form-label-bold" for="contact-email">Email address (optional)</label>
+                        <div class="form-hint">
+                            Updates about this ILR submission will be sent to this email address.
+                        </div>
+                        <input class="form-control" type="email" id="contact-email" name="contact-email" value="youremail@test.com">
+                    </div>
+
+                    <div class="multiple-choice">
+                        <input id="radio-inline-2" type="radio" name="submitFile" value="false">
+                        <label for="radio-inline-2">No, I need to check the data again</label>
+                    </div>
+
+                </fieldset>
+            </div>
+            <input type="hidden" value=@Model.JobId id="jobId" name="jobId"/>
+            <input type="hidden" value=@Model.TotalLearners id="totalLearners" name="totalLearners"/>
+
+            <div class="form-group">
+                <input class="button" type="submit" role="button" id="upload-complete-button" value="Continue">
+            </div>
+        </form>
+    </div>
+
+    <div class="column-third">
+        <div class="govuk-related-items">
+            <h2 class="heading-small">
+                Help and support
+            </h2>
+            <a href="/version-7/support" class="font-xsmall">
+                Contact the ESFA service desk
+            </a>
+        </div>
+    </div>
+</div>

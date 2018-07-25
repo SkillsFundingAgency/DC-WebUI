@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DC.Web.Ui.Models;
-using DC.Web.Ui.Services.Models;
+﻿using DC.Web.Ui.Base;
+using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
-using Microsoft.AspNetCore.Authorization;
+using ESFA.DC.DateTime.Provider.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Controllers
 {
-    [Authorize]
-    public class ConfirmationController : Controller
+    public class ConfirmationController : BaseController
     {
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public ConfirmationController(IDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
         public IActionResult Index()
         {
-            IlrFileViewModel ilrSubmission = null;
-            var tempData = TempData["ilrSubmission"];
-            if (tempData != null)
-            {
-                ilrSubmission = JsonConvert.DeserializeObject<IlrFileViewModel>(tempData.ToString());
-            }
-
-            return View(ilrSubmission);
+            return View();
         }
     }
 }

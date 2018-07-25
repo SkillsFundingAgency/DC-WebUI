@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.JobQueue;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
-using ESFA.DC.JobQueueManager.Models;
+using ESFA.DC.Jobs.Model;
 using FluentAssertions;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null);
 
             submisisionService.GetBlobStream("test file").Should().BeAssignableTo<Task<CloudBlobStream>>();
         }
@@ -35,7 +35,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null);
             await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream("test file"));
         }
 
@@ -48,7 +48,7 @@ namespace DC.Web.Ui.Services.Tests
                 ContainerName = "test"
             };
 
-            var submisisionService = new SubmissionService.SubmissionService(null, cloudStorageSettings);
+            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null);
             await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream(null));
         }
 
@@ -63,10 +63,10 @@ namespace DC.Web.Ui.Services.Tests
 
             var queue = new Mock<IJobQueueService>();
 
-            var submisisionService = new SubmissionService.SubmissionService(queue.Object, cloudStorageSettings);
-            await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<long>());
+            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null);
+            await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>());
 
-            queue.Verify(x => x.AddJobAsync(It.IsAny<Job>()), Times.Once);
+            queue.Verify(x => x.AddJobAsync(It.IsAny<IlrJob>()), Times.Once);
         }
     }
 }
