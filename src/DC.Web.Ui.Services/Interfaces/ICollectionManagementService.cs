@@ -8,5 +8,7 @@ namespace DC.Web.Ui.Services.Interfaces
     public interface ICollectionManagementService
     {
         Task<IEnumerable<SubmissionOption>> GetSubmssionOptions(long ukprn);
+
+        Task<ReturnPeriod> GetPeriod(string collectionName, DateTime dateTimeUtc);
     }
 }

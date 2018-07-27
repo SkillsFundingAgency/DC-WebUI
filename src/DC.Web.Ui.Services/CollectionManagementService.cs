@@ -50,5 +50,19 @@ namespace DC.Web.Ui.Services
 
             return result;
         }
+
+        public async Task<Models.ReturnPeriod> GetPeriod(string collectionName, DateTime dateTimeUtc)
+        {
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/{dateTimeUtc}");
+            Models.ReturnPeriod result = null;
+
+            if (data != null)
+            {
+                var returnPeriod = _serializationService.Deserialize<ESFA.DC.CollectionsManagement.Models.ReturnPeriod>(data);
+                result = new Models.ReturnPeriod(returnPeriod.PeriodName);
+            }
+
+            return result;
+        }
     }
 }
