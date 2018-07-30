@@ -35,7 +35,7 @@ namespace DC.Web.Ui.Controllers
                 throw new Exception("invalid job id");
             }
 
-            var period = _collectionManagementService.GetPeriod()
+            //var period = _collectionManagementService.GetPeriod()
 
             return View();
         }

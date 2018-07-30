@@ -59,7 +59,7 @@ namespace DC.Web.Ui.Services
             if (data != null)
             {
                 var returnPeriod = _serializationService.Deserialize<ESFA.DC.CollectionsManagement.Models.ReturnPeriod>(data);
-                result = new Models.ReturnPeriod(returnPeriod.PeriodName);
+                result = new Models.ReturnPeriod(returnPeriod.PeriodNumber);
             }
 
             return result;

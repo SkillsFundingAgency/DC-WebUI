@@ -7,16 +7,16 @@ namespace DC.Web.Ui.Services.Models
 {
     public class ReturnPeriod
     {
-        private readonly int _periodNumber;
+        private readonly string _periodName;
 
-        public ReturnPeriod(string periodName)
+        public ReturnPeriod(int periodNumber)
         {
-            PeriodName = periodName;
-            int.TryParse(PeriodName?.Replace("R", "0"), out _periodNumber);
+            PeriodNumber = periodNumber;
+            _periodName = $"R{periodNumber}";
         }
 
-        public string PeriodName { get; set; }
+        public int PeriodNumber { get; set; }
 
-        public int PeriodNumber() => _periodNumber;
+        public string PeriodName() => _periodName;
     }
 }
