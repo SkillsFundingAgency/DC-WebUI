@@ -45,7 +45,13 @@ namespace DC.Web.Ui.Services
             return await cloudBlockBlob.OpenWriteAsync();
         }
 
-        public async Task<long> SubmitIlrJob(string fileName, decimal fileSizeBytes, string submittedBy, long ukprn)
+        public async Task<long> SubmitIlrJob(
+            string fileName,
+            decimal fileSizeBytes,
+            string submittedBy,
+            long ukprn,
+            string collectionName,
+            int period)
         {
             var job = new IlrJob()
             {
@@ -57,7 +63,9 @@ namespace DC.Web.Ui.Services
                 FileName = fileName,
                 IsFirstStage = true,
                 StorageReference = _cloudStorageSettings.ContainerName,
-                FileSize = fileSizeBytes
+                FileSize = fileSizeBytes,
+                CollectionName = collectionName,
+                PeriodNumber = period
             };
             return await _jobQueueService.AddJobAsync(job);
         }

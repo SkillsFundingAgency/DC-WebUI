@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Idams;
-using DC.Web.Ui.Services.Models;
 
 namespace DC.Web.Ui.Extensions
 {

@@ -16,7 +16,7 @@
     <PackageReference Include="ESFA.DC.CollectionsManagement.Models" Version="0.1.5-beta0001" />
     <PackageReference Include="ESFA.DC.CollectionsManagement.Services.Interface" Version="0.1.9-beta0001" />
     <PackageReference Include="ESFA.DC.ILR.ValidationErrors.Interface" Version="0.1.5-beta0001" />
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.4-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.JobStatus" Version="0.1.9-beta0001" />
     <PackageReference Include="ESFA.DC.JobStatus.Interface" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />

@@ -6,7 +6,6 @@ using DC.Web.Ui.Base;
 using DC.Web.Ui.Enums;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Services.Models;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +56,7 @@ namespace DC.Web.Ui.Controllers
                     switch (submissionType)
                     {
                         case "ILR":
-                            return RedirectToAction("Index", "ILRSubmission");
+                            return RedirectToAction("Index", "CollectionOptions", new { collectionType = submissionType });
                         default:
                             throw new Exception("Not supported");
                     }

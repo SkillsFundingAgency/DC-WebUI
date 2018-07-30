@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DC.Web.Ui.Services.Models
+﻿namespace DC.Web.Ui.Services.ViewModels
 {
     public class ValidationReport
     {

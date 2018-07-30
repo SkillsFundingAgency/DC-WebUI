@@ -1,6 +1,6 @@
-﻿namespace DC.Web.Ui.Services.Models
+﻿namespace DC.Web.Ui.Services.ViewModels
 {
-    public class ValidationError
+    public class ValidationErrorViewModel
     {
         public string ErrorMessage { get; set; }
 

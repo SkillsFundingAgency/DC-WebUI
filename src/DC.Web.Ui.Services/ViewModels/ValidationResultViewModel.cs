@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DC.Web.Ui.Services.Models
+namespace DC.Web.Ui.Services.ViewModels
 {
-    public class ValidationResult
+    public class ValidationResultViewModel
     {
         public string Filename { get; set; }
 

@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
 using Microsoft.Extensions.Configuration;
 

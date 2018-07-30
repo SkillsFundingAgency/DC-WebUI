@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.Models;
+using DC.Web.Ui.Services.ViewModels;
+using ESFA.DC.CollectionsManagement.Models;
 
 namespace DC.Web.Ui.Services.Interfaces
 {
     public interface ICollectionManagementService
     {
-        Task<IEnumerable<SubmissionOption>> GetSubmssionOptions(long ukprn);
+        Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptions(long ukprn);
 
-        Task<ReturnPeriod> GetPeriod(string collectionName, DateTime dateTimeUtc);
+        Task<ReturnPeriodViewModel> GetCurrentPeriod(string collectionName);
+
+        Task<IEnumerable<CollectionViewModel>> GetAvailableCollections(long ukprn, string collectionType);
+
+        Task<bool> IsValidCollection(long ukprn, string collectionType);
     }
 }

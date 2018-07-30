@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DC.Web.Ui.Services.Models
+namespace DC.Web.Ui.Services.ViewModels
 {
-    public class IlrSubmissionMessage
+    public class IlrSubmissionMessageViewModel
     {
         public string Filename { get; set; }
 

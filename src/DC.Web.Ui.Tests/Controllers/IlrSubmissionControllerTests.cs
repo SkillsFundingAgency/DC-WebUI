@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
+using DC.Web.Ui.Services;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
@@ -28,14 +29,21 @@ namespace DC.Web.Ui.Tests.Controllers
             var submissionServiceMock = new Mock<ISubmissionService>();
             var mockCloudBlob = new Mock<CloudBlobStream>();
             submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(Task.FromResult(mockCloudBlob.Object));
-            submissionServiceMock.Setup(x => x.SubmitIlrJob("test file", It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>())).Returns(Task.FromResult((long)1));
+            submissionServiceMock.Setup(x => x.SubmitIlrJob(
+                "test file",
+                It.IsAny<decimal>(),
+                It.IsAny<string>(),
+                It.IsAny<long>(),
+                It.IsAny<string>(),
+                It.IsAny<int>())).Returns(Task.FromResult((long)1));
 
             var serialisationService = new JsonSerializationService();
             var controller = new ILRSubmissionController(
                 submissionServiceMock.Object,
                                 It.IsAny<ILogger>(),
                                 serialisationService,
-                                new Mock<IDateTimeProvider>().Object);
+                                new Mock<IDateTimeProvider>().Object,
+                                new Mock<ICollectionManagementService>().Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -57,7 +65,8 @@ namespace DC.Web.Ui.Tests.Controllers
                 submissionServiceMock.Object,
                 It.IsAny<ILogger>(),
                 new Mock<IJsonSerializationService>().Object,
-                new Mock<IDateTimeProvider>().Object);
+                new Mock<IDateTimeProvider>().Object,
+                new Mock<ICollectionManagementService>().Object);
 
             var result = controller.Submit(null).Result;
             result.Should().BeOfType(typeof(ViewResult));
@@ -71,7 +80,8 @@ namespace DC.Web.Ui.Tests.Controllers
                 submissionServiceMock.Object,
                 It.IsAny<ILogger>(),
                 new Mock<IJsonSerializationService>().Object,
-                new Mock<IDateTimeProvider>().Object);
+                new Mock<IDateTimeProvider>().Object,
+                new Mock<ICollectionManagementService>().Object);
 
             var mockFile = new Mock<IFormFile>();
             mockFile.SetupGet(x => x.FileName).Returns("test file");

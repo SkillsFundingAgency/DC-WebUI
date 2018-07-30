@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Azure.Amqp.Framing;
-
-namespace DC.Web.Ui.Services.Models
+﻿namespace DC.Web.Ui.Services.ViewModels
 {
-    public class ReturnPeriod
+    public class ReturnPeriodViewModel
     {
         private readonly string _periodName;
 
-        public ReturnPeriod(int periodNumber)
+        public ReturnPeriodViewModel(int periodNumber)
         {
             PeriodNumber = periodNumber;
             _periodName = $"R{periodNumber}";

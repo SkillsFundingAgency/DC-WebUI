@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Services.Models;
+using DC.Web.Ui.Services.ViewModels;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Logging.Interfaces;
@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Tests.Controllers
             mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
 
             var mockReader = new Mock<IAppLogsReader>();
-            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLog>>());
+            mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(It.IsAny<IEnumerable<AppLogViewModel>>());
 
             var controller = new AppLogsController(mockReader.Object, null, mockLogger.Object);
             var result = controller.Index(It.IsAny<long>());
@@ -35,10 +35,10 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void Index_Test_Data()
         {
-            var appLogs = new List<AppLog>()
+            var appLogs = new List<AppLogViewModel>()
             {
-                new AppLog(),
-                new AppLog()
+                new AppLogViewModel(),
+                new AppLogViewModel()
             };
             var mockReader = new Mock<IAppLogsReader>();
             mockReader.Setup(x => x.GetApplicationLogs(It.IsAny<long>())).Returns(appLogs);
@@ -54,8 +54,8 @@ namespace DC.Web.Ui.Tests.Controllers
 
             result.Should().BeOfType(typeof(Task<ViewResult>));
             var modelresult = ((ViewResult)result.Result).Model;
-            Assert.IsAssignableFrom<IEnumerable<AppLog>>(modelresult);
-            ((IEnumerable<AppLog>)modelresult).Count().Should().Be(2);
+            Assert.IsAssignableFrom<IEnumerable<AppLogViewModel>>(modelresult);
+            ((IEnumerable<AppLogViewModel>)modelresult).Count().Should().Be(2);
         }
     }
 }
