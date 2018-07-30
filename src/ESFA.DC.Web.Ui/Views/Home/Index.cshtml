@@ -3,53 +3,71 @@
     ViewBag.PageId = "home-page";
     ViewBag.HideNavBar = true;
 }
+<main class="govuk-main-wrapper" id="content" role="main">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl">
+                Submit learner data
+            </h1>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">
-            Submit learner data
-        </h1>
+            <p class="govuk-body-l">This service is for training providers that receive funding directly from the Education and Skills Funding Agency.</p>
 
-        <p>Use this service if you receive funding directly from the Education and Skills Funding Agency (ESFA) and need to submit learner data. The ESFA uses this to calculate the funding earned by providers.</p>
+            <p>Use this service to validate and submit:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>Individualised learner records (ILR)</li>
+                <li>Earnings adjustment statements (EAS)</li>
+                <li>ESFA supplementary data - including ESF (European Social Fund)</li>
+                <li>Funding claims</li>
+            </ul>
 
-        <p>You can submit:</p>
-        <ul class="list list-bullet">
-            <li>Individualised Learner Records (ILR)</li>
-            <li>Earnings Adjustment Statements (EAS)</li>				
-        </ul>
+            <p>
+                You can also view and download reports for data you’ve submitted.
+            </p>
 
-        <p>
-            You can also:
-        </p>
-        <ul class="list list-bullet">
-            <li>view reports for completed ILR returns</li>
-            <li>download report files for compelted ILR returns</li>				
-        </ul>			
-			
-        <p>
-            You need to have an account with the government's <a href="#" rel="external" title="This will open in a new window">Identity Management Services system</a> to use this service.
-        </p>
+            <a href="./submission-options" class="govuk-button govuk-button--start">Sign in</a>
 
-        <p>
-            <a href="/submission-options" class="button button-start">Sign in</a>
-        </p>
+            <h2 class="govuk-heading-m">Before you start</h2>
+            <p>You will need:</p>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>Your IdAMS (Information Management Services system) login details</li>
+                <li>If you’re submitting ILR or EAS data, an XML or Zip file to upload</li>
+            </ul>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            <aside class="app-related-items" role="complementary">
+                <h2 class="govuk-heading-m" id="subsection-title">
+                    Help and support
+                </h2>
+                <p><span class="govuk-!-font-weight-bold">ESFA support desk</span></p>
+                <p>
+                    Telephone: 0370 267 0001<br>
+
+                    Monday to Thursday, 8:30am to 5:00pm<br>
+                    Friday, 8:30am to 4:00pm<br>
+                    <a href="#">Find out about call charges</a>
+                </p>
+                <p>Email:  <a href="sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
+                <h2 class="govuk-heading-m" id="subsection-title">
+                    Related content
+                </h2>
+                <nav role="navigation" aria-labelledby="subsection-title">
+                    <ul class="govuk-list govuk-!-font-size-16">
+                        <li>
+                            <a href="https://www.gov.uk/guidance/how-to-become-an-approved-training-provider-and-bid-for-funding">
+                                How to become an approved training provider
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Timetable of submission deadlines
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+     
+        </div>
     </div>
-
-    <div class="column-third">
-        <aside class="govuk-related-items">
-            <h2 class="heading-medium">
-                Related content
-            </h2>
-
-            <ul class="list">
-                <li>
-                    <a href="https://www.gov.uk/guidance/how-to-become-an-approved-training-provider-and-bid-for-funding">How to become an approved training provider and bid for funding</a>
-                </li>
-                <li>
-                    <a href="/version-7/support">
-                        Contact the ESFA service desk
-                    </a>
-                </li>
-            </ul></aside>
-    </div>
-</div>
+</main>

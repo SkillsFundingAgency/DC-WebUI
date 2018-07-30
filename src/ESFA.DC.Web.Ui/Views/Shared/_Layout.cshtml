@@ -9,6 +9,7 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
+    
     <!--[if gt IE 8]><!-->
     <link rel="stylesheet" media="screen" href="~/assets/stylesheets/govuk-template.css" /><!--<![endif]-->
     <!--[if IE 6]><link rel="stylesheet" media="screen" href="~/assets/stylesheets/govuk-template-ie6.css"/><![endif]-->
@@ -29,6 +30,8 @@
     <link href="~/assets/stylesheets/govuk-elements-styles.css" rel="stylesheet" type="text/css">
     <!--[if IE 6]><link href="~/assets/stylesheets/govuk-elements-styles-ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if IE 8]><link href="~/assets/stylesheets/govuk-elements-styles-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link rel="stylesheet" media="screen" href="~/assets/stylesheets/application.css" />
+    
     <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="~/assets/images/opengraph-image.png">
@@ -37,7 +40,7 @@
     {
         <meta http-equiv="refresh" content="5">
     }
-   
+
 
     <environment include="Development">
         <link rel="stylesheet" media="all" href="~/css/site.css" />
@@ -50,7 +53,7 @@
 
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>
+<body class="govuk-template-body">
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <div id="skiplink-container">
@@ -86,11 +89,11 @@
 
     <div id="global-header-bar"></div>
 
-    <div id="content" role="main">
-        <div class="phase-banner">
-            <p>
-                <strong class="phase-tag">BETA</strong>
-                <span>This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
+    <div class="govuk-width-container">
+        <div class="govuk-phase-banner">
+            <p class="govuk-phase-banner__content">
+                <strong class="govuk-tag govuk-phase-banner__content__tag">BETA</strong>
+                <span class="govuk-phase-banner__text">This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
             </p>
         </div>
         @if (@User.Identity.IsAuthenticated)
