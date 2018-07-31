@@ -7,6 +7,7 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
@@ -24,32 +25,72 @@ namespace DC.Web.Ui.Controllers
         private readonly ILogger _logger;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICollectionManagementService _collectionManagementService;
+        private readonly string TempDataKey = "CollectionType";
 
-        public ILRSubmissionController(ISubmissionService submissionService, ILogger logger, IJsonSerializationService serializationService, IDateTimeProvider dateTimeProvider)
+        public ILRSubmissionController(
+            ISubmissionService submissionService,
+            ILogger logger,
+            IJsonSerializationService serializationService,
+            IDateTimeProvider dateTimeProvider,
+            ICollectionManagementService collectionManagementService)
         {
             _submissionService = submissionService;
             _logger = logger;
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
+            _collectionManagementService = collectionManagementService;
         }
 
-        public IActionResult Index()
+        public string CollectionName
         {
+            get
+            {
+                return (string)TempData[TempDataKey];
+            }
+
+            set
+            {
+                TempData[TempDataKey] = value;
+            }
+        }
+
+        public IActionResult Index(string collectionName)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+            {
+                _logger.LogWarning("collection type passed in as null or empty");
+                throw new Exception("null or empty collection type");
+            }
+
+            CollectionName = collectionName;
+
             return View();
         }
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Submit(IFormFile file)
         {
             if (file == null)
             {
-                return Index();
+                return Index(CollectionName);
             }
 
             if (file.Length == 0)
             {
-                return Index();
+                return Index(CollectionName);
+            }
+
+            //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
+
+            var period = await _collectionManagementService.GetCurrentPeriod(CollectionName);
+
+            if (period == null)
+            {
+                _logger.LogWarning($"No active period for collection : {CollectionName}");
+                throw new Exception($"No active period for collection : {CollectionName}");
             }
 
             try
@@ -61,7 +102,7 @@ namespace DC.Web.Ui.Controllers
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn);
+                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn, CollectionName, period.PeriodNumber);
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)

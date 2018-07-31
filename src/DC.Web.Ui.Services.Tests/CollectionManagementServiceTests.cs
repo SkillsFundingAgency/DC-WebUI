@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.Serialization.Json;

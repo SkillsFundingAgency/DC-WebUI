@@ -10,7 +10,7 @@ namespace DC.Web.Ui.Services.Interfaces
     {
         Task<CloudBlobStream> GetBlobStream(string fileName);
 
-        Task<long> SubmitIlrJob(string fileName, decimal fileSizeBytes, string submittedBy, long ukprn);
+        Task<long> SubmitIlrJob(string fileName, decimal fileSizeBytes, string submittedBy, long ukprn, string collectionName, int period);
 
         Task<IlrJob> GetJob(long ukprn, long jobId);
 

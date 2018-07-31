@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Services.Models;
+using DC.Web.Ui.Services.ViewModels;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
@@ -24,9 +24,9 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
 
-            var items = new List<SubmissionOption>()
+            var items = new List<SubmissionOptionViewModel>()
             {
-                new SubmissionOption()
+                new SubmissionOptionViewModel()
                 {
                     Name = "ILR",
                     Title = "ILR data submission"
@@ -41,7 +41,7 @@ namespace DC.Web.Ui.Tests.Controllers
 
             result.Should().BeOfType(typeof(ViewResult));
             var resultModel = (ViewResult)result;
-            resultModel.Model.As<IEnumerable<SubmissionOption>>().Count().Should().Be(1);
+            resultModel.Model.As<IEnumerable<SubmissionOptionViewModel>>().Count().Should().Be(1);
         }
     }
 }
