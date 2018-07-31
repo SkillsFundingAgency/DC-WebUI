@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Serialization.Interfaces;
-using Newtonsoft.Json;
 
-namespace DC.Web.Ui.Services
+namespace DC.Web.Ui.Services.Services
 {
     public class ValidationErrorsService : IValidationErrorsService
     {

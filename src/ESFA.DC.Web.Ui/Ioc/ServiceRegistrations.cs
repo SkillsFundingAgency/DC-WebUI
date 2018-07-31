@@ -10,6 +10,7 @@ using DC.Web.Ui.Services;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTime.Provider;
 using ESFA.DC.DateTime.Provider.Interface;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using FluentAssertions;

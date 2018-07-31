@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
@@ -10,7 +6,7 @@ using ESFA.DC.Jobs.Model;
 using Polly;
 using Polly.Registry;
 
-namespace DC.Web.Ui.Services
+namespace DC.Web.Ui.Services.Services
 {
     public class JobQueueService : IJobQueueService
     {

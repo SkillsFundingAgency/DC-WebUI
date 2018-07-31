@@ -7,14 +7,9 @@ using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.ViewModels;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.CollectionsManagement.Models;
-using ESFA.DC.Jobs.Model;
-using ESFA.DC.JobStatus.Dto;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace DC.Web.Ui.Services
+namespace DC.Web.Ui.Services.Services
 {
     public class CollectionManagementService : ICollectionManagementService
     {
