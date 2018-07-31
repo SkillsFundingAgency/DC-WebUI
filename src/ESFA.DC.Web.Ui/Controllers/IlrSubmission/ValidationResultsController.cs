@@ -11,6 +11,7 @@ using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.KeyGenerator.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
@@ -21,17 +22,21 @@ namespace DC.Web.Ui.Controllers
     {
         private readonly IValidationErrorsService _validationErrorsService;
         private readonly ISubmissionService _submissionService;
+        private readonly IReportService _reportService;
+        private readonly IKeyGenerator _keyGenerator;
 
-        public ValidationResultsController(IValidationErrorsService validationErrorsService, ISubmissionService submissionService)
+        public ValidationResultsController(IValidationErrorsService validationErrorsService, ISubmissionService submissionService, IReportService reportService, IKeyGenerator keyGenerator)
         {
             _validationErrorsService = validationErrorsService;
             _submissionService = submissionService;
+            _reportService = reportService;
+            _keyGenerator = keyGenerator;
         }
 
         [Route("")]
         public async Task<IActionResult> Index(long jobId)
         {
-            ViewBag.JobId = jobId;
+            SetJobId(jobId);
 
             var job = await _submissionService.GetJob(User.Ukprn(), jobId);
             if (job == null)
@@ -56,34 +61,26 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpPost]
-        public IActionResult Submit(bool submitFile, long jobId, int totalLearners)
+        public IActionResult Submit(bool submitFile, int totalLearners)
         {
             if (!submitFile)
             {
-                _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed, totalLearners);
+                _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Completed, totalLearners);
                 return RedirectToAction("Index", "SubmissionOptions");
             }
             else
             {
-                _submissionService.UpdateJobStatus(jobId, JobStatusType.Ready, totalLearners);
+                _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Ready, totalLearners);
                 return RedirectToAction("Index", "Confirmation");
             }
         }
 
         [Route("Download")]
-        public async Task<FileResult> Download(long jobId)
+        public async Task<FileResult> Download()
         {
-            //TODO:This will be removed/refactored based on actual report requirement
-            var data = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
-            var stream = new MemoryStream();
-            var csvWriter = new StreamWriter(stream, Encoding.GetEncoding("shift-jis"));
-            var csv = new CsvWriter(csvWriter);
-            csv.WriteRecords(data);
-            csvWriter.Flush();
-            csv.Flush();
-
-            stream.Seek(0, SeekOrigin.Begin);
-            return File(stream, "text/csv", $"{Ukprn}_{jobId}_ValidationErrors.csv");
+            var validationErrorsKey = $"{User.Ukprn()}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv";
+            var csvBlobStream = await _reportService.GetReportStreamAsync(validationErrorsKey);
+            return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_ValidationErrors.csv");
         }
     }
 }

@@ -9,6 +9,24 @@ namespace DC.Web.Ui.Base
     [Authorize]
     public abstract class BaseController : Controller
     {
+        public long ContextJobId
+        {
+            get
+            {
+                if (TempData.ContainsKey("JobId"))
+                {
+                    return long.Parse(TempData["JobId"].ToString());
+                }
+
+                return 0;
+            }
+        }
+
         protected long Ukprn => User.Ukprn();
+
+        protected void SetJobId(long jobId)
+        {
+            TempData["JobId"] = jobId;
+        }
     }
 }

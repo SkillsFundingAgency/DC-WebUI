@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
@@ -7,26 +8,50 @@ using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.ViewModels;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DC.Web.Ui.Services.Services
 {
     public class ReportService : IReportService
     {
-        private readonly IBespokeHttpClient _httpClient;
-        private readonly string _baseUrl;
-        private readonly IJsonSerializationService _serializationService;
+        private readonly CloudStorageSettings _cloudStorageSettings;
+        private readonly ILogger _logger;
 
-        public ReportService(IBespokeHttpClient httpClient, ApiSettings apiSettings, IJsonSerializationService serializationService)
+        public ReportService(ILogger logger, CloudStorageSettings cloudStorageSettings)
         {
-            _httpClient = httpClient;
-            _baseUrl = apiSettings.JobQueueBaseUrl;
-            _serializationService = serializationService;
+            _cloudStorageSettings = cloudStorageSettings;
+            _logger = logger;
         }
 
-        public Task<ValidationReport> GetValidationReport(long ukprn, long jobId)
+        public async Task<Stream> GetReportStreamAsync(string fileName)
         {
-           throw new NotImplementedException();
+            _logger.LogInfo($"Getting report : {fileName}");
+            try
+            {
+                var cloudBlockBlob = GetBlob(fileName);
+                if (await cloudBlockBlob.ExistsAsync())
+                {
+                    return await cloudBlockBlob.OpenReadAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error occured trying to report : {fileName}", ex);
+                throw;
+            }
+
+            return null;
+        }
+
+        public CloudBlockBlob GetBlob(string fileName)
+        {
+            var cloudStorageAccount = CloudStorageAccount.Parse(_cloudStorageSettings.ConnectionString);
+            var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(_cloudStorageSettings.ContainerName);
+            return cloudBlobContainer.GetBlockBlobReference(fileName);
         }
     }
 }
