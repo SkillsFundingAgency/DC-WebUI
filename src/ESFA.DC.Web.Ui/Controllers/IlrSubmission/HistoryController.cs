@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Settings.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Controllers.IlrSubmission
 {
     public class HistoryController : BaseController
     {

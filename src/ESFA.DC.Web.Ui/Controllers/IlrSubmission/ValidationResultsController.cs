@@ -1,21 +1,14 @@
-﻿using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using CsvHelper;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.ViewModels;
-using DC.Web.Ui.Settings.Models;
-using DC.Web.Ui.ViewModels;
-using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.KeyGenerator.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Controllers.IlrSubmission
 {
     [Route("validation-results")]
     public class ValidationResultsController : BaseController

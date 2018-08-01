@@ -1,4 +1,6 @@
-﻿namespace DC.Web.Ui.Services.ViewModels
+﻿using System.Globalization;
+
+namespace DC.Web.Ui.Services.ViewModels
 {
     public class ReturnPeriodViewModel
     {
@@ -7,7 +9,7 @@
         public ReturnPeriodViewModel(int periodNumber)
         {
             PeriodNumber = periodNumber;
-            _periodName = $"R{periodNumber}";
+            _periodName = $"R{periodNumber.ToString("00", NumberFormatInfo.InvariantInfo)}";
         }
 
         public int PeriodNumber { get; set; }
