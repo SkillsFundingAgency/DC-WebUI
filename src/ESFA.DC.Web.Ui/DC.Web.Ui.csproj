@@ -47,6 +47,7 @@
     <ProjectReference Include="..\DC.Web.Authorization\DC.Web.Authorization.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Services\DC.Web.Ui.Services.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
+    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

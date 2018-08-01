@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DC.Web.Ui.Services.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.AppLogs
 {

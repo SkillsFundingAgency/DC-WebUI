@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
+    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

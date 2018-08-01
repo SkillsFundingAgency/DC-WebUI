@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Services.ViewModels;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.KeyGenerator.Interface;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
@@ -31,6 +31,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _reportService = reportService;
         }
 
+        private string _reportFileName => $"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv";
+
         [Route("")]
         public async Task<IActionResult> Index(long jobId)
         {
@@ -47,10 +49,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
             Logger.LogInfo($"Got validation results for job id : {jobId}");
 
+            var fileSize = await _reportService.GetReportFileSizeAsync(_reportFileName);
+            Logger.LogInfo($"Got report size for job id : {jobId}");
+
             var result = new ValidationResultViewModel
             {
                 JobId = jobId,
-                FileSize = job.FileSize / 1024,
+                ReportFileSize = fileSize,
                 Filename = job.FileName,
                 SubmissionDateTime = job.DateTimeSubmittedUtc,
                 TotalLearners = job.TotalLearners,
@@ -83,12 +88,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [Route("Download")]
         public async Task<FileResult> Download()
         {
-            Logger.LogInfo($"Downlaod csv request for Job id : {ContextJobId}");
+            Logger.LogInfo($"Downlaod csv request for Job id : {ContextJobId}, Filename : {_reportFileName}");
 
             try
             {
-                var validationErrorsKey = $"{User.Ukprn()}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv";
-                var csvBlobStream = await _reportService.GetReportStreamAsync(validationErrorsKey);
+                var csvBlobStream = await _reportService.GetReportStreamAsync(_reportFileName);
                 return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_ValidationErrors.csv");
             }
             catch (Exception e)

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Ui.Services\DC.Web.Ui.Services.csproj" />
+    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

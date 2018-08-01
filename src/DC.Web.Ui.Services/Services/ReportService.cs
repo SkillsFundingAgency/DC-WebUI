@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Services.ViewModels;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Logging.Interfaces;
@@ -44,6 +43,26 @@ namespace DC.Web.Ui.Services.Services
             }
 
             return null;
+        }
+
+        public async Task<long> GetReportFileSizeAsync(string fileName)
+        {
+            _logger.LogInfo($"Getting report file size : {fileName}");
+            try
+            {
+                var cloudBlockBlob = GetBlob(fileName);
+                if (await cloudBlockBlob.ExistsAsync())
+                {
+                    return cloudBlockBlob.Properties.Length;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error occured trying to get report size : {fileName}", ex);
+                throw;
+            }
+
+            return 0;
         }
 
         public CloudBlockBlob GetBlob(string fileName)

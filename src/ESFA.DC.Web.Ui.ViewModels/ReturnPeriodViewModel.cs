@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace DC.Web.Ui.Services.ViewModels
+namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class ReturnPeriodViewModel
     {
