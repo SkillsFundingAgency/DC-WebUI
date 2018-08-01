@@ -13,12 +13,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     public class SubmissionOptionsController : BaseController
     {
         private readonly ICollectionManagementService _collectionManagementService;
-        private readonly ILogger _logger;
 
         public SubmissionOptionsController(ICollectionManagementService collectionManagementService, ILogger logger)
+            : base(logger)
         {
             _collectionManagementService = collectionManagementService;
-            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -27,11 +26,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             if (data.Any())
             {
-                _logger.LogInfo($"Ukprn : {User.Ukprn()}, returned {data.Count()} collection types ");
+                Logger.LogInfo($"Ukprn : {User.Ukprn()}, returned {data.Count()} collection types ");
                 return View(data);
             }
 
-            _logger.LogInfo($"Ukprn : {User.Ukprn()}, returned no available collection types ");
+            Logger.LogInfo($"Ukprn : {User.Ukprn()}, returned no available collection types ");
 
             //TODO: check whih page to redirec the user to when there is not collection type available
             return RedirectToAction("Index", "NotAuthorized");
@@ -41,7 +40,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(string submissionType)
         {
-            _logger.LogInfo($"Ukprn : {User.Ukprn()}, submission option receievd {submissionType}");
+            Logger.LogInfo($"Ukprn : {User.Ukprn()}, submission option receievd {submissionType}");
 
             var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
 
@@ -61,7 +60,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             else
             {
                 ViewData["IsValid"] = false;
-                _logger.LogInfo($"Ukprn : {User.Ukprn()}, Invalid submittion type selected for the provider{submissionType}");
+                Logger.LogInfo($"Ukprn : {User.Ukprn()}, Invalid submittion type selected for the provider{submissionType}");
             }
 
             return View("Index", data);

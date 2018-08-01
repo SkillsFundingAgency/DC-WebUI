@@ -16,7 +16,6 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
-        private readonly ILogger _logger;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
@@ -28,9 +27,9 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
             ICollectionManagementService collectionManagementService)
+            : base(logger)
         {
             _submissionService = submissionService;
-            _logger = logger;
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
@@ -53,7 +52,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         {
             if (string.IsNullOrEmpty(collectionName))
             {
-                _logger.LogWarning("collection type passed in as null or empty");
+                Logger.LogWarning("collection type passed in as null or empty");
                 throw new Exception("null or empty collection type");
             }
 
@@ -83,7 +82,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             if (period == null)
             {
-                _logger.LogWarning($"No active period for collection : {CollectionName}");
+                Logger.LogWarning($"No active period for collection : {CollectionName}");
                 throw new Exception($"No active period for collection : {CollectionName}");
             }
 
@@ -101,7 +100,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }

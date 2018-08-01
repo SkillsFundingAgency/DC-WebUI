@@ -1,6 +1,7 @@
 ﻿using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,16 @@ namespace DC.Web.Ui.Base
     [Authorize]
     public abstract class BaseController : Controller
     {
-        public long ContextJobId
+        protected BaseController(ILogger logger)
+        {
+            Logger = logger;
+        }
+
+        protected ILogger Logger { get; set; }
+
+        protected long Ukprn => User.Ukprn();
+
+        protected long ContextJobId
         {
             get
             {
@@ -21,8 +31,6 @@ namespace DC.Web.Ui.Base
                 return 0;
             }
         }
-
-        protected long Ukprn => User.Ukprn();
 
         protected void SetJobId(long jobId)
         {
