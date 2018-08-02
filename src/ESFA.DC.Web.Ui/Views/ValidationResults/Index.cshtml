@@ -17,7 +17,7 @@
                 <h3 class="heading-medium">Your data has no errors.</h3>
                 <p>
                     There may be warnings to address about your data.
-                    @Html.ActionLink("Download the error report (CSV, 87kB)", "Download", "ValidationResults")
+                    @Html.ActionLink($"Download the error report (CSV, {@Model.ReportFileSize}kB)", "Download", "ValidationResults")
                 </p>
             </div>
         }

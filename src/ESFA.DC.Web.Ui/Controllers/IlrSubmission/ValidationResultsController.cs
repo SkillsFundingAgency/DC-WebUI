@@ -37,6 +37,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         public async Task<IActionResult> Index(long jobId)
         {
             Logger.LogInfo($"Loading validation results page for job id : {jobId}");
+
             SetJobId(jobId);
 
             var job = await _submissionService.GetJob(User.Ukprn(), jobId);
@@ -49,7 +50,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
             Logger.LogInfo($"Got validation results for job id : {jobId}");
 
-            var fileSize = await _reportService.GetReportFileSizeAsync(_reportFileName);
+            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/{TaskKeys.ValidationErrors}.csv");
             Logger.LogInfo($"Got report size for job id : {jobId}");
 
             var result = new ValidationResultViewModel
@@ -92,8 +93,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             try
             {
-                var csvBlobStream = await _reportService.GetReportStreamAsync(_reportFileName);
-                return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_ValidationErrors.csv");
+                var csvBlobStream = await _reportService.GetReportStreamAsync($"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv");
+                return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_{TaskKeys.ValidationErrors}.csv");
             }
             catch (Exception e)
             {
