@@ -74,7 +74,7 @@ namespace DC.Web.Ui
             else
             {
                 app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error");
             }
 
             app.UseStaticFiles();
