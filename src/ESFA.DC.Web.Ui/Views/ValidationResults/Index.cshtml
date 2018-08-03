@@ -51,6 +51,10 @@
             <p class="error-summary-list">
                 <a href="error-report">View more detail about the errors</a>.
             </p>
+            <p>
+                @Html.ActionLink($"Download the error report (CSV, {@Model.ReportFileSize}kB)", "Download", "ValidationResults")
+
+            </p>
         </div>
         }
         <p>
