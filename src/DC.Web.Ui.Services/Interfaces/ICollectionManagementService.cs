@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DC.Web.Ui.Services.ViewModels;
 using ESFA.DC.CollectionsManagement.Models;
+using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Interfaces
 {

@@ -1,4 +1,4 @@
-﻿using DC.Web.Ui.Services.ViewModels;
+﻿using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Ui.Services.AppLogs

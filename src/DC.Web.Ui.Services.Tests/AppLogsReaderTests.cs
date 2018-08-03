@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DC.Web.Ui.Services.AppLogs;
-using DC.Web.Ui.Services.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

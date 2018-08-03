@@ -1,28 +1,21 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
-using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
-using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Controllers.IlrSubmission
 {
     [Route("ilr-submission")]
     public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
-        private readonly ILogger _logger;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
@@ -34,9 +27,9 @@ namespace DC.Web.Ui.Controllers
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
             ICollectionManagementService collectionManagementService)
+            : base(logger)
         {
             _submissionService = submissionService;
-            _logger = logger;
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
@@ -59,7 +52,7 @@ namespace DC.Web.Ui.Controllers
         {
             if (string.IsNullOrEmpty(collectionName))
             {
-                _logger.LogWarning("collection type passed in as null or empty");
+                Logger.LogWarning("collection type passed in as null or empty");
                 throw new Exception("null or empty collection type");
             }
 
@@ -89,7 +82,7 @@ namespace DC.Web.Ui.Controllers
 
             if (period == null)
             {
-                _logger.LogWarning($"No active period for collection : {CollectionName}");
+                Logger.LogWarning($"No active period for collection : {CollectionName}");
                 throw new Exception($"No active period for collection : {CollectionName}");
             }
 
@@ -107,7 +100,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }

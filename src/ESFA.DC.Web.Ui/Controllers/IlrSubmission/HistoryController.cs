@@ -1,17 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Settings.Models;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Controllers.IlrSubmission
 {
     public class HistoryController : BaseController
     {
         private readonly ISubmissionService _submissionService;
 
-        public HistoryController(ISubmissionService submissionService)
+        public HistoryController(ISubmissionService submissionService, ILogger logger)
+            : base(logger)
         {
             _submissionService = submissionService;
         }

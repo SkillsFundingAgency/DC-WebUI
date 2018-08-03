@@ -19,6 +19,7 @@
     <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.JobStatus" Version="0.1.9-beta0001" />
     <PackageReference Include="ESFA.DC.JobStatus.Interface" Version="0.1.6-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.4-beta0001" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
@@ -33,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
+    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

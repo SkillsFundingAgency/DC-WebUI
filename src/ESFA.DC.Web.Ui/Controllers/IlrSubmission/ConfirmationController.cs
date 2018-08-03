@@ -1,17 +1,16 @@
 ﻿using DC.Web.Ui.Base;
-using DC.Web.Ui.Settings.Models;
-using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider.Interface;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Controllers.IlrSubmission
 {
     public class ConfirmationController : BaseController
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ConfirmationController(IDateTimeProvider dateTimeProvider)
+        public ConfirmationController(IDateTimeProvider dateTimeProvider, ILogger logger)
+            : base(logger)
         {
             _dateTimeProvider = dateTimeProvider;
         }

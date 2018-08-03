@@ -1,5 +1,5 @@
-﻿@using DC.Web.Ui.Services.ViewModels
-@model DC.Web.Ui.Services.ViewModels.ValidationResultViewModel
+﻿@using ESFA.DC.Web.Ui.ViewModels
+@model ESFA.DC.Web.Ui.ViewModels.ValidationResultViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -11,11 +11,14 @@
             Submit your data
         </h1>
 
-        @if (Model.TotalErrors == 0)
+        @if (Model.TotalErrors > 0)
         {
             <div class="success-summary">
                 <h3 class="heading-medium">Your data has no errors.</h3>
-                <p>There may be warnings to address about your data. <a href="#">Download the error report (CSV, 87kB)</a>. </p>
+                <p>
+                    There may be warnings to address about your data.
+                    @Html.ActionLink($"Download the error report (CSV, {@Model.ReportFileSize}kB)", "Download", "ValidationResults")
+                </p>
             </div>
         }
         else
@@ -68,7 +71,7 @@
                     </tr>
                     <tr>
                         <td>File size</td>
-                        <td>@Model.FileSize kb</td>
+                        <td>@Model.ReportFileSize</td>
                     </tr>
                     <tr>
                         <td>Upload date and time</td>
