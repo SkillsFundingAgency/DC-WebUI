@@ -1,5 +1,6 @@
 ﻿@using DC.Web.Authorization
 @using DC.Web.Authorization.Data.Constants
+@using Microsoft.AspNetCore.Mvc.ModelBinding
 @{
     ViewData["Title"] = "Submit Ilr";
     ViewData["secondaryHeading"] = "ILR Submission";
@@ -8,6 +9,8 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
+
+        @Html.ValidationSummary()
 
         <h1 class="heading-large">
             Check learner data for errors
@@ -41,7 +44,7 @@
                 Learner records with errors will not be funded. Your funding may not be calculated correctly if we find any errors or warnings in your data.
             </p>
         </div>
-        <form asp-controller="ILRSubmission" asp-action="Submit" method="post" enctype="multipart/form-data" id="ilrform">
+        <form asp-controller="ILRSubmission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
             <div id="upload-v2">
 
                 <div id="upload-select-area">
@@ -49,6 +52,7 @@
                         <span class="">Select a file to check</span>
                     </label>
                     <input accept="text/xml" id="upload" class="choose-file" name="file" aria-controls="progress-container" aria-required="true" type="file" />
+
                 </div>
 
                 <div id="file-details" class="hidden">

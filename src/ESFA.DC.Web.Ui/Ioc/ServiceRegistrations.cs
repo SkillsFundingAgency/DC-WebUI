@@ -45,6 +45,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<KeyGenerator>().As<IKeyGenerator>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
+            builder.RegisterType<FileNameValidationService>().As<IFileNameValidationService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

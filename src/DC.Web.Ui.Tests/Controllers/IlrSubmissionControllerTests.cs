@@ -45,7 +45,7 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(1024);
 
-            var result = controller.Submit(mockFile.Object).Result;
+            var result = controller.Index(mockFile.Object).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
         }
 
@@ -53,7 +53,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_NullFile()
         {
             var controller = GetController(new Mock<ISubmissionService>().Object);
-            var result = controller.Submit(null).Result;
+            var result = controller.Index((IFormFile)null).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
@@ -66,7 +66,7 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(0);
 
-            var result = controller.Submit(mockFile.Object).Result;
+            var result = controller.Index(mockFile.Object).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
@@ -87,7 +87,8 @@ namespace DC.Web.Ui.Tests.Controllers
                 It.IsAny<ILogger>(),
                 new Mock<IJsonSerializationService>().Object,
                 new Mock<IDateTimeProvider>().Object,
-                mockCollectionmanagementService.Object);
+                mockCollectionmanagementService.Object,
+                new Mock<IFileNameValidationService>().Object);
 
             controller.TempData = tempData;
             return controller;

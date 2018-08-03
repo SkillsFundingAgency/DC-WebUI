@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
@@ -7,6 +8,7 @@ using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,32 +22,29 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly string TempDataKey = "CollectionType";
+        private readonly IFileNameValidationService _fileNameValidationService;
 
         public ILRSubmissionController(
             ISubmissionService submissionService,
             ILogger logger,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
-            ICollectionManagementService collectionManagementService)
+            ICollectionManagementService collectionManagementService,
+            IFileNameValidationService fileNameValidationService)
             : base(logger)
         {
             _submissionService = submissionService;
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
+            _fileNameValidationService = fileNameValidationService;
         }
 
         public string CollectionName
         {
-            get
-            {
-                return (string)TempData[TempDataKey];
-            }
+            get { return (string)TempData[TempDataKey]; }
 
-            set
-            {
-                TempData[TempDataKey] = value;
-            }
+            set { TempData[TempDataKey] = value; }
         }
 
         public IActionResult Index(string collectionName)
@@ -64,16 +63,17 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Submit(IFormFile file)
+        public async Task<IActionResult> Index(IFormFile file)
         {
-            if (file == null)
+            if (file == null || file.Length == 0)
             {
-                return Index(CollectionName);
+                return View();
             }
 
-            if (file.Length == 0)
+            if (_fileNameValidationService.ValidateFile(file.FileName, Ukprn) != FileNameValidationResult.Valid)
             {
-                return Index(CollectionName);
+                ModelState.AddModelError("fileName", "Invalid file name");
+                return View();
             }
 
             //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
@@ -95,7 +95,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 }
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn, CollectionName, period.PeriodNumber);
+                var jobId = await _submissionService.SubmitIlrJob(
+                    file.FileName,
+                    file.Length,
+                    User.Name(),
+                    Ukprn,
+                    CollectionName,
+                    period.PeriodNumber);
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)
