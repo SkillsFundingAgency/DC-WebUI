@@ -53,7 +53,7 @@ namespace DC.Web.Ui.Services.Services
                 var cloudBlockBlob = GetBlob(fileName);
                 if (await cloudBlockBlob.ExistsAsync())
                 {
-                    return cloudBlockBlob.Properties.Length;
+                    return (long)(cloudBlockBlob.Properties.Length / 1024);
                 }
             }
             catch (Exception ex)
