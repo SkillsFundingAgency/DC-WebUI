@@ -45,10 +45,6 @@ gulp.task('sass', function () {
         .pipe(sourcemaps.init())
         .pipe(sass({
             includePaths: [
-                'node_modules/govuk_frontend_toolkit/stylesheets',
-                'node_modules/govuk_frontend_toolkit/stylesheets/colours',
-                'node_modules/govuk_frontend_toolkit/stylesheets/design-patterns',
-                'node_modules/govuk-elements-sass/public/sass'
             ]
         }).on('error', sass.logError))
         .pipe(sourcemaps.write())
