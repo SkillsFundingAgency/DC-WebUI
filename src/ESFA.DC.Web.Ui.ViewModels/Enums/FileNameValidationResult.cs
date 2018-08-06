@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
-namespace ESFA.DC.Web.Ui.ViewModels
+namespace ESFA.DC.Web.Ui.ViewModels.Enums
 {
     public enum FileNameValidationResult
     {
@@ -15,6 +12,8 @@ namespace ESFA.DC.Web.Ui.ViewModels
         [Description("file name is invalid")]
         InvalidFileNameFormat = 30,
         [Description("Your file must be in an XML or Zip format")]
-        InvalidFileExtension = 40
+        InvalidFileExtension = 40,
+        [Description("This file already exists")]
+        FileAlreadyExists = 50
     }
 }

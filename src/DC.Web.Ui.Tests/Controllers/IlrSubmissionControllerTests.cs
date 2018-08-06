@@ -12,6 +12,7 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -91,8 +92,8 @@ namespace DC.Web.Ui.Tests.Controllers
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
             var mockFilenameValidationService = new Mock<IFileNameValidationService>();
-            mockFilenameValidationService.Setup(x => x.ValidateFileName(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
-                .Returns(fileNameValidationResult);
+            mockFilenameValidationService.Setup(x => x.ValidateFileNameAsync(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
+                .ReturnsAsync(() => fileNameValidationResult);
 
             var controller = new ILRSubmissionController(
                 submissionService,

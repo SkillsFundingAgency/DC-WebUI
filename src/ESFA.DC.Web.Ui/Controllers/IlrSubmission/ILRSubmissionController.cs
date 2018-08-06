@@ -8,6 +8,7 @@ using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
@@ -56,7 +57,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName, InputFileViewModel fileViewModel)
         {
-            var validationResult = _fileNameValidationService.ValidateFileName(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
             if (validationResult != FileNameValidationResult.Valid)
             {
                 ModelState.AddModelError("File", validationResult.GetDescription());
