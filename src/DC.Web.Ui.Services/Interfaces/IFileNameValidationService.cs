@@ -7,6 +7,12 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IFileNameValidationService
     {
-        FileNameValidationResult ValidateFile(string fileName, long ukprn);
+        FileNameValidationResult ValidateFileName(string fileName, long? fileSize, long ukprn);
+
+        bool IsValidExtension(string fileName);
+
+        bool IsValidRegex(string fileName);
+
+        bool IsValidUkprn(string fileName, long ukprn);
     }
 }

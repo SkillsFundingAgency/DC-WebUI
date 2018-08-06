@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
@@ -9,7 +8,6 @@ using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
@@ -63,16 +61,12 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Index(IFormFile file)
+        public async Task<IActionResult> Index(InputFileViewModel fileViewModel)
         {
-            if (file == null || file.Length == 0)
+            var validationResult = _fileNameValidationService.ValidateFileName(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
+            if (validationResult != FileNameValidationResult.Valid)
             {
-                return View();
-            }
-
-            if (_fileNameValidationService.ValidateFile(file.FileName, Ukprn) != FileNameValidationResult.Valid)
-            {
-                ModelState.AddModelError("fileName", "Invalid file name");
+                ModelState.AddModelError("File", validationResult.GetDescription());
                 return View();
             }
 
@@ -89,15 +83,15 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             try
             {
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(file.FileName))
+                using (var outputStream = await _submissionService.GetBlobStream(fileViewModel.File.FileName))
                 {
-                    await file.CopyToAsync(outputStream);
+                    await fileViewModel.File.CopyToAsync(outputStream);
                 }
 
                 // add to the queue
                 var jobId = await _submissionService.SubmitIlrJob(
-                    file.FileName,
-                    file.Length,
+                    fileViewModel.File.FileName,
+                    fileViewModel.File.Length,
                     User.Name(),
                     Ukprn,
                     CollectionName,
@@ -106,7 +100,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {fileViewModel.File.FileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }

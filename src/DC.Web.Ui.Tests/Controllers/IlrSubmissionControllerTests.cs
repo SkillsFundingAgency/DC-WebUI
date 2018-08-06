@@ -45,32 +45,40 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(1024);
 
-            var result = controller.Index(mockFile.Object).Result;
+            var ilrInput = new InputFileViewModel()
+            {
+                File = mockFile.Object
+            };
+
+            var result = controller.Index(ilrInput).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
         }
 
         [Fact]
         public void SubmitIlr_NullFile()
         {
-            var controller = GetController(new Mock<ISubmissionService>().Object);
-            var result = controller.Index((IFormFile)null).Result;
+            var controller = GetController(new Mock<ISubmissionService>().Object, FileNameValidationResult.EmptyFile);
+            var result = controller.Index((InputFileViewModel)null).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
         [Fact]
         public void SubmitIlr_EmptyFile()
         {
-            var controller = GetController(new Mock<ISubmissionService>().Object);
+            var controller = GetController(new Mock<ISubmissionService>().Object, FileNameValidationResult.EmptyFile);
 
             var mockFile = new Mock<IFormFile>();
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(0);
-
-            var result = controller.Index(mockFile.Object).Result;
+            var ilrInput = new InputFileViewModel()
+            {
+                File = mockFile.Object
+            };
+            var result = controller.Index(ilrInput).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private ILRSubmissionController GetController(ISubmissionService submissionService)
+        private ILRSubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
         {
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
@@ -82,13 +90,17 @@ namespace DC.Web.Ui.Tests.Controllers
             mockCollectionmanagementService.Setup(x => x.GetCurrentPeriod(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
+            var mockFilenameValidationService = new Mock<IFileNameValidationService>();
+            mockFilenameValidationService.Setup(x => x.ValidateFileName(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
+                .Returns(fileNameValidationResult);
+
             var controller = new ILRSubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
                 new Mock<IJsonSerializationService>().Object,
                 new Mock<IDateTimeProvider>().Object,
                 mockCollectionmanagementService.Object,
-                new Mock<IFileNameValidationService>().Object);
+                mockFilenameValidationService.Object);
 
             controller.TempData = tempData;
             return controller;

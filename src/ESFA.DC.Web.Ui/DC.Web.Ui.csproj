@@ -67,6 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ErrorMessages\" />
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
     <Folder Include="Views\Confirmation\" />
