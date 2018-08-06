@@ -19,11 +19,8 @@
     <link rel="apple-touch-icon" sizes="152x152" href="~/assets/images/apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="~/assets/images/apple-touch-icon.png">
 
-    <link href="~/css/docs.css" rel="stylesheet" type="text/css" />
-    <!--[if IE 8]><link href="~/assets/stylesheets/docs-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
-
-    <link href="~/css/override.css" rel="stylesheet" type="text/css" />
-
+    <link href="~/build/site.min.css" rel="stylesheet" type="text/css" />
+   
     <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="~/assets/images/opengraph-image.png">
@@ -32,16 +29,6 @@
     {
         <meta http-equiv="refresh" content="5">
     }
-
-
-    <environment include="Development">
-        <link rel="stylesheet" media="all" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" media="all" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
-
-
 
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
