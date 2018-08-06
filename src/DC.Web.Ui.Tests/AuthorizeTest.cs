@@ -11,7 +11,7 @@ namespace DC.Web.Ui.Tests
     {
         [Theory]
         [InlineData("AppLogs/Index")]
-        [InlineData("ilr-submission")]
+        [InlineData("ilr-submission/ILR1819")]
         [InlineData("Confirmation/Index")]
         [InlineData("Claims/Index")]
         public async Task GetAsync_ReturnsUnauthorizedResult(string url)

@@ -50,7 +50,7 @@ namespace DC.Web.Ui.Tests.Controllers
                 File = mockFile.Object
             };
 
-            var result = controller.Index(ilrInput).Result;
+            var result = controller.Index("ILR1819", ilrInput).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
         }
 
@@ -58,7 +58,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_NullFile()
         {
             var controller = GetController(new Mock<ISubmissionService>().Object, FileNameValidationResult.EmptyFile);
-            var result = controller.Index((InputFileViewModel)null).Result;
+            var result = controller.Index("ILR1819", null).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
@@ -74,7 +74,7 @@ namespace DC.Web.Ui.Tests.Controllers
             {
                 File = mockFile.Object
             };
-            var result = controller.Index(ilrInput).Result;
+            var result = controller.Index("ILR1819", ilrInput).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
