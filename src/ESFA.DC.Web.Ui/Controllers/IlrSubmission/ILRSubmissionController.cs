@@ -38,13 +38,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _fileNameValidationService = fileNameValidationService;
         }
 
-        public string CollectionName
-        {
-            get { return (string)TempData[TempDataKey]; }
-
-            set { TempData[TempDataKey] = value; }
-        }
-
+        [Route("{collectionName}")]
         public IActionResult Index(string collectionName)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -53,15 +47,14 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new Exception("null or empty collection type");
             }
 
-            CollectionName = collectionName;
-
             return View();
         }
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Index(InputFileViewModel fileViewModel)
+        [Route("{collectionName}")]
+        public async Task<IActionResult> Index(string collectionName, InputFileViewModel fileViewModel)
         {
             var validationResult = _fileNameValidationService.ValidateFileName(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
             if (validationResult != FileNameValidationResult.Valid)
@@ -72,12 +65,12 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
 
-            var period = await _collectionManagementService.GetCurrentPeriod(CollectionName);
+            var period = await _collectionManagementService.GetCurrentPeriod(collectionName);
 
             if (period == null)
             {
-                Logger.LogWarning($"No active period for collection : {CollectionName}");
-                throw new Exception($"No active period for collection : {CollectionName}");
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+                throw new Exception($"No active period for collection : {collectionName}");
             }
 
             try
@@ -94,13 +87,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                     fileViewModel.File.Length,
                     User.Name(),
                     Ukprn,
-                    CollectionName,
+                    collectionName,
                     period.PeriodNumber);
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error trying to subnmit ILR file with name : {fileViewModel.File.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {fileViewModel?.File?.FileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }
