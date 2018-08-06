@@ -5,6 +5,7 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider.Interface;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -20,8 +21,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
-        private readonly string TempDataKey = "CollectionType";
         private readonly IFileNameValidationService _fileNameValidationService;
+        private readonly IStreamableKeyValuePersistenceService _storageService;
 
         public ILRSubmissionController(
             ISubmissionService submissionService,
@@ -29,7 +30,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
             ICollectionManagementService collectionManagementService,
-            IFileNameValidationService fileNameValidationService)
+            IFileNameValidationService fileNameValidationService,
+            IStreamableKeyValuePersistenceService storageService)
             : base(logger)
         {
             _submissionService = submissionService;
@@ -37,6 +39,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
             _fileNameValidationService = fileNameValidationService;
+            _storageService = storageService;
         }
 
         [Route("{collectionName}")]
@@ -64,6 +67,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 return View();
             }
 
+            var fileName = fileViewModel?.File?.FileName;
+
             //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
 
             var period = await _collectionManagementService.GetCurrentPeriod(collectionName);
@@ -77,14 +82,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             try
             {
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(fileViewModel.File.FileName))
-                {
-                    await fileViewModel.File.CopyToAsync(outputStream);
-                }
+                await _storageService.SaveAsync(fileName, fileViewModel?.File?.OpenReadStream());
 
                 // add to the queue
                 var jobId = await _submissionService.SubmitIlrJob(
-                    fileViewModel.File.FileName,
+                    fileName,
                     fileViewModel.File.Length,
                     User.Name(),
                     Ukprn,
@@ -94,7 +96,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error trying to subnmit ILR file with name : {fileViewModel?.File?.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {fileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }

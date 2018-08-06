@@ -48,6 +48,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
             builder.RegisterType<FileNameValidationService>().As<IFileNameValidationService>().InstancePerLifetimeScope();
             builder.RegisterType<AzureStorageKeyValuePersistenceService>().As<IKeyValuePersistenceService>().InstancePerLifetimeScope();
+            builder.RegisterType<AzureStorageKeyValuePersistenceService>().As<IStreamableKeyValuePersistenceService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
