@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
@@ -8,6 +10,7 @@ using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider;
 using ESFA.DC.DateTime.Provider.Interface;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
@@ -95,13 +98,17 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFilenameValidationService.Setup(x => x.ValidateFileNameAsync(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
                 .ReturnsAsync(() => fileNameValidationResult);
 
+            var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
+            mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
+
             var controller = new ILRSubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
                 new Mock<IJsonSerializationService>().Object,
                 new Mock<IDateTimeProvider>().Object,
                 mockCollectionmanagementService.Object,
-                mockFilenameValidationService.Object);
+                mockFilenameValidationService.Object,
+                mockStreamableServiceMock.Object);
 
             controller.TempData = tempData;
             return controller;

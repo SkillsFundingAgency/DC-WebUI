@@ -10,7 +10,6 @@ namespace DC.Web.Ui.Tests
     public class AuthorizeTest
     {
         [Theory]
-        [InlineData("AppLogs/Index")]
         [InlineData("ilr-submission/ILR1819")]
         [InlineData("Confirmation/Index")]
         [InlineData("Claims/Index")]
