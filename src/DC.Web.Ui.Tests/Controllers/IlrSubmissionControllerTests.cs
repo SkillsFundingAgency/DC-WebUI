@@ -34,7 +34,6 @@ namespace DC.Web.Ui.Tests.Controllers
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
             var mockCloudBlob = new Mock<CloudBlobStream>();
-            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(Task.FromResult(mockCloudBlob.Object));
             submissionServiceMock.Setup(x => x.SubmitIlrJob(
                 "test file",
                 It.IsAny<decimal>(),

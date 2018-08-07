@@ -35,16 +35,6 @@ namespace DC.Web.Ui.Services.Services
             _serializationService = serializationService;
         }
 
-        public async Task<CloudBlobStream> GetBlobStream(string fileName)
-        {
-            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(_cloudStorageSettings.ConnectionString);
-            CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(_cloudStorageSettings.ContainerName);
-            CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
-
-            return await cloudBlockBlob.OpenWriteAsync();
-        }
-
         public async Task<long> SubmitIlrJob(
             string fileName,
             decimal fileSizeBytes,
