@@ -25,6 +25,11 @@ namespace DC.Web.Ui.Extensions
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Name);
         }
 
+        public static string Email(this ClaimsPrincipal claimsPrincipal)
+        {
+            return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Email);
+        }
+
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)
         {
             return claimsPrincipal?.Claims?.FirstOrDefault(claim => claim.Type == claimType)?.Value;
