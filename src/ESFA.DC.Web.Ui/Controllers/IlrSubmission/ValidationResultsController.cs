@@ -82,7 +82,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             {
                 _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Ready, totalLearners);
                 Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {ContextJobId}");
-                return RedirectToAction("Index", "Confirmation");
+                return RedirectToAction("Index", "Confirmation", new { jobId = ContextJobId });
             }
         }
 
