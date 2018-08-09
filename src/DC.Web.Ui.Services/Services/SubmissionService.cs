@@ -8,6 +8,7 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -97,6 +98,19 @@ namespace DC.Web.Ui.Services.Services
                 NumberOfLearners = totalLearners
             };
             return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
+        }
+
+        public async Task<IlrSubmissionConfirmationViewModel> GetIlrConfirmation(long ukprn, long jobId)
+        {
+            var job = await GetJob(ukprn, jobId);
+            return new IlrSubmissionConfirmationViewModel()
+            {
+                FileName = job.FileName,
+                JobId = jobId,
+                PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
+                SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mm tt"), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
+                SubmittedBy = job.SubmittedBy
+            };
         }
     }
 }
