@@ -137,7 +137,6 @@ namespace DC.Web.Ui.Services.Tests
             var data = service.GetCurrentPeriod("ILR1819").Result;
             data.Should().NotBeNull();
             data.PeriodNumber.Should().Be(1);
-            data.PeriodName().Should().Be("R01");
         }
     }
 }

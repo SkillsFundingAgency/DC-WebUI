@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
 {
-    [Route("confirmation")]
-    public class ConfirmationController : BaseController
+    [Route("submission-confirmation")]
+    public class SubmissionConfirmationController : BaseController
     {
         private readonly ISubmissionService _submissionService;
 
-        public ConfirmationController(ISubmissionService submissionService, ILogger logger)
+        public SubmissionConfirmationController(ISubmissionService submissionService, ILogger logger)
             : base(logger)
         {
             _submissionService = submissionService;
