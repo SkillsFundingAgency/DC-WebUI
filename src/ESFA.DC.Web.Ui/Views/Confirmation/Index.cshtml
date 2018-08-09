@@ -16,11 +16,11 @@
                 Reference: @Html.DisplayFor(model => model.JobId)
             </p>
         </div>
-        <p>File: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.FileName)</span></p>
-        <p>Submitted by: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedBy)</span></p>
-        <p>At: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedAt)</span></p>
+        <p>File: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.FileName)</span></p>
+        <p>Submitted by: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.SubmittedBy)</span></p>
+        <p>At: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.SubmittedAt)</span></p>
     
-    <h3 class="govuk-heading-m">What happens next?</h3>
+    <h3>What happens next?</h3>
     <p>We’ve sent an email to @User.Email() to confirm we’ve received your file.</p>
     <p>We will email you again to let you know when your funding breakdown for @Html.DisplayFor(model => model.PeriodName) and related reports are ready to view. This usually takes about 30 minutes.</p>
     <details class="govuk-details" role="group">
