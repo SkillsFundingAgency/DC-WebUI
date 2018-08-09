@@ -21,7 +21,7 @@ gulp.task('sass', function () {
     return gulp.src('wwwroot/scss/**/*.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
-            includePaths: [
+            includePaths: ['node_modules/govuk_frontend/settings'
             ]
         }).on('error', sass.logError))
         .pipe(sourcemaps.write())

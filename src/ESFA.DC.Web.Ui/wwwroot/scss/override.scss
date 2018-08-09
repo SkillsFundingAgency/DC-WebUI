@@ -1,24 +1,25 @@
+@import "node_modules/govuk-frontend/all";
 /* Override styles - amend at will */
 a:link, .govuk-list a:link {
-    color: #005ea5
+    color: govuk-colour("blue");
 }
 
 a:visited, .govuk-list a:visited {
-    color: #4c2c92
+    color: $govuk-link-visited-colour;
 }
 
 a:hover, .govuk-list a:hover {
-    color: #2b8cc4
+    color: $govuk-link-hover-colour;
 }
 
 a:active, .govuk-list a:active {
-    color: #2b8cc4
+    color: $govuk-link-hover-colour;
 }
 
 a:focus, .govuk-list a:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid $govuk-focus-colour;
     outline-offset: 0;
-    background-color: #ffbf47;
+    background-color: $govuk-focus-colour;
 }
 
 .govuk-header__link:focus {
@@ -27,7 +28,7 @@ a:focus, .govuk-list a:focus {
 }
 
 .govuk-body-m, .govuk-body, p {
-    color: #0b0c0c;
+    color: $govuk-text-colour;
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,7 +41,7 @@ a:focus, .govuk-list a:focus {
 
 @media print {
     .govuk-body-m, .govuk-body, p {
-        color: #000000;
+        color: govuk-colour("black");
     }
 }
 
@@ -71,7 +72,7 @@ a:focus, .govuk-list a:focus {
 }
 
 .app-related-items {
-    border-top: 10px solid #005ea5;
+    border-top: 10px solid govuk-colour("blue");;
     padding-top: 10px;
 }
 
@@ -131,9 +132,9 @@ a:focus, .govuk-list a:focus {
 }
 
 .govuk-footer__link:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid $govuk-focus-colour;
     outline-offset: 0;
-    background-color: #ffbf47;
+    background-color: $govuk-focus-colour;
 }
 
 .govuk-footer__link:link, .govuk-footer__link:visited {
@@ -142,19 +143,19 @@ a:focus, .govuk-list a:focus {
 
 .govuk-footer__link:hover, .govuk-footer__link:active {
     color: #171819;
-}
+}.govuk-footer__link:link:focus
 
 .govuk-footer__link:focus {
-    color: #0b0c0c;
+    color: $govuk-text-colour;
 }
 
 .govuk-footer__link:link:focus {
-    color: #0b0c0c;
+    color: $govuk-text-colour;
 }
 
 @media print {
     .govuk-footer__link:link:focus {
-        color: #000000;
+        color: govuk-colour("black");
     }
 }
 
@@ -162,7 +163,7 @@ a:focus, .govuk-list a:focus {
     margin: 0;
     margin-bottom: 30px;
     border: 0;
-    border-bottom: 1px solid #bfc1c3;
+    border-bottom: 1px solid  $govuk-border-colour;
 }
 
 @media (min-width: 40.0625em) {
@@ -256,7 +257,7 @@ a:focus, .govuk-list a:focus {
 .govuk-footer__heading {
     margin-bottom: 25px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #bfc1c3;
+    border-bottom: 1px solid  $govuk-border-colour;
 }
 
 @media (min-width: 40.0625em) {
