@@ -34,7 +34,9 @@
             <p>If you haven't received an email, it may be in your junkmail folder. <a href="#">Check the @Html.DisplayFor(model => model.PeriodName) reports area</a> as your reports may still have been generated.</p>
         </div>
     </details>
-    <p><a href="/submission-results">View reports page</a></p>
+    <p>
+        @Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId})
+    </p>
         <p><a href="/submission-options">Submit another data return</a></p>
     </div>
 </div>
