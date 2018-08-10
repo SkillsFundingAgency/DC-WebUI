@@ -69,7 +69,7 @@
   <ItemGroup>
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
-    <Folder Include="Views\Confirmation\" />
+    <Folder Include="Views\SubmissionConfirmation\" />
     <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\ILRSubmission\" />

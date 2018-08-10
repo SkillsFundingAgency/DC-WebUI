@@ -40,7 +40,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             SetJobId(jobId);
 
-            var job = await _submissionService.GetJob(User.Ukprn(), jobId);
+            var job = await _submissionService.GetJob(Ukprn, jobId);
             if (job == null)
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, job not found");
@@ -82,7 +82,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             {
                 _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Ready, totalLearners);
                 Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {ContextJobId}");
-                return RedirectToAction("Index", "Confirmation", new { jobId = ContextJobId });
+                return RedirectToAction("Index", "SubmissionConfirmation", new { jobId = ContextJobId });
             }
         }
 
