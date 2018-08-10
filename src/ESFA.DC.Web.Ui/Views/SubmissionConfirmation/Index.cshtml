@@ -1,0 +1,44 @@
+﻿@using DC.Web.Ui.Extensions
+@model ESFA.DC.Web.Ui.ViewModels.IlrSubmissionConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Confirmation";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="govuk-box-highlight">
+            <h1 class="heading-large">
+                @Html.DisplayFor(model => model.PeriodName) ILR file submitted
+            </h1>
+
+            <p class="font-medium" id="progress-update">
+                Reference: @Html.DisplayFor(model => model.JobId)
+            </p>
+        </div>
+        <p>File: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.FileName)</span></p>
+        <p>Submitted by: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.SubmittedBy)</span></p>
+        <p>At: <span class="govuk-!-font-weight-bold" style="font-weight: bold">@Html.DisplayFor(model => model.SubmittedAt)</span></p>
+    
+    <h3>What happens next?</h3>
+    <p>We’ve sent an email to @User.Email() to confirm we’ve received your file.</p>
+    <p>We will email you again to let you know when your funding breakdown for @Html.DisplayFor(model => model.PeriodName) and related reports are ready to view. This usually takes about 30 minutes.</p>
+    <details class="govuk-details" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content-65a433f6-9888-43f1-b72a-48af76957031" aria-expanded="false">
+            <span class="govuk-details__summary-text">
+                Wrong email address or email not arrived
+            </span>
+        </summary>
+        <div class="govuk-details__text" id="details-content-65a433f6-9888-43f1-b72a-48af76957031" aria-hidden="true">
+            <p>If your email address is wrong, you will need to <a href="#">update it in your IdAMS account</a>.</p>
+            <p>If you haven't received an email, it may be in your junkmail folder. <a href="#">Check the @Html.DisplayFor(model => model.PeriodName) reports area</a> as your reports may still have been generated.</p>
+        </div>
+    </details>
+    <p>
+        @Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId})
+    </p>
+        <p><a href="/submission-options">Submit another data return</a></p>
+    </div>
+</div>
+
+
