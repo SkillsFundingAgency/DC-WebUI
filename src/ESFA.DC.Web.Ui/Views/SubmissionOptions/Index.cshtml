@@ -6,6 +6,8 @@
     ViewData["Title"] = "SubmissionOptions";
 }
 
+@*<div class="govuk-grid-row">
+
 <div class="column-two-thirds">
 
     <form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
@@ -52,4 +54,64 @@
 
         <input type="submit" value="Start submitting data" class="button">
     </form>
+</div>
+</div>*@
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="error">Please choose an option to submit</a>
+                    </li>
+                               
+                </ul>
+            </div>
+        </div>
+        <form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                        <h1 class="govuk-fieldset__heading">
+                            What do you want to submit?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios">
+                        
+                        @foreach (var so in Model)
+                        {
+                            <span asp-validation-for="@so.Name" class="govuk-error-message"></span>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"  id="@so.Name" name="submissionType" type="radio" value="@so.Name">
+                                <label class="govuk-label govuk-radios__label" for="@so.Name">@so.Title</label>
+                            </div>
+                        }
+
+                       
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button">
+                Continue
+            </button>
+
+        </form>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="app-related-items" role="complementary">
+            <h2 class="govuk-heading-m" id="subsection-title">
+                Help and support
+            </h2>
+            <p><span class="govuk-!-font-weight-bold">ESFA support desk</span></p>
+            <p>
+                Telephone: 0370 267 0001<br />
+                Monday to Thursday, 8:30am to 5:00pm<br />
+                Friday, 8:30am to 4:00pm<br />
+            <p>Email:  <a href="sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
+        </aside>
+    </div>
 </div>
