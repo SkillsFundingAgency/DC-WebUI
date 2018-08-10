@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
-using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.Logging.Interfaces;

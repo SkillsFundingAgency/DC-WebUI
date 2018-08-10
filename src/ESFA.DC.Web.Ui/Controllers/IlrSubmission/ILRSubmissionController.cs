@@ -5,9 +5,11 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.ViewModels;
 using ESFA.DC.DateTime.Provider.Interface;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
-using Microsoft.AspNetCore.Http;
+using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
@@ -19,35 +21,28 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
-        private readonly string TempDataKey = "CollectionType";
+        private readonly IFileNameValidationService _fileNameValidationService;
+        private readonly IStreamableKeyValuePersistenceService _storageService;
 
         public ILRSubmissionController(
             ISubmissionService submissionService,
             ILogger logger,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
-            ICollectionManagementService collectionManagementService)
+            ICollectionManagementService collectionManagementService,
+            IFileNameValidationService fileNameValidationService,
+            IStreamableKeyValuePersistenceService storageService)
             : base(logger)
         {
             _submissionService = submissionService;
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
+            _fileNameValidationService = fileNameValidationService;
+            _storageService = storageService;
         }
 
-        public string CollectionName
-        {
-            get
-            {
-                return (string)TempData[TempDataKey];
-            }
-
-            set
-            {
-                TempData[TempDataKey] = value;
-            }
-        }
-
+        [Route("{collectionName}")]
         public IActionResult Index(string collectionName)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -56,51 +51,52 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new Exception("null or empty collection type");
             }
 
-            CollectionName = collectionName;
-
             return View();
         }
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Submit(IFormFile file)
+        [Route("{collectionName}")]
+        public async Task<IActionResult> Index(string collectionName, InputFileViewModel fileViewModel)
         {
-            if (file == null)
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
+            if (validationResult != FileNameValidationResult.Valid)
             {
-                return Index(CollectionName);
+                ModelState.AddModelError("File", validationResult.GetDescription());
+                return View();
             }
 
-            if (file.Length == 0)
-            {
-                return Index(CollectionName);
-            }
+            var fileName = fileViewModel?.File?.FileName;
 
             //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
 
-            var period = await _collectionManagementService.GetCurrentPeriod(CollectionName);
+            var period = await _collectionManagementService.GetCurrentPeriod(collectionName);
 
             if (period == null)
             {
-                Logger.LogWarning($"No active period for collection : {CollectionName}");
-                throw new Exception($"No active period for collection : {CollectionName}");
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+                throw new Exception($"No active period for collection : {collectionName}");
             }
 
             try
             {
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(file.FileName))
-                {
-                    await file.CopyToAsync(outputStream);
-                }
+                await _storageService.SaveAsync(fileName, fileViewModel?.File?.OpenReadStream());
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(file.FileName, file.Length, User.Name(), Ukprn, CollectionName, period.PeriodNumber);
+                var jobId = await _submissionService.SubmitIlrJob(
+                    fileName,
+                    fileViewModel.File.Length,
+                    User.Name(),
+                    Ukprn,
+                    collectionName,
+                    period.PeriodNumber);
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
+                Logger.LogError($"Error trying to subnmit ILR file with name : {fileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
         }

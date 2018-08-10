@@ -9,8 +9,6 @@ using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using FluentAssertions;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Moq;
 using Polly;
 using Polly.NoOp;
