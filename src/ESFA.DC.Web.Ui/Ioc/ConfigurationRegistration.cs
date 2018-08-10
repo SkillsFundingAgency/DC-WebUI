@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Services.Models;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace DC.Web.Ui.Ioc
@@ -22,8 +22,11 @@ namespace DC.Web.Ui.Ioc
                 .As<AuthenticationSettings>().SingleInstance();
 
             builder.Register(c =>
-                    configuration.GetConfigSection<JobQueueApiSettings>())
-                .As<JobQueueApiSettings>().SingleInstance();
+                    configuration.GetConfigSection<ApiSettings>())
+                .As<ApiSettings>().SingleInstance();
+
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>())
+                .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
         }
     }
 }

@@ -5,12 +5,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
-using DC.Web.Ui.Services.JobQueue;
+using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Jobs.Model;
 using FluentAssertions;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Moq;
 using Polly;
 using Polly.NoOp;
@@ -30,9 +28,9 @@ namespace DC.Web.Ui.Services.Tests
 
             var pollyRegistryMock = new Mock<IReadOnlyPolicyRegistry<string>>();
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
-            var apiSettings = new JobQueueApiSettings()
+            var apiSettings = new ApiSettings()
             {
-                BaseUrl = string.Empty
+                JobQueueBaseUrl = string.Empty
             };
             var service = new JobQueueService(apiSettings, pollyRegistryMock.Object, httpClientMock.Object);
 
