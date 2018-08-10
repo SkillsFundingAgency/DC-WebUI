@@ -19,7 +19,7 @@ namespace DC.Web.Ui.StartupConfiguration
                 })
                 .AddCookie(options =>
                 {
-                    options.AccessDeniedPath = new PathString("/");
+                    options.AccessDeniedPath = new PathString("/NotAuthorized");
                 })
                 .AddWsFederation(options =>
                 {

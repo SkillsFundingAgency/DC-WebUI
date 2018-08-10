@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DC.Web.Authorization.Idams;
-using DC.Web.Ui.Services.Models;
 
 namespace DC.Web.Ui.Extensions
 {
@@ -24,6 +23,11 @@ namespace DC.Web.Ui.Extensions
         public static string Name(this ClaimsPrincipal claimsPrincipal)
         {
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Name);
+        }
+
+        public static string Email(this ClaimsPrincipal claimsPrincipal)
+        {
+            return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Email);
         }
 
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)
