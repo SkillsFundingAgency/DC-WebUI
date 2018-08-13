@@ -3,70 +3,55 @@
     ViewBag.PageId = "home-page";
     ViewBag.HideNavBar = true;
 }
-<main class="govuk-main-wrapper" id="content" role="main">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">
-                Submit learner data
-            </h1>
 
-            <p class="govuk-body-l">This service is for training providers that receive funding directly from the Education and Skills Funding Agency.</p>
 
-            <p>Use this service to validate and submit:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>Individualised learner records (ILR)</li>
-                <li>Earnings adjustment statements (EAS)</li>
-                <li>ESF (European Social Fund) supplementary data</li>
-            </ul>
+@section RelatedContent
+    {
+    <h2 class="govuk-heading-m" id="subsection-title">
+        Related content
+    </h2>
+    <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="govuk-list govuk-!-font-size-16">
+            <li>
+                <a href="https://www.gov.uk/guidance/how-to-become-an-approved-training-provider-and-bid-for-funding">
+                    How to become an approved training provider
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    Timetable of submission deadlines
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
 
-            <p>
-                You can also view and download reports for data you’ve submitted.
-            </p>
 
-            <a href="/submission-options" class="govuk-button govuk-button--start" id="signin">Sign in</a>
 
-            <h2 class="govuk-heading-m">Before you start</h2>
-            <p>You will need:</p>
+    <h1 class="govuk-heading-xl">
+        Submit learner data
+    </h1>
 
-            <ul class="govuk-list govuk-list--bullet">
-                <li>Your IdAMS (Information Management Services system) login details</li>
-                <li>an XML or Zip file to upload - for ILR data</li>
-                <li>a CSV file to upload - for ESF data</li>
-            </ul>
-        </div>
+    <p class="govuk-body-l">This service is for training providers that receive funding directly from the Education and Skills Funding Agency.</p>
 
-        <div class="govuk-grid-column-one-third">
-            <aside class="app-related-items" role="complementary">
-                <h2 class="govuk-heading-m" id="subsection-title">
-                    Help and support
-                </h2>
-                <p><span class="govuk-!-font-weight-bold">ESFA support desk</span></p>
-                <p>
-                    Telephone: 0370 267 0001<br>
+    <p>Use this service to validate and submit:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Individualised learner records (ILR)</li>
+        <li>Earnings adjustment statements (EAS)</li>
+        <li>ESF (European Social Fund) supplementary data</li>
+    </ul>
 
-                    Monday to Thursday, 8:30am to 5:00pm<br>
-                    Friday, 8:30am to 4:00pm<br />
-                </p>
-                <p>Email:  <a href="mailto:sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
-                <h2 class="govuk-heading-m" id="subsection-title">
-                    Related content
-                </h2>
-                <nav role="navigation" aria-labelledby="subsection-title">
-                    <ul class="govuk-list govuk-!-font-size-16">
-                        <li>
-                            <a href="https://www.gov.uk/guidance/how-to-become-an-approved-training-provider-and-bid-for-funding">
-                                How to become an approved training provider
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Timetable of submission deadlines
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
-     
-        </div>
-    </div>
-</main>
+    <p>
+        You can also view and download reports for data you’ve submitted.
+    </p>
+
+    <a href="/submission-options" class="govuk-button govuk-button--start" id="signin">Sign in</a>
+
+    <h2 class="govuk-heading-m">Before you start</h2>
+    <p>You will need:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Your IdAMS (Information Management Services system) login details</li>
+        <li>an XML or Zip file to upload - for ILR data</li>
+        <li>a CSV file to upload - for ESF data</li>
+    </ul>
