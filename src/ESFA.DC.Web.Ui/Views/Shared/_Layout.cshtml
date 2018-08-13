@@ -19,8 +19,16 @@
     <link rel="apple-touch-icon" sizes="152x152" href="~/assets/images/apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="~/assets/images/apple-touch-icon.png">
 
-    <link href="~/build/site.min.css" rel="stylesheet" type="text/css" />
-   
+    <environment include="Development">
+        <link href="~/assets/css/docs.css" rel="stylesheet" type="text/css" />
+        <link href="~/assets/css/override.css" rel="stylesheet" type="text/css" />
+    </environment>
+
+    <environment exclude="Development">
+        <link href="~/assets/minified/site.min.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    </environment>
+
+
     <meta name="theme-color" content="#0b0c0c" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="~/assets/images/opengraph-image.png">
@@ -81,14 +89,14 @@
                 <span class="govuk-phase-banner__text">This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
             </p>
         </div>
-        @if (@User.Identity.IsAuthenticated)
+        @*@if (@User.Identity.IsAuthenticated)
         {
             <div class="breadcrumbs" style="float: right">
                 <ol>
                     <li>Logged in as: @User.Name() (@User.Ukprn())</li>
                 </ol>
             </div>
-        }
+        }*@
         
        
         @RenderBody()
