@@ -1,0 +1,15 @@
+﻿[
+  {
+    "outputFile": "wwwroot/assets/stylesheets/docs.css",
+    "inputFile": "wwwroot/assets/scss/docs.scss",
+    "minify": { "enabled": false },
+    "options": { "sourceMap": true }
+  },
+  {
+    "outputFile": "wwwroot/assets/stylesheets/override.css",
+    "inputFile": "wwwroot/assets/scss/override.scss",
+    "minify": { "enabled": false },
+    "options": { "sourceMap": true }
+  }
+]
+

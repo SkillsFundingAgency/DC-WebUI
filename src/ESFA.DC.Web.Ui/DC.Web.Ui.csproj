@@ -7,6 +7,7 @@
     <UserSecretsId>08fa5945-0c7a-49b8-bb56-c3ec9b0961d9</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/12f72527-6622-45d3-90a4-0a5d3644c45c/resourcegroups/DC-CI-AppSrvEnv-WEU/providers/microsoft.insights/components/DC-CI-WebTest-WEU</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/12f72527-6622-45d3-90a4-0a5d3644c45c/resourcegroups/DC-CI-AppSrvEnv-WEU/providers/microsoft.insights/components/DC-CI-WebTest-WEU</ApplicationInsightsAnnotationResourceId>
+    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -18,16 +19,102 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <Compile Remove="css\**" />
+    <Compile Remove="obj\**" />
+    <Compile Remove="Views\Confirmation\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\components\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\core\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\helpers\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\objects\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\overrides\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\settings\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\tools\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\utilities\**" />
+    <Compile Remove="wwwroot\assets\govuk-frontend\vendor\**" />
+    <Compile Remove="wwwroot\css\**" />
+    <Compile Remove="wwwroot\NewFolder\**" />
+    <Content Remove="bin\**" />
+    <Content Remove="css\**" />
+    <Content Remove="obj\**" />
+    <Content Remove="Views\Confirmation\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\components\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\core\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\helpers\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\objects\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\overrides\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\settings\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\tools\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\utilities\**" />
+    <Content Remove="wwwroot\assets\govuk-frontend\vendor\**" />
+    <Content Remove="wwwroot\css\**" />
+    <Content Remove="wwwroot\NewFolder\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="css\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="Views\Confirmation\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\components\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\core\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\helpers\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\objects\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\overrides\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\settings\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\tools\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\utilities\**" />
+    <EmbeddedResource Remove="wwwroot\assets\govuk-frontend\vendor\**" />
+    <EmbeddedResource Remove="wwwroot\css\**" />
+    <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+    <None Remove="bin\**" />
+    <None Remove="css\**" />
+    <None Remove="obj\**" />
+    <None Remove="Views\Confirmation\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\components\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\core\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\helpers\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\objects\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\overrides\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\settings\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\tools\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\utilities\**" />
+    <None Remove="wwwroot\assets\govuk-frontend\vendor\**" />
+    <None Remove="wwwroot\css\**" />
+    <None Remove="wwwroot\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="node_modules\govuk-frontend\assets\fonts\bold-f38c792ac2-v1.woff" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\bold-fb2676462a-v1.eot" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\bold-tabular-357fdfbcc3-v1.eot" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\bold-tabular-784c21afb8-v1.woff" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\light-2c037cf7e1-v1.eot" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\light-458f8ea81c-v1.woff" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\light-tabular-498ea8ffe2-v1.eot" />
+    <Content Include="node_modules\govuk-frontend\assets\fonts\light-tabular-62cc6f0a28-v1.woff" />
+    <Content Include="node_modules\govuk-frontend\assets\images\favicon.ico" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-apple-touch-icon-152x152.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-apple-touch-icon-167x167.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-apple-touch-icon-180x180.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-apple-touch-icon.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-crest-2x.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-crest.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-logotype-crown.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\govuk-opengraph-image.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\icon-arrow-left.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\icon-important.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\icon-pointer-2x.png" />
+    <Content Include="node_modules\govuk-frontend\assets\images\icon-pointer.png" />
+    <Content Include="node_modules\govuk-frontend\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="autofac" Version="4.6.2" />
     <PackageReference Include="Autofac.Configuration" Version="4.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="CsvHelper" Version="7.1.0" />
     <PackageReference Include="ESFA.DC.DateTime.Provider" Version="0.1.4-beta0001" />
     <PackageReference Include="ESFA.DC.ILR.ValidationErrors.Interface" Version="0.1.5-beta0001" />
-    <PackageReference Include="ESFA.DC.IO.AzureStorage" Version="0.1.13-beta0001" />
-    <PackageReference Include="ESFA.DC.IO.Interfaces" Version="0.1.12-beta0001" />
     <PackageReference Include="ESFA.DC.KeyGenerator" Version="0.1.6-beta0001" />
-    <PackageReference Include="ESFA.DC.KeyGenerator.Interface" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.4-beta0001" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
@@ -49,7 +136,6 @@
     <ProjectReference Include="..\DC.Web.Authorization\DC.Web.Authorization.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Services\DC.Web.Ui.Services.csproj" />
     <ProjectReference Include="..\DC.Web.Ui.Settings\DC.Web.Ui.Settings.csproj" />
-    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,18 +155,215 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ErrorMessages\" />
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
-    <Folder Include="Views\SubmissionConfirmation\" />
     <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\ILRSubmission\" />
     <Folder Include="Views\ValidationResults\" />
+    <Folder Include="wwwroot\assets\minified\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="node_modules\govuk-frontend\all-ie8.scss" />
+    <None Include="node_modules\govuk-frontend\all.js" />
+    <None Include="node_modules\govuk-frontend\all.scss" />
+    <None Include="node_modules\govuk-frontend\assets\fonts\bold-a2452cb66f-v1.woff2" />
+    <None Include="node_modules\govuk-frontend\assets\fonts\bold-tabular-b89238d840-v1.woff2" />
+    <None Include="node_modules\govuk-frontend\assets\fonts\light-f38ad40456-v1.woff2" />
+    <None Include="node_modules\govuk-frontend\assets\fonts\light-tabular-851b10ccdd-v1.woff2" />
+    <None Include="node_modules\govuk-frontend\assets\images\govuk-mask-icon.svg" />
+    <None Include="node_modules\govuk-frontend\common.js" />
+    <None Include="node_modules\govuk-frontend\components\back-link\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\back-link\README.md" />
+    <None Include="node_modules\govuk-frontend\components\back-link\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\back-link\_back-link.scss" />
+    <None Include="node_modules\govuk-frontend\components\breadcrumbs\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\breadcrumbs\README.md" />
+    <None Include="node_modules\govuk-frontend\components\breadcrumbs\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\breadcrumbs\_breadcrumbs.scss" />
+    <None Include="node_modules\govuk-frontend\components\button\button.js" />
+    <None Include="node_modules\govuk-frontend\components\button\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\button\README.md" />
+    <None Include="node_modules\govuk-frontend\components\button\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\button\_button.scss" />
+    <None Include="node_modules\govuk-frontend\components\checkboxes\checkboxes.js" />
+    <None Include="node_modules\govuk-frontend\components\checkboxes\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\checkboxes\README.md" />
+    <None Include="node_modules\govuk-frontend\components\checkboxes\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\checkboxes\_checkboxes.scss" />
+    <None Include="node_modules\govuk-frontend\components\date-input\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\date-input\README.md" />
+    <None Include="node_modules\govuk-frontend\components\date-input\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\date-input\_date-input.scss" />
+    <None Include="node_modules\govuk-frontend\components\details\details.js" />
+    <None Include="node_modules\govuk-frontend\components\details\implementation.md" />
+    <None Include="node_modules\govuk-frontend\components\details\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\details\README.md" />
+    <None Include="node_modules\govuk-frontend\components\details\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\details\_details.scss" />
+    <None Include="node_modules\govuk-frontend\components\error-message\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\error-message\README.md" />
+    <None Include="node_modules\govuk-frontend\components\error-message\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\error-message\_error-message.scss" />
+    <None Include="node_modules\govuk-frontend\components\error-summary\error-summary.js" />
+    <None Include="node_modules\govuk-frontend\components\error-summary\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\error-summary\README.md" />
+    <None Include="node_modules\govuk-frontend\components\error-summary\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\error-summary\_error-summary.scss" />
+    <None Include="node_modules\govuk-frontend\components\fieldset\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\fieldset\README.md" />
+    <None Include="node_modules\govuk-frontend\components\fieldset\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\fieldset\_fieldset.scss" />
+    <None Include="node_modules\govuk-frontend\components\file-upload\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\file-upload\README.md" />
+    <None Include="node_modules\govuk-frontend\components\file-upload\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\file-upload\_file-upload.scss" />
+    <None Include="node_modules\govuk-frontend\components\footer\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\footer\README.md" />
+    <None Include="node_modules\govuk-frontend\components\footer\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\footer\_footer.scss" />
+    <None Include="node_modules\govuk-frontend\components\header\header.js" />
+    <None Include="node_modules\govuk-frontend\components\header\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\header\README.md" />
+    <None Include="node_modules\govuk-frontend\components\header\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\header\_header.scss" />
+    <None Include="node_modules\govuk-frontend\components\hint\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\hint\README.md" />
+    <None Include="node_modules\govuk-frontend\components\hint\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\hint\_hint.scss" />
+    <None Include="node_modules\govuk-frontend\components\input\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\input\README.md" />
+    <None Include="node_modules\govuk-frontend\components\input\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\input\_input.scss" />
+    <None Include="node_modules\govuk-frontend\components\inset-text\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\inset-text\README.md" />
+    <None Include="node_modules\govuk-frontend\components\inset-text\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\inset-text\_inset-text.scss" />
+    <None Include="node_modules\govuk-frontend\components\label\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\label\README.md" />
+    <None Include="node_modules\govuk-frontend\components\label\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\label\_label.scss" />
+    <None Include="node_modules\govuk-frontend\components\panel\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\panel\README.md" />
+    <None Include="node_modules\govuk-frontend\components\panel\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\panel\_panel.scss" />
+    <None Include="node_modules\govuk-frontend\components\phase-banner\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\phase-banner\README.md" />
+    <None Include="node_modules\govuk-frontend\components\phase-banner\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\phase-banner\_phase-banner.scss" />
+    <None Include="node_modules\govuk-frontend\components\radios\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\radios\radios.js" />
+    <None Include="node_modules\govuk-frontend\components\radios\README.md" />
+    <None Include="node_modules\govuk-frontend\components\radios\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\radios\_radios.scss" />
+    <None Include="node_modules\govuk-frontend\components\select\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\select\README.md" />
+    <None Include="node_modules\govuk-frontend\components\select\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\select\_select.scss" />
+    <None Include="node_modules\govuk-frontend\components\skip-link\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\skip-link\README.md" />
+    <None Include="node_modules\govuk-frontend\components\skip-link\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\skip-link\_skip-link.scss" />
+    <None Include="node_modules\govuk-frontend\components\table\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\table\README.md" />
+    <None Include="node_modules\govuk-frontend\components\table\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\table\_table.scss" />
+    <None Include="node_modules\govuk-frontend\components\tabs\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\tabs\README.md" />
+    <None Include="node_modules\govuk-frontend\components\tabs\tabs.js" />
+    <None Include="node_modules\govuk-frontend\components\tabs\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\tabs\_tabs.scss" />
+    <None Include="node_modules\govuk-frontend\components\tag\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\tag\README.md" />
+    <None Include="node_modules\govuk-frontend\components\tag\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\tag\_tag.scss" />
+    <None Include="node_modules\govuk-frontend\components\textarea\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\textarea\README.md" />
+    <None Include="node_modules\govuk-frontend\components\textarea\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\textarea\_textarea.scss" />
+    <None Include="node_modules\govuk-frontend\components\warning-text\macro.njk" />
+    <None Include="node_modules\govuk-frontend\components\warning-text\README.md" />
+    <None Include="node_modules\govuk-frontend\components\warning-text\template.njk" />
+    <None Include="node_modules\govuk-frontend\components\warning-text\_warning-text.scss" />
+    <None Include="node_modules\govuk-frontend\components\_all.scss" />
+    <None Include="node_modules\govuk-frontend\core\_all.scss" />
+    <None Include="node_modules\govuk-frontend\core\_global-styles.scss" />
+    <None Include="node_modules\govuk-frontend\core\_links.scss" />
+    <None Include="node_modules\govuk-frontend\core\_lists.scss" />
+    <None Include="node_modules\govuk-frontend\core\_section-break.scss" />
+    <None Include="node_modules\govuk-frontend\core\_template.scss" />
+    <None Include="node_modules\govuk-frontend\core\_typography.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_all.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_clearfix.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_colour.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_device-pixels.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_focusable.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_font-faces.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_grid.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_links.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_media-queries.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_shape-arrow.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_spacing.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_typography.scss" />
+    <None Include="node_modules\govuk-frontend\helpers\_visually-hidden.scss" />
+    <None Include="node_modules\govuk-frontend\objects\_all.scss" />
+    <None Include="node_modules\govuk-frontend\objects\_form-group.scss" />
+    <None Include="node_modules\govuk-frontend\objects\_grid.scss" />
+    <None Include="node_modules\govuk-frontend\objects\_main-wrapper.scss" />
+    <None Include="node_modules\govuk-frontend\objects\_width-container.scss" />
+    <None Include="node_modules\govuk-frontend\overrides\_all.scss" />
+    <None Include="node_modules\govuk-frontend\overrides\_display.scss" />
+    <None Include="node_modules\govuk-frontend\overrides\_spacing.scss" />
+    <None Include="node_modules\govuk-frontend\overrides\_typography.scss" />
+    <None Include="node_modules\govuk-frontend\overrides\_width.scss" />
+    <None Include="node_modules\govuk-frontend\README.md" />
+    <None Include="node_modules\govuk-frontend\settings\_all.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_assets.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_colours-applied.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_colours-organisations.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_colours-palette.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_compatibility.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_global-styles.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_ie8.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_measurements.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_media-queries.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_spacing.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_typography-font-families.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_typography-font.scss" />
+    <None Include="node_modules\govuk-frontend\settings\_typography-responsive.scss" />
+    <None Include="node_modules\govuk-frontend\template.njk" />
+    <None Include="node_modules\govuk-frontend\tools\_all.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_compatibility.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_exports.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_font-url.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_ie8.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_iff.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_image-url.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_px-to-em.scss" />
+    <None Include="node_modules\govuk-frontend\tools\_px-to-rem.scss" />
+    <None Include="node_modules\govuk-frontend\utilities\_all.scss" />
+    <None Include="node_modules\govuk-frontend\utilities\_clearfix.scss" />
+    <None Include="node_modules\govuk-frontend\utilities\_visually-hidden.scss" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Document.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\DOMTokenList.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Element.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Element\prototype\classList.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Event.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Function\prototype\bind.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Object\defineProperty.js" />
+    <None Include="node_modules\govuk-frontend\vendor\polyfills\Window.js" />
+    <None Include="node_modules\govuk-frontend\vendor\_sass-mq.scss" />
+  </ItemGroup>
+
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file $(ProjectDir)Scripts\settings.ps1 $(ProjectDir)" />
+  </Target>
+
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)node_modules\govuk-frontend\assets\*  $(ProjectDir)wwwroot\assets\ /R /Y /S&#xD;&#xA;" />
   </Target>
 
 </Project>
