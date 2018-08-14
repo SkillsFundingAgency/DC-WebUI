@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
         public async Task<IActionResult> Index()
         {
-            var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
+            var data = await _collectionManagementService.GetSubmssionOptions(Ukprn);
 
             if (data.Any())
             {
@@ -42,7 +42,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         {
             Logger.LogInfo($"Ukprn : {User.Ukprn()}, submission option receievd {submissionType}");
 
-            var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
+            var data = await _collectionManagementService.GetSubmssionOptions(Ukprn);
 
             if (!string.IsNullOrEmpty(submissionType))
             {
