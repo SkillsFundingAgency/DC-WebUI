@@ -69,7 +69,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             var fileName = fileViewModel?.File?.FileName;
 
-            //TODO: Validate if collection is indeed available to hhe provider, or someone has hacked in the request
+            //TODO: Validate if collection is indeed available to the provider, or someone has hacked in the request
 
             var period = await _collectionManagementService.GetCurrentPeriod(collectionName);
 

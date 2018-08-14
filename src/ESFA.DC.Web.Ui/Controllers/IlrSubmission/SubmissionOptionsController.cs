@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
         public async Task<IActionResult> Index()
         {
-            var data = await _collectionManagementService.GetSubmssionOptions(Ukprn);
+            var data = (await _collectionManagementService.GetSubmssionOptions(Ukprn)).ToList();
 
             if (data.Any())
             {
