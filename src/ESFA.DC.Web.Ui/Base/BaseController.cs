@@ -1,4 +1,5 @@
 ﻿using DC.Web.Authorization.Data.Constants;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Logging.Interfaces;
@@ -30,6 +31,16 @@ namespace DC.Web.Ui.Base
 
                 return 0;
             }
+        }
+
+        protected void AddFieldError(string key)
+        {
+            ModelState.AddModelError(key, ErrorMessageLookup.GetErrorMessage(key));
+        }
+
+        protected void AddSummaryError(string message)
+        {
+            ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, message);
         }
 
         protected void SetJobId(long jobId)

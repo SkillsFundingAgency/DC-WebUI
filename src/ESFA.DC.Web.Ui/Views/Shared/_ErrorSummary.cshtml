@@ -1,10 +1,13 @@
-﻿
+﻿@using DC.Web.Ui.Constants
+
+
 @{
     Layout = null;
-    var errorMessage = ViewData.ModelState.ContainsKey("Summary") ? 
-        ViewData.ModelState["Summary"]?.Errors?.First()?.ErrorMessage : 
-        string.Empty;
     
+    var errorMessage = ViewData.ModelState.ContainsKey("Summary") ?
+        ViewData.ModelState["Summary"]?.Errors?.First()?.ErrorMessage :
+        string.Empty;
+
 }
 
 @if (!ViewData.ModelState.IsValid)
