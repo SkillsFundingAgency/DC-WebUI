@@ -64,6 +64,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             if (validationResult != FileNameValidationResult.Valid)
             {
                 ModelState.AddModelError("File", validationResult.GetDescription());
+               // ModelState.AddModelError("Summary", "Sumamry error");
+
                 return View();
             }
 
