@@ -1,43 +1,27 @@
-﻿@using ESFA.DC.Web.Ui.ViewModels
+﻿@using DC.Web.Ui.Constants
+@using ESFA.DC.Web.Ui.ViewModels
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissionOptionViewModel>
 
 
 @{
-    ViewData["Title"] = "SubmissionOptions";
+    ViewData["Title"] = "Submission Options";
 }
 
-
-
-@if (ViewData["IsValid"] != null && Boolean.Parse(ViewData["IsValid"].ToString()) == false)
-{
-
-    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">
-            There is a problem
-        </h2>
-        <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-                <li>
-                    <a href="error">Please choose an option to submit</a>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-}
 <form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" error-class id="controls">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                 <h1 class="govuk-fieldset__heading">
                     What do you want to submit?
                 </h1>
             </legend>
+           
+            <div error-field-name="@ErrorMessageKeys.SubmissionOptions_OptionsFieldKey"></div>
+
             <div class="govuk-radios">
 
                 @foreach (var so in Model)
                 {
-                    <span asp-validation-for="@so.Name" class="govuk-error-message"></span>
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input" id="@so.Name" name="submissionType" type="radio" value="@so.Name">
                         <label class="govuk-label govuk-radios__label" for="@so.Name">@so.Title</label>
