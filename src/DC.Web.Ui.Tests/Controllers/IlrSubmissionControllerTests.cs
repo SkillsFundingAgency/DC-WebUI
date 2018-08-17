@@ -90,7 +90,7 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
-            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriod(It.IsAny<string>()))
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
             var mockFilenameValidationService = new Mock<IFileNameValidationService>();

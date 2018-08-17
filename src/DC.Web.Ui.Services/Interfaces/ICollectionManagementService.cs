@@ -8,12 +8,12 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface ICollectionManagementService
     {
-        Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptions(long ukprn);
+        Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptionsAsync(long ukprn);
 
-        Task<ReturnPeriodViewModel> GetCurrentPeriod(string collectionName);
+        Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName);
 
-        Task<IEnumerable<CollectionViewModel>> GetAvailableCollections(long ukprn, string collectionType);
+        Task<IEnumerable<CollectionViewModel>> GetAvailableCollectionsAsync(long ukprn, string collectionType);
 
-        Task<bool> IsValidCollection(long ukprn, string collectionType);
+        Task<bool> IsValidCollectionAsync(long ukprn, string collectionType);
     }
 }

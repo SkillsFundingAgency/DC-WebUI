@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
@@ -18,8 +19,6 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     public class ILRSubmissionController : BaseController
     {
         private readonly ISubmissionService _submissionService;
-        private readonly IJsonSerializationService _serializationService;
-        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IFileNameValidationService _fileNameValidationService;
         private readonly IStreamableKeyValuePersistenceService _storageService;
@@ -27,28 +26,36 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         public ILRSubmissionController(
             ISubmissionService submissionService,
             ILogger logger,
-            IJsonSerializationService serializationService,
-            IDateTimeProvider dateTimeProvider,
             ICollectionManagementService collectionManagementService,
             IFileNameValidationService fileNameValidationService,
             IStreamableKeyValuePersistenceService storageService)
             : base(logger)
         {
             _submissionService = submissionService;
-            _serializationService = serializationService;
-            _dateTimeProvider = dateTimeProvider;
             _collectionManagementService = collectionManagementService;
             _fileNameValidationService = fileNameValidationService;
             _storageService = storageService;
         }
 
         [Route("{collectionName}")]
-        public IActionResult Index(string collectionName)
+        public async Task<IActionResult> Index(string collectionName)
         {
             if (string.IsNullOrEmpty(collectionName))
             {
                 Logger.LogWarning("collection type passed in as null or empty");
                 throw new Exception("null or empty collection type");
+            }
+
+            if (!(await IsValidCollection(collectionName)))
+            {
+                Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available");
+                return RedirectToAction("Index", "ReturnWindowClosed");
+            }
+
+            if (await _collectionManagementService.GetCurrentPeriodAsync(collectionName) == null)
+            {
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+                return RedirectToAction("Index", "ReturnWindowClosed");
             }
 
             return View();
@@ -69,11 +76,14 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 return View();
             }
 
+            if (!(await IsValidCollection(collectionName)))
+            {
+                Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available, but file is being uploaded");
+                throw new ArgumentOutOfRangeException(collectionName);
+            }
+
             var fileName = fileViewModel?.File?.FileName;
-
-            //TODO: Validate if collection is indeed available to the provider, or someone has hacked in the request
-
-            var period = await _collectionManagementService.GetCurrentPeriod(collectionName);
+            var period = await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
 
             if (period == null)
             {
@@ -101,6 +111,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 Logger.LogError($"Error trying to subnmit ILR file with name : {fileName}", ex);
                 return View("Error", new ErrorViewModel());
             }
+        }
+
+        public async Task<bool> IsValidCollection(string collectionName)
+        {
+            return await _collectionManagementService.IsValidCollectionAsync(Ukprn, collectionName);
         }
     }
 }
