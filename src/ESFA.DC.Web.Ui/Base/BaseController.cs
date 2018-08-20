@@ -33,14 +33,14 @@ namespace DC.Web.Ui.Base
             }
         }
 
-        protected void AddFieldError(string key)
+        protected void AddError(string key)
         {
             ModelState.AddModelError(key, ErrorMessageLookup.GetErrorMessage(key));
         }
 
-        protected void AddSummaryError(string message)
+        protected void AddError(string key, string message)
         {
-            ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, message);
+            ModelState.AddModelError(key, message);
         }
 
         protected void SetJobId(long jobId)

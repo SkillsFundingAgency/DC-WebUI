@@ -6,8 +6,8 @@ namespace DC.Web.Ui.Services.BespokeHttpClient
 {
     public class BespokeHttpClient : IBespokeHttpClient
     {
+        private readonly HttpClient _httpClient = new HttpClient();
         private bool _disposed = false;
-        private HttpClient _httpClient = new HttpClient();
 
         public async Task<string> SendDataAsync(string url, object data)
         {

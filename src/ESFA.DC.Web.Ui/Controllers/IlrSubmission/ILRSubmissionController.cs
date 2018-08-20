@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.ViewModels;
@@ -11,6 +12,7 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
@@ -65,13 +67,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
         [Route("{collectionName}")]
-        public async Task<IActionResult> Index(string collectionName, InputFileViewModel fileViewModel)
+        public async Task<IActionResult> Index(string collectionName, IFormFile file)
         {
-            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(fileViewModel?.File?.FileName, fileViewModel?.File?.Length, Ukprn);
-            if (validationResult != FileNameValidationResult.Valid)
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
+            if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
-                ModelState.AddModelError("File", validationResult.GetDescription());
-               // ModelState.AddModelError("Summary", "Sumamry error");
+                AddError(ErrorMessageKeys.IlrSubmission_FileFieldKey, validationResult.FieldError);
+                AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
                 return View();
             }
@@ -82,7 +84,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new ArgumentOutOfRangeException(collectionName);
             }
 
-            var fileName = fileViewModel?.File?.FileName;
+            var fileName = file?.FileName;
             var period = await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
 
             if (period == null)
@@ -94,12 +96,12 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             try
             {
                 // push file to Storage
-                await _storageService.SaveAsync(fileName, fileViewModel?.File?.OpenReadStream());
+                await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
                 var jobId = await _submissionService.SubmitIlrJob(
                     fileName,
-                    fileViewModel.File.Length,
+                    file.Length,
                     User.Name(),
                     Ukprn,
                     collectionName,
@@ -109,7 +111,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             catch (Exception ex)
             {
                 Logger.LogError($"Error trying to subnmit ILR file with name : {fileName}", ex);
-                return View("Error", new ErrorViewModel());
+                throw;
             }
         }
 

@@ -59,8 +59,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             else
             {
-                AddFieldError(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey);
-                AddSummaryError(_summaryErrorMessage);
+                AddError(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey);
+                AddError(ErrorMessageKeys.ErrorSummaryKey, _summaryErrorMessage);
 
                 Logger.LogInfo($"Ukprn : {Ukprn}, Invalid submittion type selected for the provider : {submissionType}");
             }

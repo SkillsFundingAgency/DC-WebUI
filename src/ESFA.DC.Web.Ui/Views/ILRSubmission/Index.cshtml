@@ -1,7 +1,7 @@
 ﻿@using DC.Web.Authorization
 @using DC.Web.Authorization.Data.Constants
+@using DC.Web.Ui.Constants
 @using Microsoft.AspNetCore.Mvc.ModelBinding
-@model DC.Web.Ui.ViewModels.InputFileViewModel
 
 @{
     ViewData["Title"] = "Submit ILR";
@@ -48,11 +48,11 @@
         <li>the data it contains is as accurate as possible</li>
     </ul>
     <div class="govuk-form-group" error-class id="controls">
-        <label class="govuk-label govuk-!-font-weight-bold" asp-for="File">
+        <label class="govuk-label govuk-!-font-weight-bold" >
             Upload a file
         </label>
-        <div><span asp-validation-for="File" class="govuk-error-message"></span></div>
-        <input asp-for="File" class="govuk-file-upload" id="file" type="file" accept=".xml,.zip">
+        <div error-field-name="@ErrorMessageKeys.IlrSubmission_FileFieldKey"></div>
+        <input class="govuk-file-upload" name="file" id="file" type="file" accept=".xml,.zip">
     </div>
 
     <button class="govuk-button">
