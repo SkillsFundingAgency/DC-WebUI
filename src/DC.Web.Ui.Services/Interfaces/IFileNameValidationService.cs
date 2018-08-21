@@ -9,7 +9,7 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IFileNameValidationService
     {
-        Task<FileNameValidationResult> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn);
+        Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn);
 
         bool IsValidExtension(string fileName);
 

@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
         public async Task<IActionResult> Index()
         {
-            var data = (await _collectionManagementService.GetSubmssionOptions(Ukprn)).ToList();
+            var data = (await _collectionManagementService.GetSubmssionOptionsAsync(Ukprn)).ToList();
 
             if (data.Any())
             {
@@ -42,7 +42,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         {
             Logger.LogInfo($"Ukprn : {Ukprn}, submission option receievd {submissionType}");
 
-            var data = await _collectionManagementService.GetSubmssionOptions(Ukprn);
+            var data = await _collectionManagementService.GetSubmssionOptionsAsync(Ukprn);
 
             if (!string.IsNullOrEmpty(submissionType))
             {
@@ -59,8 +59,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             else
             {
-                AddFieldError(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey);
-                AddSummaryError(_summaryErrorMessage);
+                AddError(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey);
+                AddError(ErrorMessageKeys.ErrorSummaryKey, _summaryErrorMessage);
 
                 Logger.LogInfo($"Ukprn : {Ukprn}, Invalid submittion type selected for the provider : {submissionType}");
             }

@@ -34,7 +34,7 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var service = new Mock<ICollectionManagementService>();
-            service.Setup(x => x.GetSubmssionOptions(It.IsAny<long>())).ReturnsAsync(() => items);
+            service.Setup(x => x.GetSubmssionOptionsAsync(It.IsAny<long>())).ReturnsAsync(() => items);
 
             var controller = new SubmissionOptionsController(service.Object, mockLogger.Object);
             var result = controller.Index().Result;

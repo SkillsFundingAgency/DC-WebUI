@@ -20,34 +20,48 @@ namespace DC.Web.Ui.Services.Services
             _persistenceService = persistenceService;
         }
 
-        public async Task<FileNameValidationResult> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn)
+        public async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn)
         {
+            var result = new FileNameValidationResultViewModel();
             if (string.IsNullOrEmpty(fileName) || fileSize == null || fileSize.Value == 0)
             {
-                return FileNameValidationResult.EmptyFile;
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.EmptyFile,
+                    FieldError = "Choose a file to upload",
+                    SummaryError = "Check file you want to upload"
+                };
             }
 
             if (!IsValidExtension(fileName))
             {
-                return FileNameValidationResult.InvalidFileExtension;
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.InvalidFileExtension,
+                    FieldError = "Your file must be in an XML or Zip format",
+                    SummaryError = "Your file must be in an XML or Zip format"
+                };
             }
 
-            if (!IsValidRegex(fileName))
+            //if (!IsValidRegex(fileName))
+            //{
+            //    return FileNameValidationResult.InvalidFileNameFormat;
+            //}
+
+            //if (!IsValidUkprn(fileName, ukprn))
+            //{
+            //    return FileNameValidationResult.UkprnDifferentToFileName;
+            //}
+
+            //if (!(await IsUniqueFileAsync(fileName)))
+            //{
+            //    return FileNameValidationResult.FileAlreadyExists;
+            //}
+
+            return new FileNameValidationResultViewModel()
             {
-                return FileNameValidationResult.InvalidFileNameFormat;
-            }
-
-            if (!IsValidUkprn(fileName, ukprn))
-            {
-                return FileNameValidationResult.UkprnDifferentToFileName;
-            }
-
-            if (!(await IsUniqueFileAsync(fileName)))
-            {
-                return FileNameValidationResult.FileAlreadyExists;
-            }
-
-            return FileNameValidationResult.Valid;
+                ValidationResult = FileNameValidationResult.Valid
+            };
         }
 
         public bool IsValidExtension(string fileName)

@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         {
             Logger.LogInfo($"Ukprn : {User.Ukprn()},page load with colletion type : {collectionType} ");
 
-            var data = await _collectionManagementService.GetAvailableCollections(User.Ukprn(), collectionType);
+            var data = await _collectionManagementService.GetAvailableCollectionsAsync(User.Ukprn(), collectionType);
 
             if (data.Any())
             {
@@ -37,7 +37,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 return View(data);
             }
 
-            return RedirectToAction("Index", "NotAuthorized");
+            return RedirectToAction("Index", "ReturnWindowClosed");
         }
     }
 }

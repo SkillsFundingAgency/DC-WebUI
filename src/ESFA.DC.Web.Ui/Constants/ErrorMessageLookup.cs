@@ -10,7 +10,9 @@ namespace DC.Web.Ui.Constants
         private static readonly IReadOnlyDictionary<string, string> MessagesDictionary =
             new Dictionary<string, string>()
             {
-                { ErrorMessageKeys.SubmissionOptions_OptionsFieldKey, "Choose an option from the list" }
+                {
+                    ErrorMessageKeys.SubmissionOptions_OptionsFieldKey, "Choose an option from the list"
+                }
             };
 
         public static string GetErrorMessage(string key)

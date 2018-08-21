@@ -31,8 +31,7 @@ namespace DC.Web.Ui.TagHelpers
             }
             else
             {
-                var message = ErrorMessageLookup.GetErrorMessage(ErrorFieldName);
-                output.Content.SetHtmlContent($"<span class='govuk-error-message'>{message}</span>");
+                output.Content.SetHtmlContent($"<span class='govuk-error-message'>{errorMessage}</span>");
             }
         }
     }

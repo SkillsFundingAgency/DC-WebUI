@@ -33,7 +33,6 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            var mockCloudBlob = new Mock<CloudBlobStream>();
             submissionServiceMock.Setup(x => x.SubmitIlrJob(
                 "test file",
                 It.IsAny<decimal>(),
@@ -48,12 +47,7 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(1024);
 
-            var ilrInput = new InputFileViewModel()
-            {
-                File = mockFile.Object
-            };
-
-            var result = controller.Index("ILR1819", ilrInput).Result;
+            var result = controller.Index("ILR1819", mockFile.Object).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
         }
 
@@ -73,16 +67,18 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockFile = new Mock<IFormFile>();
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(0);
-            var ilrInput = new InputFileViewModel()
-            {
-                File = mockFile.Object
-            };
-            var result = controller.Index("ILR1819", ilrInput).Result;
+            var result = controller.Index("ILR1819", mockFile.Object).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
         private ILRSubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
         {
+            var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
+            {
+                ValidationResult = fileNameValidationResult,
+                SummaryError = "summary",
+                FieldError = "field error"
+            };
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
             {
@@ -90,12 +86,17 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
-            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriod(It.IsAny<string>()))
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ReturnPeriodViewModel(10));
+
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => true);
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
             var mockFilenameValidationService = new Mock<IFileNameValidationService>();
             mockFilenameValidationService.Setup(x => x.ValidateFileNameAsync(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
-                .ReturnsAsync(() => fileNameValidationResult);
+                .ReturnsAsync(() => fileNameValidationResultViewModel);
 
             var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
             mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
@@ -103,8 +104,6 @@ namespace DC.Web.Ui.Tests.Controllers
             var controller = new ILRSubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
-                new Mock<IJsonSerializationService>().Object,
-                new Mock<IDateTimeProvider>().Object,
                 mockCollectionmanagementService.Object,
                 mockFilenameValidationService.Object,
                 mockStreamableServiceMock.Object);

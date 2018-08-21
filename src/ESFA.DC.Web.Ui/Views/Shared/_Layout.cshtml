@@ -2,7 +2,7 @@
 @using DC.Web.Ui.Extensions
 
 @{
-    var referrerUrl = Context.Request.Headers["Referer"].ToString(); 
+    string referrerUrl = Context.Request.Headers?["Referer"]; 
 }
 
 <!DOCTYPE html>
@@ -120,6 +120,7 @@
                             Monday to Thursday, 8:30am to 5:00pm<br />
                             Friday, 8:30am to 4:00pm<br />
                         <p>Email: <a href="sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
+                        
 
                         @RenderSection("RelatedContent", required: false)
 
