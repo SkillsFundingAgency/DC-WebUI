@@ -3,7 +3,6 @@ using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
-using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;

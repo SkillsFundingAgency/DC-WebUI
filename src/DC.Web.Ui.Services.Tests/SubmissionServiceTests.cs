@@ -4,6 +4,7 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
@@ -29,7 +30,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var queue = new Mock<IJobQueueService>();
 
-            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null);
+            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, null);
             await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<int>());
 
             queue.Verify(x => x.AddJobAsync(It.IsAny<IlrJob>()), Times.Once);
@@ -55,7 +56,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var queue = new Mock<IJobQueueService>();
 
-            var submisisionService = new SubmissionService(queue.Object, null, httpClientMock.Object,  new ApiSettings(), serializationServiceMock.Object);
+            var submisisionService = new SubmissionService(queue.Object, null, httpClientMock.Object,  new ApiSettings(), serializationServiceMock.Object, new Mock<IDateTimeProvider>().Object);
             var confirmation = await submisisionService.GetIlrConfirmation(It.IsAny<long>(), It.IsAny<long>());
 
             confirmation.Should().NotBeNull();

@@ -6,9 +6,9 @@ using System.Text;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
-using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Reports.ValidationReport;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -39,7 +39,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void Download_Test()
         {
             var controller = GetController();
-            var result = controller.Download().Result;
+            var result = controller.Download(It.IsAny<long>()).Result;
 
             result.Should().BeOfType(typeof(FileStreamResult));
         }
@@ -62,9 +62,8 @@ namespace DC.Web.Ui.Tests.Controllers
                     TotalLearners = 10
                 });
 
-            validationErrorsServiceMock.Setup(x => x.GetValidationErrors(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(
-                    () => new List<ValidationErrorDto>());
+            validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(() => new ValidationResultViewModel());
 
             reportServiceMock.Setup(x => x.GetReportStreamAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new MemoryStream());

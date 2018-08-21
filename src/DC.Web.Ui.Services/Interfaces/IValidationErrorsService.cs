@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using ESFA.DC.ILR.ValidationErrors.Interface.Models;
+using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IValidationErrorsService
     {
-        Task<IEnumerable<ValidationErrorDto>> GetValidationErrors(long ukprn, long jobId);
+        Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc);
+
+        string GetFileName(long ukprn, long jobId, DateTime dateTimeUtc);
     }
 }

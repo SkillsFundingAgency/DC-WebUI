@@ -20,19 +20,6 @@ namespace DC.Web.Ui.Base
 
         protected long Ukprn => User.Ukprn();
 
-        protected long ContextJobId
-        {
-            get
-            {
-                if (TempData.ContainsKey("JobId"))
-                {
-                    return long.Parse(TempData["JobId"].ToString());
-                }
-
-                return 0;
-            }
-        }
-
         protected void AddError(string key)
         {
             ModelState.AddModelError(key, ErrorMessageLookup.GetErrorMessage(key));
@@ -41,11 +28,6 @@ namespace DC.Web.Ui.Base
         protected void AddError(string key, string message)
         {
             ModelState.AddModelError(key, message);
-        }
-
-        protected void SetJobId(long jobId)
-        {
-            TempData["JobId"] = jobId;
         }
     }
 }
