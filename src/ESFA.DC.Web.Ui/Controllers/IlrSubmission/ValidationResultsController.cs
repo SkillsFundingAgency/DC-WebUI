@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
-using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.JobStatus.Interface;
-using ESFA.DC.KeyGenerator.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +29,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _reportService = reportService;
         }
 
-        private string _reportFileName => $"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv";
+        // Todo: Build the correct filename, will need the submission utc date time of job
+        private string _reportFileName => $"{Ukprn}/{ContextJobId}/ValidationErrors.csv";
 
         [Route("")]
         public async Task<IActionResult> Index(long jobId)
@@ -50,7 +49,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
             Logger.LogInfo($"Got validation results for job id : {jobId}");
 
-            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/{TaskKeys.ValidationErrors}.csv");
+            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/ValidationErrors.csv");
             Logger.LogInfo($"Got report size for job id : {jobId}");
 
             var result = new ValidationResultViewModel
@@ -93,8 +92,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             try
             {
-                var csvBlobStream = await _reportService.GetReportStreamAsync($"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv");
-                return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_{TaskKeys.ValidationErrors}.csv");
+                var csvBlobStream = await _reportService.GetReportStreamAsync($"{Ukprn}/{ContextJobId}/ValidationErrors.csv");
+                return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_ValidationErrors.csv");
             }
             catch (Exception e)
             {

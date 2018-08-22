@@ -6,7 +6,6 @@ using DC.Web.Authorization.Base;
 using DC.Web.Authorization.Data.Repository;
 using DC.Web.Authorization.FileSubmissionPolicy;
 using DC.Web.Authorization.Query;
-using DC.Web.Ui.Services;
 using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -14,14 +13,11 @@ using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTime.Provider;
 using ESFA.DC.DateTime.Provider.Interface;
-using ESFA.DC.KeyGenerator;
-using ESFA.DC.KeyGenerator.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ESFA.DC.Logging.Config.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
-using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
 using ILogger = ESFA.DC.Logging.Interfaces.ILogger;
@@ -43,7 +39,6 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
-            builder.RegisterType<KeyGenerator>().As<IKeyGenerator>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
 
             builder.Register(context =>
