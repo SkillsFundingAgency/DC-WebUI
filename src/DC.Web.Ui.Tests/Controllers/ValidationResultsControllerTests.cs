@@ -33,6 +33,14 @@ namespace DC.Web.Ui.Tests.Controllers
             var modelresult = (ValidationResultViewModel)((ViewResult)result).Model;
 
             modelresult.JobId.Should().Be(1000);
+
+            modelresult.ReportFileSize.Should().Be("20.30");
+            modelresult.CollectionName.Should().Be("ILR1819");
+            modelresult.TotalErrors.Should().Be(100);
+            modelresult.TotalErrorLearners.Should().Be(20);
+            modelresult.TotalLearners.Should().Be(50);
+            modelresult.TotalWarningLearners.Should().Be(30);
+            modelresult.TotalWarnings.Should().Be(40);
         }
 
         [Fact]
@@ -52,18 +60,30 @@ namespace DC.Web.Ui.Tests.Controllers
                 ["JobId"] = 1000
             };
 
-            var validationErrorsServiceMock = new Mock<IValidationErrorsService>();
+            var validationErrorsServiceMock = new Mock<IValidationResultsService>();
             var submissionServiceMock = new Mock<ISubmissionService>();
             var reportServiceMock = new Mock<IReportService>();
 
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(() => new IlrJob
                 {
                     JobId = 1000,
-                    TotalLearners = 10
-                });
+                    TotalLearners = 10,
+                    Ukprn = 0,
+                    CollectionName = "ILR1819"
+            });
 
             validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DateTime>()))
-                .ReturnsAsync(() => new ValidationResultViewModel());
+                .ReturnsAsync(() => new ValidationResultViewModel()
+                {
+                    JobId = 1000,
+                    ReportFileSize = "20.30",
+                    CollectionName = "ILR1819",
+                    TotalErrors = 100,
+                    TotalErrorLearners = 20,
+                    TotalLearners = 50,
+                    TotalWarningLearners = 30,
+                    TotalWarnings = 40
+                });
 
             reportServiceMock.Setup(x => x.GetReportStreamAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new MemoryStream());

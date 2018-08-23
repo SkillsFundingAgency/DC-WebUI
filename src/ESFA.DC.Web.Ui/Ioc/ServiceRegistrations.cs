@@ -40,7 +40,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
-            builder.RegisterType<ValidationErrorsService>().As<IValidationErrorsService>().InstancePerLifetimeScope();
+            builder.RegisterType<ValidationResultsService>().As<IValidationResultsService>().InstancePerLifetimeScope();
             builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();

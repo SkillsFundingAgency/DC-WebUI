@@ -12,7 +12,7 @@ using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Services
 {
-    public class ValidationErrorsService : IValidationErrorsService
+    public class ValidationResultsService : IValidationResultsService
     {
         private readonly IJsonSerializationService _serializationService;
         private readonly IReportService _reportService;
@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Services.Services
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
 
-        public ValidationErrorsService(
+        public ValidationResultsService(
             IJsonSerializationService serializationService,
             IReportService reportService,
             IDateTimeProvider dateTimeProvider,
@@ -53,16 +53,15 @@ namespace DC.Web.Ui.Services.Services
                 TotalWarningLearners = ilrValidationResult.TotalWarningLearners,
                 TotalWarnings = ilrValidationResult.TotalWarnings,
                 TotalLearners = ilrValidationResult.TotalLearners,
-                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N"),
-                ReportFileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc)}.csv"
-        };
+                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N")
+            };
         }
 
         public async Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/ValidationResults/{ukprn}/{jobId}");
 
-            if (data != null)
+            if (!string.IsNullOrEmpty(data))
             {
                 return _serializationService.Deserialize<IlrValidationResult>(data);
             }

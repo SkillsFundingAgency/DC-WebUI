@@ -17,18 +17,18 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     [Route("validation-results")]
     public class ValidationResultsController : BaseController
     {
-        private readonly IValidationErrorsService _validationErrorsService;
+        private readonly IValidationResultsService _validationResultsService;
         private readonly ISubmissionService _submissionService;
         private readonly IReportService _reportService;
 
         public ValidationResultsController(
-            IValidationErrorsService validationErrorsService,
+            IValidationResultsService validationResultsService,
             ISubmissionService submissionService,
             IReportService reportService,
             ILogger logger)
             : base(logger)
         {
-            _validationErrorsService = validationErrorsService;
+            _validationResultsService = validationResultsService;
             _submissionService = submissionService;
             _reportService = reportService;
         }
@@ -40,7 +40,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             var job = await GetJob(jobId);
 
-            var valResult = await _validationErrorsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
+            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
             if (valResult == null)
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
@@ -85,8 +85,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             try
             {
                 var job = await GetJob(jobId);
-                var downloadFileName = $"{_validationErrorsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
-                var storageFileName = $"{_validationErrorsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
+                var downloadFileName = $"{_validationResultsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
+                var storageFileName = $"{_validationResultsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
 
                 var csvBlobStream = await _reportService.GetReportStreamAsync(storageFileName);
                 return File(csvBlobStream, "text/csv", downloadFileName);

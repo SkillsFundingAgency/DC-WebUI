@@ -29,8 +29,10 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var queue = new Mock<IJobQueueService>();
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
 
-            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, null);
+            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, dateTimeProviderMock.Object);
             await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<int>());
 
             queue.Verify(x => x.AddJobAsync(It.IsAny<IlrJob>()), Times.Once);
@@ -67,21 +69,20 @@ namespace DC.Web.Ui.Services.Tests
             confirmation.FileName.Should().Be("test1.xml");
         }
 
-        //[Fact]
-        //public async Task UpdateJobStatus_Success()
-        //{
-        //    var job = new JobStatusDto()
-        //    {
-        //        JobId = 10,
-        //        JobStatus = 4,
-        //        NumberOfLearners = 100
-        //    };
-        //    var httpClientMock = new Mock<IBespokeHttpClient>();
-        //    httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), job));
+        [Fact]
+        public async Task UpdateJobStatus_Success()
+        {
+            var job = new JobStatusDto()
+            {
+                JobId = 10,
+                JobStatus = 4
+            };
+            var httpClientMock = new Mock<IBespokeHttpClient>();
+            httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), job));
 
-        //    var submisisionService = new SubmissionService(new Mock<IJobQueueService>().Object, null, httpClientMock.Object, new ApiSettings(), null);
-        //    var result = await submisisionService.UpdateJobStatus(10, JobStatusType.Completed, 100);
-        //    httpClientMock.Verify(x => x.SendDataAsync(It.IsAny<string>(), job), Times.Once());
-        //}
+            var submisisionService = new SubmissionService(new Mock<IJobQueueService>().Object, null, httpClientMock.Object, new ApiSettings(), null, new Mock<IDateTimeProvider>().Object);
+            var result = await submisisionService.UpdateJobStatus(10, JobStatusType.Completed);
+            httpClientMock.Verify(x => x.SendDataAsync(It.IsAny<string>(), It.IsAny<JobStatusDto>()), Times.Once());
+        }
     }
 }
