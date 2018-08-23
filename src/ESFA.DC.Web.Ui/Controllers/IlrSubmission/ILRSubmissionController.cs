@@ -19,6 +19,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     [Route("ilr-submission")]
     public class ILRSubmissionController : BaseController
     {
+        private const string TempDataKey = "CollectionType";
         private readonly ISubmissionService _submissionService;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IFileNameValidationService _fileNameValidationService;
@@ -94,6 +95,9 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             try
             {
+                // Change filename to include the ukprn to keep the root of the storage account clean
+                string filename = $"{Ukprn}/{file.FileName}";
+
                 // push file to Storage
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 

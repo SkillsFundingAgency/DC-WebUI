@@ -9,7 +9,6 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
-using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;

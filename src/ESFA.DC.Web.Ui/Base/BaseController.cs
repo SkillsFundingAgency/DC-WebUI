@@ -1,7 +1,6 @@
 ﻿using DC.Web.Authorization.Data.Constants;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
-using DC.Web.Ui.Settings.Models;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
