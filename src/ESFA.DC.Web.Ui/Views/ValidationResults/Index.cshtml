@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    ViewData["BackUrl"] = $"/ilr-submission/{Model.CollectionName}";
+
 }
 
 @if (Model.TotalErrors >0)
@@ -34,7 +36,7 @@
 
 
 <p>
-    @Html.ActionLink($"Download detailed report (CSV, {@Model.ReportFileSize}kB) showing all errors and warnings", "Download", "ValidationResults")
+    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults") <span>(CSV, @Model.ReportFileSize KB) showing all errors and warnings</span>
 </p>
 
 <div class="govuk-warning-text">

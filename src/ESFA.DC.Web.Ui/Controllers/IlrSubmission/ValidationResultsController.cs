@@ -60,7 +60,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ");
             var job = await GetJob(jobId);
 
-            await _submissionService.UpdateJobStatus(jobId, JobStatusType.Ready, -1);
+            await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
             return RedirectToAction("Index", "SubmissionConfirmation", new { jobId = jobId });
         }
@@ -71,7 +71,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         {
             var job = await GetJob(jobId);
 
-            await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed, -1);
+            await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
             return RedirectToAction("Index", "ILRSubmission", new { job.CollectionName });
@@ -85,9 +85,11 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             try
             {
                 var job = await GetJob(jobId);
-                var fileName = $"{_validationErrorsService.GetFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
-                var csvBlobStream = await _reportService.GetReportStreamAsync(fileName);
-                return File(csvBlobStream, "text/csv", fileName.Replace("/", "_"));
+                var downloadFileName = $"{_validationErrorsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
+                var storageFileName = $"{_validationErrorsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
+
+                var csvBlobStream = await _reportService.GetReportStreamAsync(storageFileName);
+                return File(csvBlobStream, "text/csv", downloadFileName);
             }
             catch (Exception e)
             {
@@ -96,14 +98,14 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
         }
 
-        private async Task<IlrJob> GetJob(long jobId)
+        public async Task<IlrJob> GetJob(long jobId)
         {
             Logger.LogInfo($"Trying to get Job for validation results report page for job id : {jobId}");
 
             var job = await _submissionService.GetJob(Ukprn, jobId);
-            if (job == null)
+            if (job == null || job.Ukprn != Ukprn)
             {
-                throw new Exception($"invalid job id provider for validation results page jobid: {jobId}");
+                throw new Exception($"invalid job id provider for validation results page jobid: {jobId} and ukprn : {Ukprn}");
             }
 
             return job;

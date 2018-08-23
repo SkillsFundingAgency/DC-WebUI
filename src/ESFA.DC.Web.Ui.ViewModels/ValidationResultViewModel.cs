@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class ValidationResultViewModel
     {
-        public long ReportFileSize { get; set; }
+        public string ReportFileSize { get; set; }
 
         public long JobId { get; set; }
 

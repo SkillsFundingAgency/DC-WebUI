@@ -10,6 +10,6 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public string PeriodName { get; set; }
 
-        public long FileSize { get; set; }
+        public decimal FileSize { get; set; }
     }
 }

@@ -10,6 +10,8 @@ namespace DC.Web.Ui.Services.Interfaces
     {
         Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc);
 
-        string GetFileName(long ukprn, long jobId, DateTime dateTimeUtc);
+        string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc);
+
+        string GetReportFileName(DateTime dateTimeUtc);
     }
 }

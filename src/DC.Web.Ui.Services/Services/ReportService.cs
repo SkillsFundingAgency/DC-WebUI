@@ -44,7 +44,7 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public async Task<long> GetReportFileSizeAsync(string fileName)
+        public async Task<decimal> GetReportFileSizeAsync(string fileName)
         {
             _logger.LogInfo($"Getting report file size : {fileName}");
             try
@@ -52,7 +52,7 @@ namespace DC.Web.Ui.Services.Services
                 var cloudBlockBlob = GetBlob(fileName);
                 if (await cloudBlockBlob.ExistsAsync())
                 {
-                    return (long)(cloudBlockBlob.Properties.Length / 1024);
+                    return (decimal)cloudBlockBlob.Properties.Length / 1024;
                 }
             }
             catch (Exception ex)

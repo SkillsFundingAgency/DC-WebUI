@@ -14,27 +14,32 @@ namespace DC.Web.Ui.Services.Services
 {
     public class ValidationErrorsService : IValidationErrorsService
     {
-        private readonly string _reportFileName = "{0}/{1}/Validation Errors Report {2}";
         private readonly IJsonSerializationService _serializationService;
         private readonly IReportService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IKeyValuePersistenceService _persistenceService;
+        private readonly IBespokeHttpClient _httpClient;
+        private readonly string _baseUrl;
 
         public ValidationErrorsService(
             IJsonSerializationService serializationService,
             IReportService reportService,
             IDateTimeProvider dateTimeProvider,
-            IKeyValuePersistenceService persistenceService)
+            IKeyValuePersistenceService persistenceService,
+            IBespokeHttpClient httpClient,
+            ApiSettings apiSettings)
         {
             _serializationService = serializationService;
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
             _persistenceService = persistenceService;
+            _httpClient = httpClient;
+            _baseUrl = apiSettings?.JobQueueBaseUrl;
         }
 
         public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc)
         {
-            var ilrValidationResult = await GetValidationErrorsData(ukprn, jobId, dateTimeUtc);
+            var ilrValidationResult = await GetValidationResultsData(ukprn, jobId);
             if (ilrValidationResult == null)
             {
                 return null;
@@ -48,33 +53,40 @@ namespace DC.Web.Ui.Services.Services
                 TotalWarningLearners = ilrValidationResult.TotalWarningLearners,
                 TotalWarnings = ilrValidationResult.TotalWarnings,
                 TotalLearners = ilrValidationResult.TotalLearners,
-                ReportFileSize = await GetFileSize(ukprn, jobId, dateTimeUtc),
-                ReportFileName = $"{GetFileName(ukprn, jobId, dateTimeUtc)}.csv"
+                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N"),
+                ReportFileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc)}.csv"
         };
         }
 
-        public async Task<IlrValidationResult> GetValidationErrorsData(long ukprn, long jobId, DateTime dateTimeUtc)
+        public async Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId)
         {
-            var validationErrorsKey = $"{GetFileName(ukprn, jobId, dateTimeUtc)}.json";
-            var exists = await _persistenceService.ContainsAsync(validationErrorsKey);
-            if (exists)
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/ValidationResults/{ukprn}/{jobId}");
+
+            if (data != null)
             {
-                var data = await _persistenceService.GetAsync(validationErrorsKey);
                 return _serializationService.Deserialize<IlrValidationResult>(data);
             }
 
             return null;
         }
 
-        public string GetFileName(long ukprn, long jobId, DateTime dateTimeUtc)
+        public string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc)
         {
+            var reportFileName = "{0}/{1}/Validation Errors Report {2}";
             var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
-            return string.Format(_reportFileName, ukprn, jobId, jobDateTime);
+            return string.Format(reportFileName, ukprn, jobId, jobDateTime);
         }
 
-        public async Task<long> GetFileSize(long ukprn, long jobId, DateTime dateTimeUtc)
+        public string GetReportFileName(DateTime dateTimeUtc)
         {
-            var fileName = $"{GetFileName(ukprn, jobId, dateTimeUtc)}.csv";
+            var reportFileName = "Validation Errors Report {0}";
+            var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
+            return string.Format(reportFileName, jobDateTime);
+        }
+
+        public async Task<decimal> GetFileSize(long ukprn, long jobId, DateTime dateTimeUtc)
+        {
+            var fileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc)}.csv";
             return await _reportService.GetReportFileSizeAsync(fileName);
         }
     }

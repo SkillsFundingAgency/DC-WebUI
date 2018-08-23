@@ -83,13 +83,12 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<IlrJob>>(data);
         }
 
-        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners)
+        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new JobStatusDto()
             {
                 JobId = jobId,
-                JobStatus = (int)status,
-                NumberOfLearners = totalLearners
+                JobStatus = (int)status
             };
             return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
         }
