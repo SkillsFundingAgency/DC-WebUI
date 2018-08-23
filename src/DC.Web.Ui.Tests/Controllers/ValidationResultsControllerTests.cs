@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
-using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Logging.Interfaces;
-using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

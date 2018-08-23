@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Services.Interfaces;
-using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
