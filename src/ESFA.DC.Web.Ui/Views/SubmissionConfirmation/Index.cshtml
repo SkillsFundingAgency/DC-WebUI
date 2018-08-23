@@ -4,9 +4,6 @@
 @{
     ViewData["Title"] = "Confirmation";
 }
-
-<div class="grid-row">
-    <div class="column-two-thirds">
         <div class="govuk-box-highlight">
             <h1 class="heading-large">
                 @Html.DisplayFor(model => model.PeriodName) ILR file submitted
@@ -38,7 +35,3 @@
         @Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId})
     </p>
         <p><a href="/submission-options">Submit another data return</a></p>
-    </div>
-</div>
-
-

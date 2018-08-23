@@ -6,7 +6,6 @@ using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.ViewModels;
-using ESFA.DC.DateTime.Provider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
@@ -20,6 +19,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     [Route("ilr-submission")]
     public class ILRSubmissionController : BaseController
     {
+        private const string TempDataKey = "CollectionType";
         private readonly ISubmissionService _submissionService;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IFileNameValidationService _fileNameValidationService;
@@ -84,7 +84,6 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new ArgumentOutOfRangeException(collectionName);
             }
 
-            var fileName = file?.FileName;
             var period = await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
 
             if (period == null)
@@ -93,6 +92,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new Exception($"No active period for collection : {collectionName}");
             }
 
+            var fileName = $"{Ukprn}/{file.FileName}";
             try
             {
                 // push file to Storage

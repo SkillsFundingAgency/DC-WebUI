@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
@@ -21,19 +21,22 @@ namespace DC.Web.Ui.Services.Services
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
         private readonly IJsonSerializationService _serializationService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public SubmissionService(
             IJobQueueService jobQueueService,
             CloudStorageSettings cloudStorageSettings,
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
-            IJsonSerializationService serializationService)
+            IJsonSerializationService serializationService,
+            IDateTimeProvider dateTimeProvider)
         {
             _jobQueueService = jobQueueService;
             _cloudStorageSettings = cloudStorageSettings;
             _httpClient = httpClient;
             _baseUrl = apiSettings?.JobQueueBaseUrl;
             _serializationService = serializationService;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<long> SubmitIlrJob(
@@ -47,7 +50,7 @@ namespace DC.Web.Ui.Services.Services
             var job = new IlrJob()
             {
                 Ukprn = ukprn,
-                DateTimeSubmittedUtc = DateTime.UtcNow,
+                DateTimeSubmittedUtc = _dateTimeProvider.GetNowUtc(),
                 Priority = 1,
                 Status = JobStatusType.Ready,
                 SubmittedBy = submittedBy,
@@ -79,13 +82,12 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<IlrJob>>(data);
         }
 
-        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners)
+        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new JobStatusDto()
             {
                 JobId = jobId,
-                JobStatus = (int)status,
-                NumberOfLearners = totalLearners
+                JobStatus = (int)status
             };
             return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
         }

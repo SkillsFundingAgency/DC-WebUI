@@ -15,7 +15,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
 
-        Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners);
+        Task<string> UpdateJobStatus(long jobId, JobStatusType status);
 
         Task<JobStatusType> GetJobStatus(long jobId);
 

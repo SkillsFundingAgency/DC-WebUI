@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
-using ESFA.DC.KeyGenerator.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -15,92 +16,98 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     [Route("validation-results")]
     public class ValidationResultsController : BaseController
     {
-        private readonly IValidationErrorsService _validationErrorsService;
+        private readonly IValidationResultsService _validationResultsService;
         private readonly ISubmissionService _submissionService;
         private readonly IReportService _reportService;
 
         public ValidationResultsController(
-            IValidationErrorsService validationErrorsService,
+            IValidationResultsService validationResultsService,
             ISubmissionService submissionService,
             IReportService reportService,
             ILogger logger)
             : base(logger)
         {
-            _validationErrorsService = validationErrorsService;
+            _validationResultsService = validationResultsService;
             _submissionService = submissionService;
             _reportService = reportService;
         }
 
-        private string _reportFileName => $"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv";
-
-        [Route("")]
+        [Route("{jobId}")]
         public async Task<IActionResult> Index(long jobId)
         {
             Logger.LogInfo($"Loading validation results page for job id : {jobId}");
 
-            SetJobId(jobId);
+            var job = await GetJob(jobId);
 
-            var job = await _submissionService.GetJob(Ukprn, jobId);
-            if (job == null)
+            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
+            if (valResult == null)
             {
-                Logger.LogInfo($"Loading validation results page for job id : {jobId}, job not found");
+                Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
                 return View(new ValidationResultViewModel());
             }
 
-            var valErrors = await _validationErrorsService.GetValidationErrors(Ukprn, jobId);
-            Logger.LogInfo($"Got validation results for job id : {jobId}");
+            valResult.CollectionName = job.CollectionName;
+            Logger.LogInfo($"Returning validation results for job id : {jobId}, total errors : {valResult.TotalErrors}");
 
-            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/{TaskKeys.ValidationErrors}.csv");
-            Logger.LogInfo($"Got report size for job id : {jobId}");
-
-            var result = new ValidationResultViewModel
-            {
-                JobId = jobId,
-                ReportFileSize = fileSize,
-                Filename = job.FileName,
-                SubmissionDateTime = job.DateTimeSubmittedUtc,
-                TotalLearners = job.TotalLearners,
-                UploadedBy = job.SubmittedBy,
-                TotalErrors = valErrors.Count()
-            };
-            Logger.LogInfo($"Returning validation results for job id : {jobId}, total errors : {result.TotalErrors}");
-
-            return View(result);
+            return View(valResult);
         }
 
         [HttpPost]
-        public IActionResult Submit(bool submitFile, int totalLearners)
+        [Route("SubmitAnyway/{jobId}")]
+        public async Task<IActionResult> SubmitAnyway(long jobId)
         {
-            Logger.LogInfo($"Validation results Submit to progress : {submitFile}");
-            if (!submitFile)
-            {
-                _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Completed, totalLearners);
-                Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {ContextJobId}");
-                return RedirectToAction("Index", "SubmissionOptions");
-            }
-            else
-            {
-                _submissionService.UpdateJobStatus(ContextJobId, JobStatusType.Ready, totalLearners);
-                Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {ContextJobId}");
-                return RedirectToAction("Index", "SubmissionConfirmation", new { jobId = ContextJobId });
-            }
+            Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ");
+            var job = await GetJob(jobId);
+
+            await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
+            Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
+            return RedirectToAction("Index", "SubmissionConfirmation", new { jobId = jobId });
         }
 
-        [Route("Download")]
-        public async Task<FileResult> Download()
+        [HttpGet]
+        [Route("SubmitAnother/{jobId}")]
+        public async Task<IActionResult> SubmitAnother(long jobId)
         {
-            Logger.LogInfo($"Downlaod csv request for Job id : {ContextJobId}, Filename : {_reportFileName}");
+            var job = await GetJob(jobId);
+
+            await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
+            Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
+
+            return RedirectToAction("Index", "ILRSubmission", new { job.CollectionName });
+        }
+
+        [Route("Download/{jobId}")]
+        public async Task<FileResult> Download(long jobId)
+        {
+            Logger.LogInfo($"Downlaod csv request for Job id : {jobId}");
 
             try
             {
-                var csvBlobStream = await _reportService.GetReportStreamAsync($"{Ukprn}/{ContextJobId}/{TaskKeys.ValidationErrors}.csv");
-                return File(csvBlobStream, "text/csv", $"{Ukprn}_{ContextJobId}_{TaskKeys.ValidationErrors}.csv");
+                var job = await GetJob(jobId);
+                var downloadFileName = $"{_validationResultsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
+                var storageFileName = $"{_validationResultsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
+
+                var csvBlobStream = await _reportService.GetReportStreamAsync(storageFileName);
+                return File(csvBlobStream, "text/csv", downloadFileName);
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download csv failed for job id : {ContextJobId}", e);
+                Logger.LogError($"Download csv failed for job id : {jobId}", e);
                 throw;
             }
+        }
+
+        public async Task<IlrJob> GetJob(long jobId)
+        {
+            Logger.LogInfo($"Trying to get Job for validation results report page for job id : {jobId}");
+
+            var job = await _submissionService.GetJob(Ukprn, jobId);
+            if (job == null || job.Ukprn != Ukprn)
+            {
+                throw new Exception($"invalid job id provider for validation results page jobid: {jobId} and ukprn : {Ukprn}");
+            }
+
+            return job;
         }
     }
 }
