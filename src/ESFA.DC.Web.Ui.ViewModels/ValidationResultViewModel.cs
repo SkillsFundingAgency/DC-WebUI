@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
