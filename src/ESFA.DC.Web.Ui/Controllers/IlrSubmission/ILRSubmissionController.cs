@@ -84,7 +84,6 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new ArgumentOutOfRangeException(collectionName);
             }
 
-            var fileName = file?.FileName;
             var period = await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
 
             if (period == null)
@@ -93,11 +92,9 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 throw new Exception($"No active period for collection : {collectionName}");
             }
 
+            var fileName = $"{Ukprn}/{file.FileName}";
             try
             {
-                // Change filename to include the ukprn to keep the root of the storage account clean
-                string filename = $"{Ukprn}/{file.FileName}";
-
                 // push file to Storage
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
