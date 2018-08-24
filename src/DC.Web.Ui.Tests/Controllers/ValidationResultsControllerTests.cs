@@ -33,7 +33,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void Download_Test()
         {
             var controller = GetController();
-            var result = controller.Download().Result;
+            var result = controller.Download(1).Result;
 
             result.Should().BeOfType(typeof(FileStreamResult));
         }
