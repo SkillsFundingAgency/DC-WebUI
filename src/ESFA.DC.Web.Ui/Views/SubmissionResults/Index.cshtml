@@ -3,35 +3,30 @@
 @{
     ViewData["Title"] = "ILR Submission Results";
 }
+<h1 class="govuk-heading-xl">Individualised Learner Record (ILR) submissions</h1>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">Individualised Learner Record (ILR) submissions</h1>
-        
-        @if (Model.FileSize > 0)
-        {
-            <h2 class="heading-medium">Return Period @Html.DisplayFor(model => model.PeriodNumber) (@Html.DisplayFor(model => model.PeriodName))</h2>
+@if (Model.FileSize > 0)
+{
+<h2 class="govuk-heading-l">Return Period @Html.DisplayFor(model => model.PeriodNumber) (@Html.DisplayFor(model => model.PeriodName))</h2>
 
-            <p>
-                @Html.ActionLink($"Download all your reports (Zip, {@Model.FileSize}kB)", "Download", "SubmissionResults")
-            </p>
-            <details class="govuk-details" role="group">
-                <summary class="govuk-details__summary" role="button" aria-controls="details-content-7f6d4efe-3a7c-4ace-be55-a68b13884308" aria-expanded="true">
-                    <span class="govuk-details__summary-text">
-                        Problems with the figures?
-                    </span>
-                </summary>
-                <div class="govuk-details__text" id="details-content-7f6d4efe-3a7c-4ace-be55-a68b13884308" aria-hidden="true">
-                    You can <a href="/submission-options">re-submit your file</a> or contact us to let us know.
+    <p>
+        @Html.ActionLink($"Download all your reports (Zip, {@Model.FileSize}kB)", "Download", "SubmissionResults")
+    </p>
+    <details class="govuk-details" role="group" open="">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content-9df1fa39-15c1-4e6e-9426-ed2cffe7189a" aria-expanded="true">
+            <span class="govuk-details__summary-text">
+                Problems with the figures?
+            </span>
+        </summary>
+        <div class="govuk-details__text" id="details-content-9df1fa39-15c1-4e6e-9426-ed2cffe7189a" aria-hidden="false">
+            You can <a href="/submission-options">re-submit your file</a> or contact us to let us know.
 
-                </div>
-            </details>
-        }
-        else
-        {
-            <h2 class="heading-medium">Your file is still being processed. Please come back later.</h2>
+        </div>
+    </details>
+}
+else
+{
+    <h2 class="heading-medium">Your file is still being processed. Please come back later.</h2>
 
-        }
-    </div>
-</div>
+}
 
