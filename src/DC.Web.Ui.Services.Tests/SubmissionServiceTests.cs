@@ -9,6 +9,7 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
@@ -32,7 +33,7 @@ namespace DC.Web.Ui.Services.Tests
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
 
             var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, dateTimeProviderMock.Object);
-            await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<int>());
+            await submisisionService.SubmitIlrJob(new IlrSubmissionMessageViewModel());
 
             queue.Verify(x => x.AddJobAsync(It.IsAny<IlrJob>()), Times.Once);
         }

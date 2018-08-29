@@ -62,7 +62,6 @@ namespace DC.Web.Ui.Tests.Controllers
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(() => new IlrJob
                 {
                     JobId = 1000,
-                    TotalLearners = 10,
                     Ukprn = 0,
                     CollectionName = "ILR1819"
             });
