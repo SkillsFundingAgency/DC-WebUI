@@ -25,13 +25,10 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitIlrJob(
-                "test file",
-                It.IsAny<decimal>(),
-                It.IsAny<string>(),
-                It.IsAny<long>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).Returns(Task.FromResult((long)1));
+            submissionServiceMock.Setup(x => x.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+            {
+                FileName = "test file",
+            })).Returns(Task.FromResult((long)1));
 
             var controller = GetController(submissionServiceMock.Object);
 

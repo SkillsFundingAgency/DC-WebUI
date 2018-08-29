@@ -99,13 +99,16 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(
-                    fileName,
-                    file.Length,
-                    User.Name(),
-                    Ukprn,
-                    collectionName,
-                    period.PeriodNumber);
+                var jobId = await _submissionService.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+                {
+                   FileName = fileName,
+                   FileSizeBytes = file.Length,
+                   SubmittedBy = User.Name(),
+                   Ukprn = Ukprn,
+                   CollectionName = collectionName,
+                   Period = period.PeriodNumber,
+                    NotifyEmail = User.Email()
+                });
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)

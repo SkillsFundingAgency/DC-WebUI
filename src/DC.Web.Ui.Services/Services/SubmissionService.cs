@@ -39,27 +39,22 @@ namespace DC.Web.Ui.Services.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<long> SubmitIlrJob(
-            string fileName,
-            decimal fileSizeBytes,
-            string submittedBy,
-            long ukprn,
-            string collectionName,
-            int period)
+        public async Task<long> SubmitIlrJob(IlrSubmissionMessageViewModel submissionMessage)
         {
             var job = new IlrJob()
             {
-                Ukprn = ukprn,
+                Ukprn = submissionMessage.Ukprn,
                 DateTimeSubmittedUtc = _dateTimeProvider.GetNowUtc(),
                 Priority = 1,
                 Status = JobStatusType.Ready,
-                SubmittedBy = submittedBy,
-                FileName = fileName,
+                SubmittedBy = submissionMessage.SubmittedBy,
+                FileName = submissionMessage.FileName,
                 IsFirstStage = true,
                 StorageReference = _cloudStorageSettings.ContainerName,
-                FileSize = fileSizeBytes,
-                CollectionName = collectionName,
-                PeriodNumber = period
+                FileSize = submissionMessage.FileSizeBytes,
+                CollectionName = submissionMessage.CollectionName,
+                PeriodNumber = submissionMessage.Period,
+                NotifyEmail = submissionMessage.NotifyEmail
             };
             return await _jobQueueService.AddJobAsync(job);
         }
