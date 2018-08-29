@@ -92,7 +92,7 @@ namespace DC.Web.Ui.Services.Services
             var job = await GetJob(ukprn, jobId);
             return new IlrSubmissionConfirmationViewModel()
             {
-                FileName = job.FileName,
+                FileName = job.FileName.Split('/')[1],
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
                 SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mm tt"), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
