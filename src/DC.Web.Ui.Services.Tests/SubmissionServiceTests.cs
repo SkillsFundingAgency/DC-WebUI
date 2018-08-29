@@ -48,7 +48,7 @@ namespace DC.Web.Ui.Services.Tests
                 DateTimeSubmittedUtc = new DateTime(2018, 08, 09, 05, 06, 0),
                 SubmittedBy = "test user",
                 PeriodNumber = 6,
-                FileName = "test1.xml"
+                FileName = "22222_test1.xml".Replace("_", "/")
             };
             var httpClientMock = new Mock<IBespokeHttpClient>();
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => string.Empty);
