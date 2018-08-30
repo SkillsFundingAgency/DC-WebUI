@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,16 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 return View(new SubmissionResultViewModel());
             }
 
-            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/Reports.zip");
-            Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
+            decimal fileSize = 0;
+            if (job.Status == JobStatusType.Completed)
+            {
+                fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/Reports.zip");
+                Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
+            }
+            else
+            {
+                Logger.LogInfo($"Got job status for job id : {jobId}, it is still : {job.Status}");
+            }
 
             var result = new SubmissionResultViewModel()
             {
