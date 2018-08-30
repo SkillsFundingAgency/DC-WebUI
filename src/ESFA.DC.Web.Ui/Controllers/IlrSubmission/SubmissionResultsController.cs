@@ -49,7 +49,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [Route("Download/{jobId}")]
         public async Task<FileResult> Download(long jobId)
         {
-            var reportFileName = $"{Ukprn}/{jobId}/reports.zip";
+            var reportFileName = $"{Ukprn}/{jobId}/Reports.zip";
             Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
 
             try
