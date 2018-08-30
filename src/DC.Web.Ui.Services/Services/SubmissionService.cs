@@ -39,37 +39,22 @@ namespace DC.Web.Ui.Services.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<CloudBlobStream> GetBlobStream(string fileName)
-        {
-            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(_cloudStorageSettings.ConnectionString);
-            CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(_cloudStorageSettings.ContainerName);
-            CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
-
-            return await cloudBlockBlob.OpenWriteAsync();
-        }
-
-        public async Task<long> SubmitIlrJob(
-            string fileName,
-            decimal fileSizeBytes,
-            string submittedBy,
-            long ukprn,
-            string collectionName,
-            int period)
+        public async Task<long> SubmitIlrJob(IlrSubmissionMessageViewModel submissionMessage)
         {
             var job = new IlrJob()
             {
-                Ukprn = ukprn,
+                Ukprn = submissionMessage.Ukprn,
                 DateTimeSubmittedUtc = _dateTimeProvider.GetNowUtc(),
                 Priority = 1,
                 Status = JobStatusType.Ready,
-                SubmittedBy = submittedBy,
-                FileName = fileName,
+                SubmittedBy = submissionMessage.SubmittedBy,
+                FileName = submissionMessage.FileName,
                 IsFirstStage = true,
                 StorageReference = _cloudStorageSettings.ContainerName,
-                FileSize = fileSizeBytes,
-                CollectionName = collectionName,
-                PeriodNumber = period
+                FileSize = submissionMessage.FileSizeBytes,
+                CollectionName = submissionMessage.CollectionName,
+                PeriodNumber = submissionMessage.Period,
+                NotifyEmail = submissionMessage.NotifyEmail
             };
             return await _jobQueueService.AddJobAsync(job);
         }
@@ -92,13 +77,12 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<IlrJob>>(data);
         }
 
-        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners)
+        public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new JobStatusDto()
             {
                 JobId = jobId,
-                JobStatus = (int)status,
-                NumberOfLearners = totalLearners
+                JobStatus = (int)status
             };
             return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
         }
@@ -108,7 +92,7 @@ namespace DC.Web.Ui.Services.Services
             var job = await GetJob(ukprn, jobId);
             return new IlrSubmissionConfirmationViewModel()
             {
-                FileName = job.FileName,
+                FileName = job.FileName.Split('/')[1],
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
                 SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mm tt"), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),

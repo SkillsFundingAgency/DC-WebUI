@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
-using ESFA.DC.ILR.ValidationErrors.Interface.Models;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
@@ -45,7 +44,7 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public async Task<long> GetReportFileSizeAsync(string fileName)
+        public async Task<decimal> GetReportFileSizeAsync(string fileName)
         {
             _logger.LogInfo($"Getting report file size : {fileName}");
             try
@@ -53,7 +52,7 @@ namespace DC.Web.Ui.Services.Services
                 var cloudBlockBlob = GetBlob(fileName);
                 if (await cloudBlockBlob.ExistsAsync())
                 {
-                    return (long)(cloudBlockBlob.Properties.Length / 1024);
+                    return (decimal)cloudBlockBlob.Properties.Length / 1024;
                 }
             }
             catch (Exception ex)

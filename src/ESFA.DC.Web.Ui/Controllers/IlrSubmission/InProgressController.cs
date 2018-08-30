@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
 {
+    [Route("inprogress")]
     public class InProgressController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -17,6 +18,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _submissionService = submissionService;
         }
 
+        [Route("{jobId}")]
         public async Task<IActionResult> Index(long jobId)
         {
             ViewBag.AutoRefresh = true;

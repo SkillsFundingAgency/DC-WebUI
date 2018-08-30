@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
@@ -13,6 +14,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
     public class SubmissionOptionsController : BaseController
     {
         private readonly ICollectionManagementService _collectionManagementService;
+        private readonly string _summaryErrorMessage = "Check data you want to submit";
 
         public SubmissionOptionsController(ICollectionManagementService collectionManagementService, ILogger logger)
             : base(logger)
@@ -22,17 +24,15 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
         public async Task<IActionResult> Index()
         {
-            var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
+            var data = (await _collectionManagementService.GetSubmssionOptionsAsync(Ukprn)).ToList();
 
             if (data.Any())
             {
-                Logger.LogInfo($"Ukprn : {User.Ukprn()}, returned {data.Count()} collection types ");
+                Logger.LogInfo($"Ukprn : {Ukprn}, returned {data.Count()} collection types ");
                 return View(data);
             }
 
             Logger.LogInfo($"Ukprn : {User.Ukprn()}, returned no available collection types ");
-
-            //TODO: check whih page to redirec the user to when there is not collection type available
             return RedirectToAction("Index", "NotAuthorized");
         }
 
@@ -40,9 +40,9 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(string submissionType)
         {
-            Logger.LogInfo($"Ukprn : {User.Ukprn()}, submission option receievd {submissionType}");
+            Logger.LogInfo($"Ukprn : {Ukprn}, submission option receievd {submissionType}");
 
-            var data = await _collectionManagementService.GetSubmssionOptions(User.Ukprn());
+            var data = await _collectionManagementService.GetSubmssionOptionsAsync(Ukprn);
 
             if (!string.IsNullOrEmpty(submissionType))
             {
@@ -59,8 +59,10 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
             else
             {
-                ViewData["IsValid"] = false;
-                Logger.LogInfo($"Ukprn : {User.Ukprn()}, Invalid submittion type selected for the provider{submissionType}");
+                AddError(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey);
+                AddError(ErrorMessageKeys.ErrorSummaryKey, _summaryErrorMessage);
+
+                Logger.LogInfo($"Ukprn : {Ukprn}, Invalid submittion type selected for the provider : {submissionType}");
             }
 
             return View("Index", data);

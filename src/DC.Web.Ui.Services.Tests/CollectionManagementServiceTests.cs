@@ -48,7 +48,7 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
-            var data = service.GetSubmssionOptions(10000).Result;
+            var data = service.GetSubmssionOptionsAsync(10000).Result;
             data.Count().Should().Be(2);
             data.Any(x => x.Name == "ILR" && x.Title == "ILR data submission").Should().BeTrue();
             data.Any(x => x.Name == "ESF" && x.Title == "ESF data submission").Should().BeTrue();
@@ -68,7 +68,7 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
-            var data = service.GetSubmssionOptions(10000).Result;
+            var data = service.GetSubmssionOptionsAsync(10000).Result;
             data.Count().Should().Be(0);
         }
 
@@ -103,7 +103,7 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
-            var data = service.GetAvailableCollections(10000, "ILR").Result;
+            var data = service.GetAvailableCollectionsAsync(10000, "ILR").Result;
             data.Count().Should().Be(2);
             data.Any(x => x.CollectionName == "ILR1819" && x.IsOpen == true).Should().BeTrue();
             data.Any(x => x.CollectionName == "ILR1718" && x.IsOpen == true).Should().BeTrue();
@@ -134,7 +134,7 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
-            var data = service.GetCurrentPeriod("ILR1819").Result;
+            var data = service.GetCurrentPeriodAsync("ILR1819").Result;
             data.Should().NotBeNull();
             data.PeriodNumber.Should().Be(1);
         }

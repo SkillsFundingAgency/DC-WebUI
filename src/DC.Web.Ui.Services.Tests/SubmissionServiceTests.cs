@@ -6,7 +6,10 @@ using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.JobStatus.Dto;
+using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
@@ -17,46 +20,6 @@ namespace DC.Web.Ui.Services.Tests
     public class SubmissionServiceTests
     {
         [Fact]
-        public void GetBlobStream_Success()
-        {
-            var cloudStorageSettings = new CloudStorageSettings()
-            {
-                ConnectionString = "DefaultEndpointsProtocol=https;AccountName=xxxxxxxxxxxxxxx;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx==;EndpointSuffix=core.windows.net",
-                ContainerName = "test"
-            };
-
-            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null, null);
-
-            submisisionService.GetBlobStream("test file").Should().BeAssignableTo<Task<CloudBlobStream>>();
-        }
-
-        [Fact]
-        public async Task GetBlobStream_Error_InvalidAccount()
-        {
-            var cloudStorageSettings = new CloudStorageSettings()
-            {
-                ConnectionString = string.Empty,
-                ContainerName = "test"
-            };
-
-            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null, null);
-            await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream("test file"));
-        }
-
-        [Fact]
-        public async Task GetBlobStream_Error_InvalidFileName()
-        {
-            var cloudStorageSettings = new CloudStorageSettings()
-            {
-                ConnectionString = "DefaultEndpointsProtocol=https;AccountName=xxxxxxxxxxxxxxx;AccountKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx==;EndpointSuffix=core.windows.net",
-                ContainerName = "test"
-            };
-
-            var submisisionService = new SubmissionService(null, cloudStorageSettings, null, null, null, null);
-            await Assert.ThrowsAnyAsync<Exception>(() => submisisionService.GetBlobStream(null));
-        }
-
-        [Fact]
         public async Task AddMessageToQueue_Success()
         {
             var cloudStorageSettings = new CloudStorageSettings()
@@ -66,10 +29,11 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var queue = new Mock<IJobQueueService>();
-            var dateTimeProvider = new Mock<IDateTimeProvider>();
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
 
-            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, dateTimeProvider.Object);
-            await submisisionService.SubmitIlrJob(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<long>(), It.IsAny<string>(), It.IsAny<int>());
+            var submisisionService = new SubmissionService(queue.Object, cloudStorageSettings, null, null, null, dateTimeProviderMock.Object);
+            await submisisionService.SubmitIlrJob(new IlrSubmissionMessageViewModel());
 
             queue.Verify(x => x.AddJobAsync(It.IsAny<IlrJob>()), Times.Once);
         }
@@ -84,7 +48,7 @@ namespace DC.Web.Ui.Services.Tests
                 DateTimeSubmittedUtc = new DateTime(2018, 08, 09, 05, 06, 0),
                 SubmittedBy = "test user",
                 PeriodNumber = 6,
-                FileName = "test1.xml"
+                FileName = "22222_test1.xml".Replace("_", "/")
             };
             var httpClientMock = new Mock<IBespokeHttpClient>();
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => string.Empty);
@@ -94,7 +58,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var queue = new Mock<IJobQueueService>();
 
-            var submisisionService = new SubmissionService(queue.Object, null, httpClientMock.Object,  new ApiSettings(), serializationServiceMock.Object, null);
+            var submisisionService = new SubmissionService(queue.Object, null, httpClientMock.Object,  new ApiSettings(), serializationServiceMock.Object, new Mock<IDateTimeProvider>().Object);
             var confirmation = await submisisionService.GetIlrConfirmation(It.IsAny<long>(), It.IsAny<long>());
 
             confirmation.Should().NotBeNull();
@@ -105,21 +69,20 @@ namespace DC.Web.Ui.Services.Tests
             confirmation.FileName.Should().Be("test1.xml");
         }
 
-        //[Fact]
-        //public async Task UpdateJobStatus_Success()
-        //{
-        //    var job = new JobStatusDto()
-        //    {
-        //        JobId = 10,
-        //        JobStatus = 4,
-        //        NumberOfLearners = 100
-        //    };
-        //    var httpClientMock = new Mock<IBespokeHttpClient>();
-        //    httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), job));
+        [Fact]
+        public async Task UpdateJobStatus_Success()
+        {
+            var job = new JobStatusDto()
+            {
+                JobId = 10,
+                JobStatus = 4
+            };
+            var httpClientMock = new Mock<IBespokeHttpClient>();
+            httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), job));
 
-        //    var submisisionService = new SubmissionService(new Mock<IJobQueueService>().Object, null, httpClientMock.Object, new ApiSettings(), null);
-        //    var result = await submisisionService.UpdateJobStatus(10, JobStatusType.Completed, 100);
-        //    httpClientMock.Verify(x => x.SendDataAsync(It.IsAny<string>(), job), Times.Once());
-        //}
+            var submisisionService = new SubmissionService(new Mock<IJobQueueService>().Object, null, httpClientMock.Object, new ApiSettings(), null, new Mock<IDateTimeProvider>().Object);
+            var result = await submisisionService.UpdateJobStatus(10, JobStatusType.Completed);
+            httpClientMock.Verify(x => x.SendDataAsync(It.IsAny<string>(), It.IsAny<JobStatusDto>()), Times.Once());
+        }
     }
 }

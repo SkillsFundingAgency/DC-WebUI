@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,39 +22,43 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         private const string TempDataKey = "CollectionType";
         private readonly ISubmissionService _submissionService;
         private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IFileNameValidationService _fileNameValidationService;
+        private readonly IStreamableKeyValuePersistenceService _storageService;
 
         public ILRSubmissionController(
             ISubmissionService submissionService,
             ILogger logger,
-            ICollectionManagementService collectionManagementService)
+            ICollectionManagementService collectionManagementService,
+            IFileNameValidationService fileNameValidationService,
+            IStreamableKeyValuePersistenceService storageService)
             : base(logger)
         {
             _submissionService = submissionService;
             _collectionManagementService = collectionManagementService;
+            _fileNameValidationService = fileNameValidationService;
+            _storageService = storageService;
         }
 
-        public string CollectionName
-        {
-            get
-            {
-                return (string)TempData[TempDataKey];
-            }
-
-            set
-            {
-                TempData[TempDataKey] = value;
-            }
-        }
-
-        public IActionResult Index(string collectionName)
+        [Route("{collectionName}")]
+        public async Task<IActionResult> Index(string collectionName)
         {
             if (string.IsNullOrEmpty(collectionName))
             {
                 Logger.LogWarning("collection type passed in as null or empty");
-                throw new ArgumentNullException(nameof(collectionName), "null or empty collection type");
+                throw new Exception("null or empty collection type");
             }
 
-            CollectionName = collectionName;
+            if (!(await IsValidCollection(collectionName)))
+            {
+                Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available");
+                return RedirectToAction("Index", "ReturnWindowClosed");
+            }
+
+            if (await _collectionManagementService.GetCurrentPeriodAsync(collectionName) == null)
+            {
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+                return RedirectToAction("Index", "ReturnWindowClosed");
+            }
 
             return View();
         }
@@ -56,43 +66,61 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Submit(IFormFile file)
+        [Route("{collectionName}")]
+        public async Task<IActionResult> Index(string collectionName, IFormFile file)
         {
-            if (file == null || file.Length == 0)
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
+            if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
-                return Index(CollectionName);
+                AddError(ErrorMessageKeys.IlrSubmission_FileFieldKey, validationResult.FieldError);
+                AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
+
+                return View();
             }
 
-            // TODO: Validate if collection is indeed available to the provider, or someone has hacked in the request
+            if (!(await IsValidCollection(collectionName)))
+            {
+                Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available, but file is being uploaded");
+                throw new ArgumentOutOfRangeException(collectionName);
+            }
 
-            var period = await _collectionManagementService.GetCurrentPeriod(CollectionName);
+            var period = await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
 
             if (period == null)
             {
-                Logger.LogWarning($"No active period for collection : {CollectionName}");
-                throw new ArgumentOutOfRangeException($"No active period for collection : {CollectionName}");
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+                throw new Exception($"No active period for collection : {collectionName}");
             }
 
+            var fileName = $"{Ukprn}/{file.FileName}";
             try
             {
-                // Change filename to include the ukprn to keep the root of the storage account clean
-                string filename = $"{Ukprn}/{file.FileName}";
-
                 // push file to Storage
-                using (var outputStream = await _submissionService.GetBlobStream(filename))
-                {
-                    await file.CopyToAsync(outputStream);
-                }
+                await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(filename, file.Length, User.Name(), Ukprn, CollectionName, period.PeriodNumber);
+                var jobId = await _submissionService.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+                {
+                   FileName = fileName,
+                   FileSizeBytes = file.Length,
+                   SubmittedBy = User.Name(),
+                   Ukprn = Ukprn,
+                   CollectionName = collectionName,
+                   Period = period.PeriodNumber,
+                    NotifyEmail = User.Email()
+                });
                 return RedirectToAction("Index", "InProgress", new { jobId });
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error trying to subnmit ILR file with name : {file.FileName}", ex);
-                return View("Error", new ErrorViewModel());
+                Logger.LogError($"Error trying to subnmit ILR file with name : {fileName}", ex);
+                throw;
             }
+        }
+
+        public async Task<bool> IsValidCollection(string collectionName)
+        {
+            return await _collectionManagementService.IsValidCollectionAsync(Ukprn, collectionName);
         }
     }
 }

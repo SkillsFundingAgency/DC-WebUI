@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Settings.Models
 {
-    public class CloudStorageSettings : ISettings
+    public class CloudStorageSettings : ISettings, IAzureStorageKeyValuePersistenceServiceConfig
     {
         [JsonRequired]
         public string ConnectionString { get; set; }
