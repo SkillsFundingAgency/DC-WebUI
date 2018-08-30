@@ -9,7 +9,7 @@ namespace DC.Web.Authorization.FileSubmissionPolicy
 {
     public class AuthorizationPolicyService : IAuthorizationPolicyService
     {
-        private readonly IEnumerable<string> _allowedRoles = new List<string> { "DAA", "DCS" };
+        private readonly IEnumerable<string> _allowedRoles = new List<string> { "DCFT", "DAA", "DCS" };
 
         public bool IsRequirementMet(IEnumerable<IdamsClaim> claims, IAuthorizationRequirement requirement)
         {

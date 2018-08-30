@@ -5,13 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
-    public class ClaimsController : BaseController
+    public class ClaimsController : Controller
     {
-        public ClaimsController(ILogger logger)
-            : base(logger)
-        {
-        }
-
         public IActionResult Index()
         {
             return View();
