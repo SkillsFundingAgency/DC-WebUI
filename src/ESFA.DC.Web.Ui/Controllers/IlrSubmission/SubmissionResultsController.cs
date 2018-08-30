@@ -32,8 +32,8 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 return View(new SubmissionResultViewModel());
             }
 
-            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/reports.zip");
-            Logger.LogInfo($"Got report size for job id : {jobId}");
+            var fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/Reports.zip");
+            Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
 
             var result = new SubmissionResultViewModel()
             {
