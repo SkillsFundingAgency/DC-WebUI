@@ -14,8 +14,8 @@ namespace DC.Web.Ui.Ioc
             builder.Register(context =>
                 {
                     var authenticationSettings = context.Resolve<AuthenticationSettings>();
-                    var policy = context.Resolve<IPolicyService>();
-                    return new PolicyHandler(policy, authenticationSettings);
+                    var policy = context.Resolve<IAuthorizationPolicyService>();
+                    return new AuthorizationAuthorizationPolicyHandler(policy, authenticationSettings);
                 })
                 .As<IAuthorizationHandler>()
                 .SingleInstance();

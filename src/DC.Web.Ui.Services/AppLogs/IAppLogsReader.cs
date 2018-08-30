@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using DC.Web.Ui.Services.Models;
+using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.AppLogs
 {
     public interface IAppLogsReader
     {
-        IEnumerable<AppLog> GetApplicationLogs(long jobId);
+        IEnumerable<AppLogViewModel> GetApplicationLogs(long jobId);
     }
 }

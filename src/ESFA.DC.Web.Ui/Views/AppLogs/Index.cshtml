@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DC.Web.Ui.Services.Models.AppLog>
+﻿@using ESFA.DC.Web.Ui.ViewModels
+@model IEnumerable<ESFA.DC.Web.Ui.ViewModels.AppLogViewModel>
 
 @{
     ViewData["Title"] = "Application Logs";
@@ -8,28 +9,31 @@
 <div class="grid-row">
     <div class="column-full">
         <div class="govuk-box-highlight">
-            <h1 class="heading-large">
-                ILR Submission Process Logs
+            <h1 class="heading-small">
+                ILR Submission Status : @ViewBag.JobStatus
             </h1>
         </div>
         <table class="table table-font-xsmall ">
             <thead>
-                <tr>
-                    <th>Step</th>
-                    <th>DateTime</th>
-                </tr>
+            <tr>
+                <th>Step</th>
+                <th>DateTime</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var log in Model)
+            @foreach (var log in Model)
             {
                 <tr>
                     <td style="width:75%">@Html.DisplayFor(model => log.Message)</td>
                     <td style="width:25%;">@Convert.ToDateTime(log.TimeStampUtc).ToString("MM/dd/yyyy hh:mm:ss.fff tt")</td>
                 </tr>
 
-        }
+            }
             </tbody>
         </table>
+        <p>
+            @Html.ActionLink("Click here to see validation errors", "Index", "ValidationErrors")
+        </p>
         <p><a class="button" href="/IlrSubmission" role="button" id="upload-complete-button">Finished</a></p>
     </div>
 </div>

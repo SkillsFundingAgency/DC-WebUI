@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.JobQueueManager" Version="0.1.4-beta0001" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
@@ -23,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DC.Web.Ui.Services\DC.Web.Ui.Services.csproj" />
+    <ProjectReference Include="..\ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

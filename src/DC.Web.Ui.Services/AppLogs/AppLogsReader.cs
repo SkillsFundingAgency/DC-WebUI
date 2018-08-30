@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DC.Web.Ui.Services.Models;
+using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.AppLogs
 {
@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Services.AppLogs
             _context = appLogsContext;
         }
 
-        public IEnumerable<AppLog> GetApplicationLogs(long jobId)
+        public IEnumerable<AppLogViewModel> GetApplicationLogs(long jobId)
         {
             return _context.Logs.Where(x => x.JobId == jobId.ToString()).OrderByDescending(x => x.TimeStampUtc);
         }

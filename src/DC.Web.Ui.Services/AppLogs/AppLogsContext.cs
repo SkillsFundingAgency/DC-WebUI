@@ -1,4 +1,4 @@
-﻿using DC.Web.Ui.Services.Models;
+﻿using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DC.Web.Ui.Services.AppLogs
@@ -14,11 +14,11 @@ namespace DC.Web.Ui.Services.AppLogs
         {
         }
 
-        public virtual DbSet<AppLog> Logs { get; set; }
+        public virtual DbSet<AppLogViewModel> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AppLog>(entity =>
+            modelBuilder.Entity<AppLogViewModel>(entity =>
             {
                 entity.Property(e => e.Level).HasMaxLength(128);
 
