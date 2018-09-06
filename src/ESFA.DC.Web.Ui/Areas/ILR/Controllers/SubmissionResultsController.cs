@@ -8,8 +8,9 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
+    [Area("ilr")]
     [Route("submission-results")]
     public class SubmissionResultsController : BaseController
     {

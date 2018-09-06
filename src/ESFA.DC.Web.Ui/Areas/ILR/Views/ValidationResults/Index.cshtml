@@ -47,12 +47,13 @@
     </strong>
 </div>
 <form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">
+    
     <button class="govuk-button" type="submit">
         Submit anyway
     </button>
 </form>
 
 <p>
-    <a asp-controller="ValidationResults" asp-action="SubmitAnother" id="submitAnotherForm" >Go back and upload an updated file</a>
+    @Html.ActionLink("Go back and upload an updated file", "SubmitAnother", "ValidationResults") 
 
 </p>

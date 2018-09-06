@@ -1,0 +1,68 @@
+﻿@using DC.Web.Authorization
+@using DC.Web.Authorization.Data.Constants
+@using DC.Web.Ui.Constants
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+
+@{
+    ViewData["Title"] = "Submit ILR";
+    ViewData["secondaryHeading"] = "ILR Submission";
+    var collection = ViewContext.RouteData.Values["collectionName"];
+    ViewData["BackUrl"] = "/submission-options";
+
+}
+
+@section RelatedContent
+    {
+    <h2 class="govuk-heading-m" id="subsection-title">
+        Related content
+    </h2>
+    <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="govuk-list govuk-!-font-size-16">
+            <li>
+                <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018">
+                    ILR provider support manual - guide to making ILR returns
+                </a>
+            </li>
+            <li>
+                <a href="https://www.gov.uk/education/data-collection-for-further-education-providers">
+                    ILR specification, validation and funding rules
+                </a>
+            </li>
+            <li>
+                <a href="https://www.gov.uk/government/publications/ilr-data-check-that-it-meets-standards-and-quality-requirements">
+                    ILR data: check that it meets standards and quality requirements
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+
+    <form asp-controller="ILRSubmission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
+        
+        @Html.AntiForgeryToken()
+
+        <h1 class="govuk-heading-xl">
+            Choose file to upload
+            <span class="govuk-caption-xl" collection="@collection"></span>
+        </h1>
+        <p>Before uploading your file you should make sure that:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>it’s in an XML or Zip format</li>
+            <li>the data it contains is as complete as possible</li>
+            <li>the data it contains is as accurate as possible</li>
+        </ul>
+        <div class="govuk-form-group" error-class id="controls">
+            <label class="govuk-label govuk-!-font-weight-bold">
+                Upload a file
+            </label>
+            <div error-field-name="@ErrorMessageKeys.IlrSubmission_FileFieldKey"></div>
+            <input class="govuk-file-upload" name="file" id="file" type="file" accept=".xml,.zip">
+        </div>
+
+        <button class="govuk-button">
+            Upload file
+        </button>
+    </form>
+
+
+

@@ -4,9 +4,10 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Route("submission-confirmation")]
+    [Area("ilr")]
+    [Route("ilr/submission-confirmation")]
     public class SubmissionConfirmationController : BaseController
     {
         private readonly ISubmissionService _submissionService;

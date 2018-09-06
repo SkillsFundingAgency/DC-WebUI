@@ -4,7 +4,7 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Controllers
 {
     public class HistoryController : BaseController
     {
