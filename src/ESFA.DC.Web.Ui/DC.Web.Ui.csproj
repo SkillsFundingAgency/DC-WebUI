@@ -152,10 +152,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\ESF\Controllers\" />
     <Folder Include="Areas\ESF\Data\" />
     <Folder Include="Areas\ESF\Models\" />
-    <Folder Include="Areas\ESF\Views\" />
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
     <Folder Include="Views\History\" />
