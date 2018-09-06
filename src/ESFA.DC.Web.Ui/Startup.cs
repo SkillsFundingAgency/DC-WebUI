@@ -93,13 +93,6 @@ namespace DC.Web.Ui
                     return Task.FromResult(0);
                 }
             });
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "area",
-            //        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-            //});
         }
 
         private IServiceProvider ConfigureAutofac(IServiceCollection services)
