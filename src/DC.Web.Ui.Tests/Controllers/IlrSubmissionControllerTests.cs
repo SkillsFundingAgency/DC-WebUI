@@ -26,7 +26,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel()
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));

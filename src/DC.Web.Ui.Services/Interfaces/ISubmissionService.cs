@@ -9,16 +9,16 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface ISubmissionService
     {
-        Task<long> SubmitIlrJob(IlrSubmissionMessageViewModel submissionMessage);
+        Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage);
 
-        Task<IlrJob> GetJob(long ukprn, long jobId);
+        Task<FileUploadJobDto> GetJob(long ukprn, long jobId);
 
-        Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
+        Task<IEnumerable<FileUploadJobDto>> GetAllJobs(long ukprn);
 
         Task<string> UpdateJobStatus(long jobId, JobStatusType status);
 
         Task<JobStatusType> GetJobStatus(long jobId);
 
-        Task<IlrSubmissionConfirmationViewModel> GetIlrConfirmation(long ukprn, long jobId);
+        Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId);
     }
 }

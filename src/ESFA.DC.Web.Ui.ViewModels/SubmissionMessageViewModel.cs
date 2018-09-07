@@ -2,7 +2,7 @@
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
-    public class IlrSubmissionMessageViewModel
+    public class SubmissionMessageViewModel
     {
         public string CollectionName { get; set; }
 

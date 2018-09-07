@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [Route("{jobId}")]
         public async Task<IActionResult> Index(long jobId)
         {
-            var data = await _submissionService.GetIlrConfirmation(Ukprn, jobId);
+            var data = await _submissionService.GetConfirmation(Ukprn, jobId);
             return View(data);
         }
     }

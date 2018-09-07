@@ -97,7 +97,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+                var jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel()
                 {
                    FileName = fileName,
                    FileSizeBytes = file.Length,

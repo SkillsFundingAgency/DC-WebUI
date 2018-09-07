@@ -1,6 +1,6 @@
 ﻿namespace ESFA.DC.Web.Ui.ViewModels
 {
-    public class IlrSubmissionConfirmationViewModel
+    public class FileUploadConfirmationViewModel
     {
         public long JobId { get; set; }
 

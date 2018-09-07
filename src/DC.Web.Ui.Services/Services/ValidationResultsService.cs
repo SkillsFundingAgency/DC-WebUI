@@ -57,13 +57,13 @@ namespace DC.Web.Ui.Services.Services
             };
         }
 
-        public async Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId)
+        public async Task<IlrValidationResultDto> GetValidationResultsData(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/ValidationResults/{ukprn}/{jobId}");
 
             if (!string.IsNullOrEmpty(data))
             {
-                return _serializationService.Deserialize<IlrValidationResult>(data);
+                return _serializationService.Deserialize<IlrValidationResultDto>(data);
             }
 
             return null;

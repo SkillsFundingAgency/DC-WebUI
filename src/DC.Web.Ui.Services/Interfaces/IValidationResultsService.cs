@@ -15,7 +15,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         string GetReportFileName(DateTime dateTimeUtc);
 
-        Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId);
+        Task<IlrValidationResultDto> GetValidationResultsData(long ukprn, long jobId);
 
         Task<decimal> GetFileSize(long ukprn, long jobId, DateTime dateTimeUtc);
     }

@@ -35,7 +35,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             }
 
             decimal fileSize = 0;
-            if (job.Status == JobStatusType.Completed)
+            if (job.Status == (short)JobStatusType.Completed)
             {
                 fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/Reports.zip");
                 Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
