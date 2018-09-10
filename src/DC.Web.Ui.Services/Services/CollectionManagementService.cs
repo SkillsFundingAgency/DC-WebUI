@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -34,8 +32,8 @@ namespace DC.Web.Ui.Services.Services
 
             if (data != null)
             {
-                var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
-                options.ToList().ForEach(x => result.Add(
+                var options = _serializationService.Deserialize<List<CollectionType>>(data);
+                options.ForEach(x => result.Add(
                     new SubmissionOptionViewModel
                     {
                         Name = x.Type,
@@ -67,8 +65,8 @@ namespace DC.Web.Ui.Services.Services
 
             if (data != null)
             {
-                var options = _serializationService.Deserialize<IEnumerable<Collection>>(data);
-                options.ToList().ForEach(x => result.Add(
+                var options = _serializationService.Deserialize<List<Collection>>(data);
+                options.ForEach(x => result.Add(
                     new CollectionViewModel
                     {
                         IsOpen = x.IsOpen,
