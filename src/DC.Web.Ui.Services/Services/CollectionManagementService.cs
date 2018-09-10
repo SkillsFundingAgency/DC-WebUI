@@ -32,13 +32,15 @@ namespace DC.Web.Ui.Services.Services
 
             if (data != null)
             {
-                var options = _serializationService.Deserialize<List<CollectionType>>(data);
-                options.ForEach(x => result.Add(
-                    new SubmissionOptionViewModel
+                var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
+                foreach (var x in options)
+                {
+                    result.Add(new SubmissionOptionViewModel
                     {
                         Name = x.Type,
                         Title = x.Description
-                    }));
+                    });
+                }
             }
 
             return result;
@@ -65,13 +67,15 @@ namespace DC.Web.Ui.Services.Services
 
             if (data != null)
             {
-                var options = _serializationService.Deserialize<List<Collection>>(data);
-                options.ForEach(x => result.Add(
-                    new CollectionViewModel
+                var options = _serializationService.Deserialize<IEnumerable<Collection>>(data);
+                foreach (var x in options)
+                {
+                    result.Add(new CollectionViewModel
                     {
                         IsOpen = x.IsOpen,
                         CollectionName = x.CollectionTitle
-                    }));
+                    });
+                }
             }
 
             return result;
