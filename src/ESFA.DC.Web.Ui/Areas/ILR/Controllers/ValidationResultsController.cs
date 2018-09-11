@@ -96,7 +96,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             }
         }
 
-        public async Task<FileUploadJobDto> GetJob(long jobId)
+        public async Task<FileUploadJob> GetJob(long jobId)
         {
             Logger.LogInfo($"Trying to get Job for validation results report page for job id : {jobId}");
 

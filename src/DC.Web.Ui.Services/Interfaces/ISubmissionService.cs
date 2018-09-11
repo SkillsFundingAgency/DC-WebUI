@@ -11,9 +11,9 @@ namespace DC.Web.Ui.Services.Interfaces
     {
         Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage);
 
-        Task<FileUploadJobDto> GetJob(long ukprn, long jobId);
+        Task<FileUploadJob> GetJob(long ukprn, long jobId);
 
-        Task<IEnumerable<FileUploadJobDto>> GetAllJobs(long ukprn);
+        Task<IEnumerable<FileUploadJob>> GetAllJobs(long ukprn);
 
         Task<string> UpdateJobStatus(long jobId, JobStatusType status);
 

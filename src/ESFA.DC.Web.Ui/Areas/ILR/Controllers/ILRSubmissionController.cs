@@ -5,6 +5,7 @@ using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
@@ -105,7 +106,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                    Ukprn = Ukprn,
                    CollectionName = collectionName,
                    Period = period.PeriodNumber,
-                    NotifyEmail = User.Email()
+                    NotifyEmail = User.Email(),
+                    JobType = JobType.IlrSubmission
                 });
                 return RedirectToAction("Index", "InProgress", new { area = "ilr", jobId });
             }

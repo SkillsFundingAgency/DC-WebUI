@@ -6,7 +6,7 @@ using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
-using ESFA.DC.Jobs.Model.Reports.ValidationReport;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 
@@ -57,13 +57,13 @@ namespace DC.Web.Ui.Services.Services
             };
         }
 
-        public async Task<IlrValidationResultDto> GetValidationResultsData(long ukprn, long jobId)
+        public async Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/ValidationResults/{ukprn}/{jobId}");
 
             if (!string.IsNullOrEmpty(data))
             {
-                return _serializationService.Deserialize<IlrValidationResultDto>(data);
+                return _serializationService.Deserialize<IlrValidationResult>(data);
             }
 
             return null;
