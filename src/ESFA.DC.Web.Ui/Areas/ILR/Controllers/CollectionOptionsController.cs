@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers.IlrSubmission
 {
+    [Area("ilr")]
+    [Route("ilr/CollectionOptions")]
     public class CollectionOptionsController : BaseController
     {
         private readonly ICollectionManagementService _collectionManagementService;
@@ -31,13 +33,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 //if there is only one then redirect to submission page
                 if (data.Count() == 1)
                 {
-                   return RedirectToAction("Index", "ILRSubmission", new { data.First().CollectionName });
+                   return RedirectToAction("Index", "ILRSubmission", new { area="ilr", data.First().CollectionName });
                 }
 
                 return View(data);
             }
 
-            return RedirectToAction("Index", "ReturnWindowClosed");
+            return RedirectToAction("Index", "ReturnWindowClosed", new { area = "ilr" });
         }
     }
 }

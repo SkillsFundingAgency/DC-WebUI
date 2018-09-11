@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Services.Services
             _httpClient = httpClient;
         }
 
-        public async Task<long> AddJobAsync(IlrJob job)
+        public async Task<long> AddJobAsync(FileUploadJob job)
         {
             var policy = _pollyRegistry.Get<IAsyncPolicy>("HttpRetryPolicy");
             var response = await policy.ExecuteAsync(

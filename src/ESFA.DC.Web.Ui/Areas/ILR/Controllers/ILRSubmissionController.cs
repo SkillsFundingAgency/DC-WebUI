@@ -1,25 +1,23 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.ViewModels;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
-using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Route("ilr-submission")]
+    [Area("ilr")]
+    [Route("ilr/submission")]
     public class ILRSubmissionController : BaseController
     {
-        private const string TempDataKey = "CollectionType";
         private readonly ISubmissionService _submissionService;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IFileNameValidationService _fileNameValidationService;
@@ -39,6 +37,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             _storageService = storageService;
         }
 
+        [HttpGet]
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName)
         {
@@ -99,7 +98,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                var jobId = await _submissionService.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+                var jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel()
                 {
                    FileName = fileName,
                    FileSizeBytes = file.Length,
@@ -107,9 +106,10 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                    Ukprn = Ukprn,
                    CollectionName = collectionName,
                    Period = period.PeriodNumber,
-                    NotifyEmail = User.Email()
+                    NotifyEmail = User.Email(),
+                    JobType = JobType.IlrSubmission
                 });
-                return RedirectToAction("Index", "InProgress", new { jobId });
+                return RedirectToAction("Index", "InProgress", new { area = "ilr", jobId });
             }
             catch (Exception ex)
             {

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
-using DC.Web.Ui.Constants;
-using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
@@ -11,9 +8,10 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Route("validation-results")]
+    [Area("ilr")]
+    [Route("ilr/validation-results")]
     public class ValidationResultsController : BaseController
     {
         private readonly IValidationResultsService _validationResultsService;
@@ -33,6 +31,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         }
 
         [Route("{jobId}")]
+        [HttpGet]
         public async Task<IActionResult> Index(long jobId)
         {
             Logger.LogInfo($"Loading validation results page for job id : {jobId}");
@@ -53,7 +52,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         }
 
         [HttpPost]
-        [Route("SubmitAnyway/{jobId}")]
+        [Route("{jobId}")]
         public async Task<IActionResult> SubmitAnyway(long jobId)
         {
             Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ");
@@ -61,7 +60,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
 
             await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
-            return RedirectToAction("Index", "SubmissionConfirmation", new { jobId = jobId });
+            return RedirectToAction("Index", "SubmissionConfirmation", new { area = "ilr", jobId = jobId });
         }
 
         [HttpGet]
@@ -73,7 +72,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
-            return RedirectToAction("Index", "ILRSubmission", new { job.CollectionName });
+            return RedirectToAction("Index", "ILRSubmission", new { area = "ilr", job.CollectionName });
         }
 
         [Route("Download/{jobId}")]
@@ -97,7 +96,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
         }
 
-        public async Task<IlrJob> GetJob(long jobId)
+        public async Task<FileUploadJob> GetJob(long jobId)
         {
             Logger.LogInfo($"Trying to get Job for validation results report page for job id : {jobId}");
 

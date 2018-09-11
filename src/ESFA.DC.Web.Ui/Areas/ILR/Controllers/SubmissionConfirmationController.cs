@@ -4,9 +4,10 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Route("submission-confirmation")]
+    [Area("ilr")]
+    [Route("ilr/submission-confirmation")]
     public class SubmissionConfirmationController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -21,7 +22,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
         [Route("{jobId}")]
         public async Task<IActionResult> Index(long jobId)
         {
-            var data = await _submissionService.GetIlrConfirmation(Ukprn, jobId);
+            var data = await _submissionService.GetConfirmation(Ukprn, jobId);
             return View(data);
         }
     }

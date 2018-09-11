@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using DC.Web.Ui.Areas.ILR.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
@@ -25,7 +26,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitIlrJob(new IlrSubmissionMessageViewModel()
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel()
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));
@@ -60,7 +61,7 @@ namespace DC.Web.Ui.Tests.Controllers
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private ILRSubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
+        private ESFSubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
         {
             var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
             {
@@ -90,7 +91,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
             mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
 
-            var controller = new ILRSubmissionController(
+            var controller = new ESFSubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
                 mockCollectionmanagementService.Object,

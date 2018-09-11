@@ -51,7 +51,9 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                     switch (submissionType)
                     {
                         case "ILR":
-                            return RedirectToAction("Index", "CollectionOptions", new { collectionType = submissionType });
+                            return RedirectToAction("Index", "CollectionOptions", new { area="ilr", collectionType = submissionType });
+                        case "ESF":
+                            return RedirectToAction("Index", "ESFSubmission", new { area = "esf", collectionName= submissionType });
                         default:
                             throw new Exception("Not supported");
                     }

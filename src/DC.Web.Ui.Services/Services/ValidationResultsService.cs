@@ -6,7 +6,7 @@ using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
-using ESFA.DC.Jobs.Model.Reports.ValidationReport;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 

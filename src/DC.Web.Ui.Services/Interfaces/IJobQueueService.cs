@@ -8,6 +8,6 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IJobQueueService
     {
-        Task<long> AddJobAsync(IlrJob job);
+        Task<long> AddJobAsync(FileUploadJob job);
     }
 }

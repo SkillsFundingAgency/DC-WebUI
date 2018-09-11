@@ -1,8 +1,9 @@
 ﻿using System;
+using ESFA.DC.Jobs.Model.Enums;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
-    public class IlrSubmissionMessageViewModel
+    public class SubmissionMessageViewModel
     {
         public string CollectionName { get; set; }
 
@@ -17,5 +18,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public long Ukprn { get; set; }
 
         public string NotifyEmail { get; set; }
+
+        public JobType JobType { get; set; }
     }
 }

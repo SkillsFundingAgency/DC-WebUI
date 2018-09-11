@@ -9,8 +9,6 @@ using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DC.Web.Ui.Services.Services
 {
@@ -39,9 +37,9 @@ namespace DC.Web.Ui.Services.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<long> SubmitIlrJob(IlrSubmissionMessageViewModel submissionMessage)
+        public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
         {
-            var job = new IlrJob()
+            var job = new FileUploadJob()
             {
                 Ukprn = submissionMessage.Ukprn,
                 DateTimeSubmittedUtc = _dateTimeProvider.GetNowUtc(),
@@ -54,15 +52,16 @@ namespace DC.Web.Ui.Services.Services
                 FileSize = submissionMessage.FileSizeBytes,
                 CollectionName = submissionMessage.CollectionName,
                 PeriodNumber = submissionMessage.Period,
-                NotifyEmail = submissionMessage.NotifyEmail
+                NotifyEmail = submissionMessage.NotifyEmail,
+                JobType = submissionMessage.JobType
             };
             return await _jobQueueService.AddJobAsync(job);
         }
 
-        public async Task<IlrJob> GetJob(long ukprn, long jobId)
+        public async Task<FileUploadJob> GetJob(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}/{jobId}");
-            return _serializationService.Deserialize<IlrJob>(data);
+            return _serializationService.Deserialize<FileUploadJob>(data);
         }
 
         public async Task<JobStatusType> GetJobStatus(long jobId)
@@ -71,10 +70,10 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<JobStatusType>(data);
         }
 
-        public async Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn)
+        public async Task<IEnumerable<FileUploadJob>> GetAllJobs(long ukprn)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/job/{ukprn}");
-            return _serializationService.Deserialize<IEnumerable<IlrJob>>(data);
+            return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
@@ -87,10 +86,10 @@ namespace DC.Web.Ui.Services.Services
             return await _httpClient.SendDataAsync($"{_baseUrl}/job/status", job);
         }
 
-        public async Task<IlrSubmissionConfirmationViewModel> GetIlrConfirmation(long ukprn, long jobId)
+        public async Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId)
         {
             var job = await GetJob(ukprn, jobId);
-            return new IlrSubmissionConfirmationViewModel()
+            return new FileUploadConfirmationViewModel()
             {
                 FileName = job.FileName.Split('/')[1],
                 JobId = jobId,
