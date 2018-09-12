@@ -15,6 +15,7 @@ using ESFA.DC.DateTimeProvider;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ESFA.DC.Logging.Config.Interfaces;
@@ -42,8 +43,18 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
             builder.RegisterType<FileNameValidationService>().As<IFileNameValidationService>().InstancePerLifetimeScope();
-            builder.RegisterType<AzureStorageKeyValuePersistenceService>().As<IKeyValuePersistenceService>().InstancePerLifetimeScope();
-            builder.RegisterType<AzureStorageKeyValuePersistenceService>().As<IStreamableKeyValuePersistenceService>().InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                var config = context.Resolve<IlrCloudStorageSettings>();
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                var config = context.Resolve<EsfCloudStorageSettings>();
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

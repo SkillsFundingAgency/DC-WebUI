@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using Autofac.Features.Indexed;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
@@ -15,7 +21,6 @@ namespace DC.Web.Ui.Services.Services
     public class SubmissionService : ISubmissionService
     {
         private readonly IJobQueueService _jobQueueService;
-        private readonly CloudStorageSettings _cloudStorageSettings;
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
         private readonly IJsonSerializationService _serializationService;
@@ -23,14 +28,12 @@ namespace DC.Web.Ui.Services.Services
 
         public SubmissionService(
             IJobQueueService jobQueueService,
-            CloudStorageSettings cloudStorageSettings,
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider)
         {
             _jobQueueService = jobQueueService;
-            _cloudStorageSettings = cloudStorageSettings;
             _httpClient = httpClient;
             _baseUrl = apiSettings?.JobQueueBaseUrl;
             _serializationService = serializationService;
@@ -48,7 +51,7 @@ namespace DC.Web.Ui.Services.Services
                 SubmittedBy = submissionMessage.SubmittedBy,
                 FileName = submissionMessage.FileName,
                 IsFirstStage = true,
-                StorageReference = _cloudStorageSettings.ContainerName,
+                StorageReference = submissionMessage.StorageReference,
                 FileSize = submissionMessage.FileSizeBytes,
                 CollectionName = submissionMessage.CollectionName,
                 PeriodNumber = submissionMessage.Period,

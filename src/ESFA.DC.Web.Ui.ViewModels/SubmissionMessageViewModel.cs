@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using ESFA.DC.Jobs.Model.Enums;
 
 namespace ESFA.DC.Web.Ui.ViewModels
@@ -20,5 +21,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string NotifyEmail { get; set; }
 
         public JobType JobType { get; set; }
+
+        public string StorageReference { get; set; }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac.Features.Indexed;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
@@ -21,19 +24,20 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IFileNameValidationService _fileNameValidationService;
         private readonly IStreamableKeyValuePersistenceService _storageService;
+        private readonly IlrCloudStorageSettings _storageService;
 
         public ESFSubmissionController(
             ISubmissionService submissionService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IFileNameValidationService fileNameValidationService,
-            IStreamableKeyValuePersistenceService storageService)
+            IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices)
             : base(logger)
         {
             _submissionService = submissionService;
             _collectionManagementService = collectionManagementService;
             _fileNameValidationService = fileNameValidationService;
-            _storageService = storageService;
+            _storageService = storagePersistenceServices[JobType.IlrSubmission];
         }
 
         [HttpGet]
@@ -105,7 +109,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                    Ukprn = Ukprn,
                    CollectionName = collectionName,
                    Period = period.PeriodNumber,
-                    NotifyEmail = User.Email()
+                    NotifyEmail = User.Email(),
+                    
                 });
                 return RedirectToAction("Index", "InProgress", new { area = "ilr", jobId });
             }

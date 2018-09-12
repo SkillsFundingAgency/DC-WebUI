@@ -2,6 +2,7 @@
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using Microsoft.Extensions.Configuration;
 
 namespace DC.Web.Ui.Ioc
@@ -10,9 +11,6 @@ namespace DC.Web.Ui.Ioc
     {
         public static void SetupConfigurations(this ContainerBuilder builder, IConfiguration configuration)
         {
-            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>())
-                .As<CloudStorageSettings>().SingleInstance();
-
             builder.Register(c =>
                     configuration.GetConfigSection<ConnectionStrings>())
                 .As<ConnectionStrings>().SingleInstance();
@@ -25,8 +23,11 @@ namespace DC.Web.Ui.Ioc
                     configuration.GetConfigSection<ApiSettings>())
                 .As<ApiSettings>().SingleInstance();
 
-            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>())
-                .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+            builder.Register(c => configuration.GetConfigSection<EsfCloudStorageSettings>())
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission).SingleInstance();
+
+            builder.Register(c => configuration.GetConfigSection<IlrCloudStorageSettings>())
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission).SingleInstance();
         }
     }
 }
