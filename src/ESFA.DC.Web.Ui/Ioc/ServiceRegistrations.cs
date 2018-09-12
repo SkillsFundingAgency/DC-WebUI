@@ -14,6 +14,7 @@ using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging;
@@ -46,13 +47,13 @@ namespace DC.Web.Ui.Ioc
 
             builder.Register(context =>
             {
-                var config = context.Resolve<IlrCloudStorageSettings>();
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
             }).Keyed<IStreamableKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.Resolve<EsfCloudStorageSettings>();
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
             }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
 

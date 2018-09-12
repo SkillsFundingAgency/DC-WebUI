@@ -15,10 +15,10 @@ namespace DC.Web.Ui.Services.Services
         private readonly IKeyValuePersistenceService _persistenceService;
         private readonly Regex _fileNameRegex = new Regex("^(ILR)-([1-9][0-9]{7})-(1819)-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-(([1-9][0-9])|(0[1-9])).((XML)|(ZIP)|(xml)|(zip))$", RegexOptions.Compiled);
 
-        public FileNameValidationService(IKeyValuePersistenceService persistenceService)
-        {
-            _persistenceService = persistenceService;
-        }
+        //public FileNameValidationService(IKeyValuePersistenceService persistenceService)
+        //{
+        //    _persistenceService = persistenceService;
+        //}
 
         public async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn)
         {

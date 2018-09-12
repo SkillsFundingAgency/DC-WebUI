@@ -152,13 +152,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\ESF\Data\" />
-    <Folder Include="Areas\ESF\Models\" />
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
     <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
-    <Folder Include="Areas\ILR\Views\ILRSubmission\" />
+    <Folder Include="Areas\ILR\Views\Submission\" />
     <Folder Include="Areas\ILR\Views\ValidationResults\" />
     <Folder Include="wwwroot\assets\minified\" />
   </ItemGroup>

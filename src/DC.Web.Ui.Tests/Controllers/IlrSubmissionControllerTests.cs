@@ -61,7 +61,7 @@ namespace DC.Web.Ui.Tests.Controllers
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private ESFSubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
+        private SubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
         {
             var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
             {
@@ -91,12 +91,13 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
             mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
 
-            var controller = new ESFSubmissionController(
+            var controller = new SubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
                 mockCollectionmanagementService.Object,
                 mockFilenameValidationService.Object,
-                mockStreamableServiceMock.Object);
+                null,
+                null);
 
             controller.TempData = tempData;
             return controller;

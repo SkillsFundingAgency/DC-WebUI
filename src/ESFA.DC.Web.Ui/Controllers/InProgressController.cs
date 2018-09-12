@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
@@ -7,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area("ilr")]
-    [Route("ilr/inprogress")]
+    [Route("inprogress")]
     public class InProgressController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -29,7 +29,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "ValidationResults", new { area="ilr", jobId });
+            return RedirectToAction("Index", "ValidationResults", new { area= AreaNames.Ilr, jobId });
         }
     }
 }
