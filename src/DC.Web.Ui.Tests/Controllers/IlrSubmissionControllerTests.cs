@@ -143,7 +143,7 @@ namespace DC.Web.Ui.Tests.Controllers
             servicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockStreamableServiceMock.Object);
 
             var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
-            configs.Setup(x => x[JobType.IlrSubmission]).Returns(new IlrCloudStorageSettings());
+            configs.Setup(x => x[JobType.IlrSubmission]).Returns(new CloudStorageSettings());
 
             var controller = new SubmissionController(
                 submissionService,

@@ -23,9 +23,9 @@ namespace DC.Web.Ui.Ioc
                     configuration.GetConfigSection<ApiSettings>())
                 .As<ApiSettings>().SingleInstance();
 
-            builder.Register(c => configuration.GetConfigSection<EsfCloudStorageSettings>())
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("EsfCloudStorageSettings"))
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission).SingleInstance();
-            builder.Register(c => configuration.GetConfigSection<IlrCloudStorageSettings>())
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("IlrCloudStorageSettings"))
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission).SingleInstance();
         }
     }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DC.Web.Ui.Settings.Models
 {
-    public class IlrCloudStorageSettings : ISettings, IAzureStorageKeyValuePersistenceServiceConfig
+    public class CloudStorageSettings : ISettings, IAzureStorageKeyValuePersistenceServiceConfig
     {
         [JsonRequired]
         public string ConnectionString { get; set; }

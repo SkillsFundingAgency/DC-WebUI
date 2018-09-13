@@ -15,10 +15,10 @@ namespace DC.Web.Ui.Services.Services
 {
     public class ReportService : IReportService
     {
-        private readonly EsfCloudStorageSettings _cloudStorageSettings;
+        private readonly CloudStorageSettings _cloudStorageSettings;
         private readonly ILogger _logger;
 
-        public ReportService(ILogger logger, EsfCloudStorageSettings cloudStorageSettings)
+        public ReportService(ILogger logger, CloudStorageSettings cloudStorageSettings)
         {
             _cloudStorageSettings = cloudStorageSettings;
             _logger = logger;
