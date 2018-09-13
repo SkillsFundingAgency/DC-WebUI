@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
@@ -25,6 +26,55 @@ namespace DC.Web.Ui.Tests.Controllers
 {
     public class IlrSubmissionControllerTests
     {
+        [Fact]
+        public void Index_Success()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => true);
+
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ReturnPeriodViewModel(1));
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(ViewResult));
+        }
+
+        [Fact]
+        public async Task Index_EmptyCollectionName()
+        {
+            var controller = GetController(null);
+            await Assert.ThrowsAsync<Exception>(() => controller.Index(null));
+        }
+
+        [Fact]
+        public void Index_FailureInvalidCollection()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => false);
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(RedirectToActionResult));
+        }
+
+        [Fact]
+        public void Index_FailureInvalidPeriod()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(RedirectToActionResult));
+        }
+
         [Fact]
         public void SubmitIlr_Success()
         {
@@ -64,7 +114,7 @@ namespace DC.Web.Ui.Tests.Controllers
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private SubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid)
+        private SubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid, ICollectionManagementService collectionManagementService = null)
         {
             var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
             {
@@ -97,8 +147,8 @@ namespace DC.Web.Ui.Tests.Controllers
 
             var controller = new SubmissionController(
                 submissionService,
-                It.IsAny<ILogger>(),
-                mockCollectionmanagementService.Object,
+                new Mock<ILogger>().Object,
+                collectionManagementService ?? mockCollectionmanagementService.Object,
                 mockFilenameValidationService.Object,
                 servicesMock.Object,
                 configs.Object);
