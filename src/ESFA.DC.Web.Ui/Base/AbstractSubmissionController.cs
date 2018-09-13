@@ -65,7 +65,7 @@ namespace DC.Web.Ui.Base
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel()
+                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType)
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
@@ -74,7 +74,6 @@ namespace DC.Web.Ui.Base
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
-                    JobType = _jobType,
                     StorageReference = _storageKeyValueConfig.ContainerName
                 });
             }

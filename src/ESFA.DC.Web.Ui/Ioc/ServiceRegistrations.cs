@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using Autofac;
+using Autofac.Features.AttributeFilters;
 using DC.Web.Authorization.Base;
 using DC.Web.Authorization.Data.Repository;
 using DC.Web.Authorization.FileSubmissionPolicy;
@@ -36,14 +37,13 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<AuthorizationPolicyService>().As<IAuthorizationPolicyService>().InstancePerLifetimeScope();
             builder.RegisterType<PermissionsQueryService>().As<IPermissionsQueryService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<JobQueueService>().As<IJobQueueService>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
             builder.RegisterType<ValidationResultsService>().As<IValidationResultsService>().InstancePerLifetimeScope();
             builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
-            builder.RegisterType<FileNameValidationService>().As<IFileNameValidationService>().InstancePerLifetimeScope();
+            builder.RegisterType<IlrFileNameValidationService>().As<IFileNameValidationService>().WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
@@ -56,6 +56,18 @@ namespace DC.Web.Ui.Ioc
                 var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
             }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission);
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

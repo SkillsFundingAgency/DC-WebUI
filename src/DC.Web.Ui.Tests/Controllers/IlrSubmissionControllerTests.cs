@@ -1,12 +1,15 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac.Features.Indexed;
 using DC.Web.Ui.Areas.ILR.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
@@ -26,7 +29,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel()
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission)
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));
@@ -69,11 +72,6 @@ namespace DC.Web.Ui.Tests.Controllers
                 SummaryError = "summary",
                 FieldError = "field error"
             };
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
-            {
-                ["CollectionType"] = "ILR"
-            };
 
             var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
             mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
@@ -91,15 +89,20 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
             mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
 
+            var servicesMock = new Mock<IIndex<JobType, IStreamableKeyValuePersistenceService>>();
+            servicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockStreamableServiceMock.Object);
+
+            var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
+            configs.Setup(x => x[JobType.IlrSubmission]).Returns(new IlrCloudStorageSettings());
+
             var controller = new SubmissionController(
                 submissionService,
                 It.IsAny<ILogger>(),
                 mockCollectionmanagementService.Object,
                 mockFilenameValidationService.Object,
-                null,
-                null);
+                servicesMock.Object,
+                configs.Object);
 
-            controller.TempData = tempData;
             return controller;
         }
     }
