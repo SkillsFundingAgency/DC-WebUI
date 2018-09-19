@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Controllers
         [HttpGet]
         public IActionResult PostSignIn()
         {
-            return RedirectToAction("Index", "ILRSubmission");
+            return RedirectToAction("Index", "Submission");
         }
     }
 }
