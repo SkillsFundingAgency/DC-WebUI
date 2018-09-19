@@ -7,7 +7,7 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
     [Area(AreaNames.Ilr)]
     [Route("ilr/CollectionOptions")]

@@ -288,3 +288,4 @@ __pycache__/
 *.xsd.cs
 src/ESFA.DC.Web.Ui/appsettings.salman.json
 /src/ESFA.DC.Web.Ui/wwwroot/assets/minified/site.min.css
+src/ESFA.DC.Web.Ui/wwwroot/assets/stylesheets/docs.css
