@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac.Features.AttributeFilters;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
@@ -15,10 +18,10 @@ namespace DC.Web.Ui.Services.Services
 {
     public class ReportService : IReportService
     {
-        private readonly CloudStorageSettings _cloudStorageSettings;
+        private readonly IAzureStorageKeyValuePersistenceServiceConfig _cloudStorageSettings;
         private readonly ILogger _logger;
 
-        public ReportService(ILogger logger, CloudStorageSettings cloudStorageSettings)
+        public ReportService(ILogger logger, [KeyFilter(JobType.IlrSubmission)] IAzureStorageKeyValuePersistenceServiceConfig cloudStorageSettings)
         {
             _cloudStorageSettings = cloudStorageSettings;
             _logger = logger;
