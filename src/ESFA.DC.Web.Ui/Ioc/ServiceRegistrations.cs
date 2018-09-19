@@ -42,7 +42,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
-            builder.RegisterType<ReportService>().As<IReportService>().InstancePerLifetimeScope();
+            builder.RegisterType<ReportService>().As<IReportService>().WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<IlrFileNameValidationService>().As<IFileNameValidationService>().WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>

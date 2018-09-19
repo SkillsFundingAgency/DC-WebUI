@@ -17,7 +17,6 @@ namespace DC.Web.Ui.Services.Services
         private readonly IJsonSerializationService _serializationService;
         private readonly IReportService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IKeyValuePersistenceService _persistenceService;
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
 
@@ -25,14 +24,12 @@ namespace DC.Web.Ui.Services.Services
             IJsonSerializationService serializationService,
             IReportService reportService,
             IDateTimeProvider dateTimeProvider,
-            IKeyValuePersistenceService persistenceService,
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings)
         {
             _serializationService = serializationService;
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
-            _persistenceService = persistenceService;
             _httpClient = httpClient;
             _baseUrl = apiSettings?.JobQueueBaseUrl;
         }
