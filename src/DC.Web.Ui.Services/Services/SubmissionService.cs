@@ -102,10 +102,10 @@ namespace DC.Web.Ui.Services.Services
             var job = await GetJob(ukprn, jobId);
             return new FileUploadConfirmationViewModel()
             {
-                FileName = job.FileName.Contains("/") ? job.FileName.Split('/')[1] : job.FileName,
+                FileName = (job.FileName.Contains("/") ? job.FileName.Split('/')[1] : job.FileName).ToUpper(),
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
-                SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mm tt"), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
+                SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mmtt").ToLower(), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
                 SubmittedBy = job.SubmittedBy
             };
         }

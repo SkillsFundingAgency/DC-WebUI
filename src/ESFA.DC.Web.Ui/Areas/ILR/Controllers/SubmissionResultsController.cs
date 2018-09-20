@@ -51,7 +51,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 JobId = jobId,
                 PeriodName = job.PeriodNumber.ToPeriodName(),
                 PeriodNumber = job.PeriodNumber,
-                FileSize = fileSize
+                FileSize = fileSize.ToString("N1"),
+                Status = job.Status
             };
 
             return View(result);
