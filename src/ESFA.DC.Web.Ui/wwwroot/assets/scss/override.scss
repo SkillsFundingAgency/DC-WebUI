@@ -16,6 +16,11 @@ a:active, .govuk-list a:active {
     color: $govuk-link-hover-colour;
 }
 
+.govuk-list.govuk-error-summary__list a:visited,
+.govuk-list.govuk-error-summary__list a:active {
+    color: $govuk-error-colour;
+}
+
 a:focus, .govuk-list a:focus {
     outline: 3px solid $govuk-focus-colour;
     outline-offset: 0;
@@ -495,7 +500,7 @@ progress::-moz-progress-bar { background: white; }
     display: inline-block;
     min-width: 125px;
     padding-top: 112px;
-    background-image: url("/assets/stylesheets/images/govuk-crest.png");
+    background-image: url("/assets/images/govuk-crest.png");
     background-repeat: no-repeat;
     background-position: 50% 0%;
     background-size: 125px 102px;
@@ -610,4 +615,10 @@ progress::-moz-progress-bar { background: white; }
 
 .govuk-footer__list-item:last-child {
     margin-bottom: 0;
+}
+
+@media (min-width: 40.0625em) {
+   nav .govuk-list > li {
+        margin-bottom: 10px;
+    }
 }

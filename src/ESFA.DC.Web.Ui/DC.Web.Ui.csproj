@@ -111,6 +111,7 @@
     <PackageReference Include="Autofac.Configuration" Version="4.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+    <PackageReference Include="BuildWebCompiler" Version="1.11.375" />
     <PackageReference Include="ESFA.DC.DateTimeProvider" Version="0.1.5-beta0001" />
     <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.4-beta0001" />
@@ -161,6 +162,7 @@
     <Folder Include="Areas\ILR\Views\ILRSubmission\" />
     <Folder Include="Areas\ILR\Views\ValidationResults\" />
     <Folder Include="wwwroot\assets\minified\" />
+    <Folder Include="wwwroot\assets\stylesheets\" />
   </ItemGroup>
 
   <ItemGroup>
