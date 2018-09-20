@@ -50,7 +50,7 @@ namespace DC.Web.Ui.Services.Services
                 TotalWarningLearners = ilrValidationResult.TotalWarningLearners,
                 TotalWarnings = ilrValidationResult.TotalWarnings,
                 TotalLearners = ilrValidationResult.TotalLearners,
-                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N")
+                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N1")
             };
         }
 
