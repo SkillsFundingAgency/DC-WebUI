@@ -118,10 +118,10 @@ namespace DC.Web.Ui.Services.Tests
             var confirmation = await submisisionService.GetConfirmation(It.IsAny<long>(), It.IsAny<long>());
 
             confirmation.Should().NotBeNull();
-            confirmation.FileName.Should().Be("test.xml");
+            confirmation.FileName.Should().Be("TEST.XML");
             confirmation.PeriodName.Should().Be("R01");
             confirmation.SubmittedBy.Should().Be("test user");
-            confirmation.SubmittedAt.Should().Be("10:20 AM on Wednesday 10 October 2018");
+            confirmation.SubmittedAt.Should().Be("10:20am on Wednesday 10 October 2018");
         }
 
         [Fact]
