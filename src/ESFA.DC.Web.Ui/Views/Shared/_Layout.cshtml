@@ -91,10 +91,6 @@
                 <span class="govuk-phase-banner__text">This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
             </p>
         </div>
-
-  
-
-        @*@if (@User.Identity.IsAuthenticated)
         @if (@User.Identity.IsAuthenticated)
         {
             <div class="govuk-body account-info">
@@ -104,11 +100,10 @@
                 </div>
             </div>
         }
-        @{if (ViewBag.PageId != "home-page")
+        @if (ViewBag.PageId != "home-page")
           {
               <a href="@ViewData["BackUrl"]" class="govuk-back-link">Back</a>
           } 
-        }
         <main class="govuk-main-wrapper" id="content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
