@@ -166,6 +166,7 @@
     <Folder Include="Areas\ILR\Views\Submission\" />
     <Folder Include="Areas\ILR\Views\ValidationResults\" />
     <Folder Include="wwwroot\assets\minified\" />
+    <Folder Include="wwwroot\assets\stylesheets\" />
   </ItemGroup>
 
   <ItemGroup>

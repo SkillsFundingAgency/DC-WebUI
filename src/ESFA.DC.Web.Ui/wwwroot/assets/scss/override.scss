@@ -16,6 +16,11 @@ a:active, .govuk-list a:active {
     color: $govuk-link-hover-colour;
 }
 
+.govuk-list.govuk-error-summary__list a:visited,
+.govuk-list.govuk-error-summary__list a:active {
+    color: $govuk-error-colour;
+}
+
 a:focus, .govuk-list a:focus {
     outline: 3px solid $govuk-focus-colour;
     outline-offset: 0;
@@ -630,4 +635,10 @@ progress::-moz-progress-bar { background: white; }
 }
 .account-info .your-name {
     padding: 0 .5em;
+}
+
+@media (min-width: 40.0625em) {
+   nav .govuk-list > li {
+        margin-bottom: 10px;
+    }
 }

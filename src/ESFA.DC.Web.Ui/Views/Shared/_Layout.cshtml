@@ -2,7 +2,7 @@
 @using DC.Web.Ui.Extensions
 
 @{
-    string referrerUrl = Context.Request.Headers?["Referer"]; 
+    string referrerUrl = Context.Request.Headers?["Referer"];
 }
 
 <!DOCTYPE html>
@@ -91,6 +91,9 @@
                 <span class="govuk-phase-banner__text">This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
             </p>
         </div>
+
+  
+
         @*@if (@User.Identity.IsAuthenticated)
         {
             <div class="govuk-body account-info">
@@ -100,8 +103,11 @@
                 </div>
             </div>
         }*@
-        <a href="@ViewData["BackUrl"]" class="govuk-back-link">Back</a>
-
+        @{if (ViewBag.PageId != "home-page")
+          {
+              <a href="@ViewData["BackUrl"]" class="govuk-back-link">Back</a>
+          } 
+        }
         <main class="govuk-main-wrapper" id="content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -109,7 +115,7 @@
                     @Html.Partial("_ErrorSummary")
 
                     @RenderBody()
-                </div>   
+                </div>
 
                 <div class="govuk-grid-column-one-third">
                     <aside class="app-related-items" role="complementary">
@@ -122,7 +128,7 @@
                             Monday to Thursday, 8:30am to 5:00pm<br />
                             Friday, 8:30am to 4:00pm<br />
                         <p>Email: <a href="mailto:sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
-                        
+
 
                         @RenderSection("RelatedContent", required: false)
 
