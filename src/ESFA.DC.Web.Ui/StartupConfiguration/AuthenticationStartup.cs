@@ -20,8 +20,6 @@ namespace DC.Web.Ui.StartupConfiguration
                 .AddCookie(options =>
                 {
                     options.AccessDeniedPath = new PathString("/NotAuthorized");
-                    options.LoginPath = new PathString("/");
-                    options.LogoutPath = new PathString("/");
                 })
                 .AddWsFederation(options =>
                 {
@@ -30,7 +28,6 @@ namespace DC.Web.Ui.StartupConfiguration
                     options.Wtrealm = authSettings.WtRealm;
                     options.CallbackPath = "/";
                     options.SkipUnrecognizedRequests = true;
-                    options.SignOutWreply = "/";
                 });
         }
     }
