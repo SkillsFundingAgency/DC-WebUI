@@ -20,24 +20,19 @@
         <ul class="govuk-list govuk-!-font-size-16">
             <li>
                 <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018">
-                    ILR provider support manual - guide to making ILR returns
+                    Provider support manual for 2016 to 2017  
                 </a>
-            </li>
+            </li> 
             <li>
-                <a href="https://www.gov.uk/education/data-collection-for-further-education-providers">
-                    ILR specification, validation and funding rules
-                </a>
-            </li>
-            <li>
-                <a href="https://www.gov.uk/government/publications/ilr-data-check-that-it-meets-standards-and-quality-requirements">
-                    ILR data: check that it meets standards and quality requirements
+                <a href="https://www.gov.uk/government/publications/sfa-supplementary-data-collection">
+                    ESFA: supplementary data collection guidance  
                 </a>
             </li>
         </ul>
     </nav>
 }
 
-    <form asp-controller="ILRSubmission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
+    <form asp-controller="Submission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
         
         @Html.AntiForgeryToken()
 
@@ -47,7 +42,8 @@
         </h1>
         <p>Before uploading your file you should make sure that:</p>
         <ul class="govuk-list govuk-list--bullet">
-            <li>it’s in an XML or Zip format</li>
+            <li>it’s in a CSV format</li>
+            <li>it’s using the <a href="#">ESF non-ILR data return template</a></li>
             <li>the data it contains is as complete as possible</li>
             <li>the data it contains is as accurate as possible</li>
         </ul>

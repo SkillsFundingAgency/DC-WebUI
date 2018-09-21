@@ -36,7 +36,7 @@
 
 
 <p>
-    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults") <span>(CSV, @Model.ReportFileSize KB) showing all errors and warnings</span>
+    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults") <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
 </p>
 
 <div class="govuk-warning-text">

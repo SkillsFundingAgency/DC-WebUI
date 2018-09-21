@@ -617,6 +617,26 @@ progress::-moz-progress-bar { background: white; }
     margin-bottom: 0;
 }
 
+
+.account-info {
+    padding-left: 0;
+    text-align: right;
+    font-size: 14px;
+    line-height: 1.1428571429;
+    padding: 1em 0 0 0;
+    margin-bottom: 0;
+}
+
+@media (min-width: 641px) {
+    .account-info {
+        font-size: 16px;
+        line-height: 1.25;
+    }
+}
+.account-info .your-name {
+    padding: 0 .5em;
+}
+
 @media (min-width: 40.0625em) {
    nav .govuk-list > li {
         margin-bottom: 10px;

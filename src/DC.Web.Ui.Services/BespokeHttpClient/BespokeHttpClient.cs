@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.Serialization.Interfaces;
+using Polly;
+using Polly.Registry;
 
 namespace DC.Web.Ui.Services.BespokeHttpClient
 {
@@ -11,9 +13,11 @@ namespace DC.Web.Ui.Services.BespokeHttpClient
         private readonly IJsonSerializationService _jsonSerializationService;
         private readonly HttpClient _httpClient = new HttpClient();
         private bool _disposed = false;
+        private readonly IAsyncPolicy _pollyPolicy;
 
-        public BespokeHttpClient(IJsonSerializationService jsonSerializationService)
+        public BespokeHttpClient(IJsonSerializationService jsonSerializationService, IReadOnlyPolicyRegistry<string> pollyRegistry)
         {
+            _pollyPolicy = pollyRegistry.Get<IAsyncPolicy>("HttpRetryPolicy");
             _jsonSerializationService = jsonSerializationService;
         }
 
@@ -21,14 +25,16 @@ namespace DC.Web.Ui.Services.BespokeHttpClient
         {
             var json = _jsonSerializationService.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(url,  content);
+
+            var response = await _pollyPolicy.ExecuteAsync(() => _httpClient.PostAsync(url, content));
+
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> GetDataAsync(string url)
         {
-            var response = await _httpClient.GetAsync(new Uri(url));
+            var response = await _pollyPolicy.ExecuteAsync(() => _httpClient.GetAsync(new Uri(url)));
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }

@@ -1,16 +1,18 @@
-﻿@model ESFA.DC.Web.Ui.ViewModels.SubmissionResultViewModel
+﻿@using ESFA.DC.JobStatus.Interface
+@model ESFA.DC.Web.Ui.ViewModels.SubmissionResultViewModel
 
 @{
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
 }
 <h1 class="govuk-heading-xl">Individualised Learner Record (ILR) submissions</h1>
 
-@if (Model.FileSize > 0)
+@if (Model.Status  == JobStatusType.Completed)
 {
 <h2 class="govuk-heading-l">Return Period @Html.DisplayFor(model => model.PeriodNumber) (@Html.DisplayFor(model => model.PeriodName))</h2>
 
     <p>
-        @Html.ActionLink($"Download all your reports (Zip, {@Model.FileSize}kB)", "Download", "SubmissionResults")
+        @Html.ActionLink($"Download all your reports", "Download", "SubmissionResults") <span>(Zip,  @(Model.FileSize)KB) for this return period.</span>
+
     </p>
     <details class="govuk-details" role="group" >
         <summary class="govuk-details__summary" role="button" aria-controls="details-content-9df1fa39-15c1-4e6e-9426-ed2cffe7189a" aria-expanded="true">

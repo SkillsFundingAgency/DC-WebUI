@@ -84,7 +84,6 @@ namespace DC.Web.Ui.Services.Tests
                 new JsonSerializationService(),
                 new Mock<IReportService>().Object,
                 dateTimeProviderMock.Object,
-                new Mock<IKeyValuePersistenceService>().Object,
                 httpClient,
                 new ApiSettings());
             return service;

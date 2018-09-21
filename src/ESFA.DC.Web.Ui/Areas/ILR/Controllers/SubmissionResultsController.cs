@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.JobStatus.Interface;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area("ilr")]
+    [Area(AreaNames.Ilr)]
     [Route("submission-results")]
     public class SubmissionResultsController : BaseController
     {
@@ -50,7 +51,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 JobId = jobId,
                 PeriodName = job.PeriodNumber.ToPeriodName(),
                 PeriodNumber = job.PeriodNumber,
-                FileSize = fileSize
+                FileSize = fileSize.ToString("N1"),
+                Status = job.Status
             };
 
             return View(result);

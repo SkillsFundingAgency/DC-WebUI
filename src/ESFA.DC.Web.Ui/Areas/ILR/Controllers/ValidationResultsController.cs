@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area("ilr")]
+    [Area(AreaNames.Ilr)]
     [Route("ilr/validation-results")]
     public class ValidationResultsController : BaseController
     {
@@ -60,7 +61,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
-            return RedirectToAction("Index", "SubmissionConfirmation", new { area = "ilr", jobId = jobId });
+            return RedirectToAction("Index", "SubmissionConfirmation", new { area = AreaNames.Ilr, jobId = jobId });
         }
 
         [HttpGet]
@@ -72,7 +73,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
-            return RedirectToAction("Index", "ILRSubmission", new { area = "ilr", job.CollectionName });
+            return RedirectToAction("Index", "ILRSubmission", new { area = AreaNames.Ilr, job.CollectionName });
         }
 
         [Route("Download/{jobId}")]

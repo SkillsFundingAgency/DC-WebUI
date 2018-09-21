@@ -1,14 +1,15 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
+using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area("ilr")]
+    [Area(AreaNames.Ilr)]
     [Route("ilr/CollectionOptions")]
     public class CollectionOptionsController : BaseController
     {
@@ -33,13 +34,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
                 //if there is only one then redirect to submission page
                 if (data.Count() == 1)
                 {
-                   return RedirectToAction("Index", "ILRSubmission", new { area="ilr", data.First().CollectionName });
+                   return RedirectToAction("Index", "Submission", new { area= AreaNames.Ilr, data.First().CollectionName });
                 }
 
                 return View(data);
             }
 
-            return RedirectToAction("Index", "ReturnWindowClosed", new { area = "ilr" });
+            return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Ilr });
         }
     }
 }
