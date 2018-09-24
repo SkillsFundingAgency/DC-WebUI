@@ -9,18 +9,16 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface ISubmissionService
     {
-        Task<CloudBlobStream> GetBlobStream(string fileName);
+        Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage);
 
-        Task<long> SubmitIlrJob(string fileName, decimal fileSizeBytes, string submittedBy, long ukprn, string collectionName, int period);
+        Task<FileUploadJob> GetJob(long ukprn, long jobId);
 
-        Task<IlrJob> GetJob(long ukprn, long jobId);
+        Task<IEnumerable<FileUploadJob>> GetAllJobs(long ukprn);
 
-        Task<IEnumerable<IlrJob>> GetAllJobs(long ukprn);
-
-        Task<string> UpdateJobStatus(long jobId, JobStatusType status, int totalLearners);
+        Task<string> UpdateJobStatus(long jobId, JobStatusType status);
 
         Task<JobStatusType> GetJobStatus(long jobId);
 
-        Task<IlrSubmissionConfirmationViewModel> GetIlrConfirmation(long ukprn, long jobId);
+        Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId);
     }
 }

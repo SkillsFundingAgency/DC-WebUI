@@ -287,3 +287,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 src/ESFA.DC.Web.Ui/appsettings.salman.json
+/src/ESFA.DC.Web.Ui/wwwroot/assets/minified/site.min.css
+src/ESFA.DC.Web.Ui/wwwroot/assets/stylesheets/docs.css
+src/ESFA.DC.Web.Ui/wwwroot/assets/css/override.css
+src/ESFA.DC.Web.Ui/wwwroot/assets/css/docs.css

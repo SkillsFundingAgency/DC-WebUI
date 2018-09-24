@@ -10,6 +10,6 @@ namespace DC.Web.Ui.Services.Interfaces
     {
         Task<Stream> GetReportStreamAsync(string fileName);
 
-        Task<long> GetReportFileSizeAsync(string fileName);
+        Task<decimal> GetReportFileSizeAsync(string fileName);
     }
 }

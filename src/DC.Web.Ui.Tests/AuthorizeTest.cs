@@ -10,9 +10,8 @@ namespace DC.Web.Ui.Tests
     public class AuthorizeTest
     {
         [Theory]
-        [InlineData("AppLogs/Index")]
-        [InlineData("ilr-submission")]
-        [InlineData("submission-confirmation/Index")]
+        [InlineData("ilr/submission/Index")]
+        [InlineData("ilr/submission-confirmation/Index")]
         public async Task GetAsync_ReturnsUnauthorizedResult(string url)
         {
             // Arrange

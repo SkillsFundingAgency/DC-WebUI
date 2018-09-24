@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
-using DC.Web.Ui.Services.AppLogs;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.Logging.Interfaces;
@@ -35,7 +34,7 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var service = new Mock<ICollectionManagementService>();
-            service.Setup(x => x.GetSubmssionOptions(It.IsAny<long>())).ReturnsAsync(() => items);
+            service.Setup(x => x.GetSubmssionOptionsAsync(It.IsAny<long>())).ReturnsAsync(() => items);
 
             var controller = new SubmissionOptionsController(service.Object, mockLogger.Object);
             var result = controller.Index().Result;

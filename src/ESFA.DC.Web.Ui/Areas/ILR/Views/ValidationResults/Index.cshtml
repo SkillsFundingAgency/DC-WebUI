@@ -1,0 +1,59 @@
+﻿@using ESFA.DC.Web.Ui.ViewModels
+@model ESFA.DC.Web.Ui.ViewModels.ValidationResultViewModel
+
+@{
+    ViewData["Title"] = "Problems with your learner data";
+    ViewData["BackUrl"] = $"/ilr-submission/{Model.CollectionName}";
+
+}
+
+@if (Model.TotalErrors >0)
+{
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+            ILR file not submitted
+        </h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                <li>
+                    <p>There are errors and warnings for the learner data in your file.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+<h1 class="govuk-heading-xl">
+    Problems with your learner data
+    <span class="govuk-caption-xl" collection="@Model.CollectionName"></span>
+</h1>
+
+<p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners</p>
+
+<p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)
+
+<p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)
+
+
+<p>
+    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults") <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
+</p>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        If you submit this file you may not be paid the correct amount for this period.
+    </strong>
+</div>
+<form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">
+    
+    <button class="govuk-button" type="submit">
+        Submit anyway
+    </button>
+</form>
+
+<p>
+    @Html.ActionLink("Go back and upload an updated file", "SubmitAnother", "ValidationResults") 
+
+</p>

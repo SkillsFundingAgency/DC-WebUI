@@ -66,14 +66,14 @@ namespace DC.Web.Ui
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseBrowserLink();
+
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseBrowserLink();
                 app.UseExceptionHandler("/error");
             }
 
@@ -92,6 +92,13 @@ namespace DC.Web.Ui
 
                     return Task.FromResult(0);
                 }
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "area",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
         }
 

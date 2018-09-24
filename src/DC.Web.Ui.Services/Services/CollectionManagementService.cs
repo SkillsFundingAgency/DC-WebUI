@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -27,7 +25,7 @@ namespace DC.Web.Ui.Services.Services
             _serializationService = serializationService;
         }
 
-        public async Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptions(long ukprn)
+        public async Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptionsAsync(long ukprn)
         {
             var result = new List<SubmissionOptionViewModel>();
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}");
@@ -35,18 +33,20 @@ namespace DC.Web.Ui.Services.Services
             if (data != null)
             {
                 var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
-                options.ToList().ForEach(x => result.Add(
-                    new SubmissionOptionViewModel
+                foreach (var x in options)
+                {
+                    result.Add(new SubmissionOptionViewModel
                     {
                         Name = x.Type,
                         Title = x.Description
-                    }));
+                    });
+                }
             }
 
             return result;
         }
 
-        public async Task<ReturnPeriodViewModel> GetCurrentPeriod(string collectionName)
+        public async Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}");
             ReturnPeriodViewModel result = null;
@@ -60,28 +60,38 @@ namespace DC.Web.Ui.Services.Services
             return result;
         }
 
-        public async Task<IEnumerable<CollectionViewModel>> GetAvailableCollections(long ukprn, string collectionType)
+        public async Task<IEnumerable<CollectionViewModel>> GetAvailableCollectionsAsync(long ukprn, string collectionType)
         {
-             var result = new List<CollectionViewModel>();
+            var result = new List<CollectionViewModel>();
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/collections/{ukprn}/{collectionType}");
 
             if (data != null)
             {
                 var options = _serializationService.Deserialize<IEnumerable<Collection>>(data);
-                options.ToList().ForEach(x => result.Add(
-                    new CollectionViewModel
+                foreach (var x in options)
+                {
+                    result.Add(new CollectionViewModel
                     {
                         IsOpen = x.IsOpen,
                         CollectionName = x.CollectionTitle
-                    }));
+                    });
+                }
             }
 
             return result;
         }
 
-        public Task<bool> IsValidCollection(long ukprn, string collectionType)
+        public async Task<bool> IsValidCollectionAsync(long ukprn, string collectionName)
         {
-            throw new NotImplementedException();
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}/{collectionName}");
+
+            if (!string.IsNullOrEmpty(data))
+            {
+                var collection = _serializationService.Deserialize<Collection>(data);
+                return collection.IsOpen;
+            }
+
+            return false;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using DC.Web.Ui.Extensions;
+﻿using DC.Web.Authorization.Data.Constants;
+using DC.Web.Ui.Constants;
+using DC.Web.Ui.Extensions;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +19,14 @@ namespace DC.Web.Ui.Base
 
         protected long Ukprn => User.Ukprn();
 
-        protected long ContextJobId
+        protected void AddError(string key)
         {
-            get
-            {
-                if (TempData.ContainsKey("JobId"))
-                {
-                    return long.Parse(TempData["JobId"].ToString());
-                }
-
-                return 0;
-            }
+            ModelState.AddModelError(key, ErrorMessageLookup.GetErrorMessage(key));
         }
 
-        protected void SetJobId(long jobId)
+        protected void AddError(string key, string message)
         {
-            TempData["JobId"] = jobId;
+            ModelState.AddModelError(key, message);
         }
     }
 }

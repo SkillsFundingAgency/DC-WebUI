@@ -1,4 +1,5 @@
 ﻿using System;
+using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -10,6 +11,8 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public string PeriodName { get; set; }
 
-        public long FileSize { get; set; }
+        public string FileSize { get; set; }
+
+        public JobStatusType Status { get; set; }
     }
 }

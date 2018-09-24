@@ -1,8 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac.Features.Indexed;
+using DC.Web.Ui.Areas.ILR.Controllers;
 using DC.Web.Ui.Controllers.IlrSubmission;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Settings.Models;
+using DC.Web.Ui.ViewModels;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,18 +27,62 @@ namespace DC.Web.Ui.Tests.Controllers
     public class IlrSubmissionControllerTests
     {
         [Fact]
+        public void Index_Success()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => true);
+
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ReturnPeriodViewModel(1));
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(ViewResult));
+        }
+
+        [Fact]
+        public async Task Index_EmptyCollectionName()
+        {
+            var controller = GetController(null);
+            await Assert.ThrowsAsync<Exception>(() => controller.Index(null));
+        }
+
+        [Fact]
+        public void Index_FailureInvalidCollection()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => false);
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(RedirectToActionResult));
+        }
+
+        [Fact]
+        public void Index_FailureInvalidPeriod()
+        {
+            var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => null);
+
+            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+
+            var result = controller.Index("ILR1819").Result;
+            result.Should().BeOfType(typeof(RedirectToActionResult));
+        }
+
+        [Fact]
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            var mockCloudBlob = new Mock<CloudBlobStream>();
-            submissionServiceMock.Setup(x => x.GetBlobStream("test file")).Returns(Task.FromResult(mockCloudBlob.Object));
-            submissionServiceMock.Setup(x => x.SubmitIlrJob(
-                "test file",
-                It.IsAny<decimal>(),
-                It.IsAny<string>(),
-                It.IsAny<long>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).Returns(Task.FromResult((long)1));
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission)
+            {
+                FileName = "test file",
+            })).Returns(Task.FromResult((long)1));
 
             var controller = GetController(submissionServiceMock.Object);
 
@@ -35,49 +90,69 @@ namespace DC.Web.Ui.Tests.Controllers
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(1024);
 
-            var result = controller.Submit(mockFile.Object).Result;
+            var result = controller.Index("ILR1819", mockFile.Object).Result;
             result.Should().BeOfType(typeof(RedirectToActionResult));
         }
 
         [Fact]
         public void SubmitIlr_NullFile()
         {
-            var controller = GetController(new Mock<ISubmissionService>().Object);
-            var result = controller.Submit(null).Result;
+            var controller = GetController(new Mock<ISubmissionService>().Object, FileNameValidationResult.EmptyFile);
+            var result = controller.Index("ILR1819", null).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
         [Fact]
         public void SubmitIlr_EmptyFile()
         {
-            var controller = GetController(new Mock<ISubmissionService>().Object);
+            var controller = GetController(new Mock<ISubmissionService>().Object, FileNameValidationResult.EmptyFile);
 
             var mockFile = new Mock<IFormFile>();
             mockFile.SetupGet(x => x.FileName).Returns("test file");
             mockFile.SetupGet(x => x.Length).Returns(0);
-
-            var result = controller.Submit(mockFile.Object).Result;
+            var result = controller.Index("ILR1819", mockFile.Object).Result;
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private ILRSubmissionController GetController(ISubmissionService submissionService)
+        private SubmissionController GetController(ISubmissionService submissionService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid, ICollectionManagementService collectionManagementService = null)
         {
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
+            var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
             {
-                ["CollectionType"] = "ILR"
+                ValidationResult = fileNameValidationResult,
+                SummaryError = "summary",
+                FieldError = "field error"
             };
 
             var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
-            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriod(It.IsAny<string>()))
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
-            var controller = new ILRSubmissionController(
-                submissionService,
-                It.IsAny<ILogger>(),
-                mockCollectionmanagementService.Object);
+            mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => true);
+            mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
-            controller.TempData = tempData;
+            var mockFilenameValidationService = new Mock<IFileNameValidationService>();
+            mockFilenameValidationService.Setup(x => x.ValidateFileNameAsync(It.IsAny<string>(), It.IsAny<long?>(), It.IsAny<long>()))
+                .ReturnsAsync(() => fileNameValidationResultViewModel);
+
+            var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
+            mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
+
+            var servicesMock = new Mock<IIndex<JobType, IStreamableKeyValuePersistenceService>>();
+            servicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockStreamableServiceMock.Object);
+
+            var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
+            configs.Setup(x => x[JobType.IlrSubmission]).Returns(new CloudStorageSettings());
+
+            var controller = new SubmissionController(
+                submissionService,
+                new Mock<ILogger>().Object,
+                collectionManagementService ?? mockCollectionmanagementService.Object,
+                mockFilenameValidationService.Object,
+                servicesMock.Object,
+                configs.Object);
+
             return controller;
         }
     }
