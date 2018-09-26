@@ -8,7 +8,9 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
+using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;
@@ -47,6 +49,12 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
+        public async Task<decimal> GetReportFileSizeAsync(FileUploadJob job)
+        {
+            var fileName = GetReportsZipFileName(job.Ukprn, job.JobId, job.CrossLoadingStatus);
+            return await GetReportFileSizeAsync(fileName);
+        }
+
         public async Task<decimal> GetReportFileSizeAsync(string fileName)
         {
             _logger.LogInfo($"Getting report file size : {fileName}");
@@ -65,6 +73,12 @@ namespace DC.Web.Ui.Services.Services
             }
 
             return 0;
+        }
+
+        public string GetReportsZipFileName(long ukprn, long jobId, JobStatusType? crossLoadingStatus)
+        {
+            var fileNamePart = crossLoadingStatus.HasValue ? "_DC" : string.Empty;
+            return $"{ukprn}/{jobId}/Reports{fileNamePart}.zip";
         }
 
         public CloudBlockBlob GetBlob(string fileName)
