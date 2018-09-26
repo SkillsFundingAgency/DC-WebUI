@@ -68,8 +68,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             try
             {
-                var csvBlobStream = await _reportService.GetReportStreamAsync(reportFileName);
-                return File(csvBlobStream, "application/zip", $"{Ukprn}_{jobId}_Reports.zip");
+                var blobStream = await _reportService.GetReportStreamAsync(reportFileName);
+                return File(blobStream, "application/zip", $"{jobId}_Reports.zip");
             }
             catch (Exception e)
             {
