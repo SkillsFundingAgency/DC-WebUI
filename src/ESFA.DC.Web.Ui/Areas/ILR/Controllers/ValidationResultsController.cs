@@ -73,7 +73,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
-            return RedirectToAction("Index", "ILRSubmission", new { area = AreaNames.Ilr, job.CollectionName });
+            return RedirectToAction("Index", "Submission", new { area = AreaNames.Ilr, job.CollectionName });
         }
 
         [Route("Download/{jobId}")]

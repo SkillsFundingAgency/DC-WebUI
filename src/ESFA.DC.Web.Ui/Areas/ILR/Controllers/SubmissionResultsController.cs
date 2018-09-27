@@ -36,14 +36,14 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             }
 
             decimal fileSize = 0;
-            if (job.Status == JobStatusType.Completed)
+            if ((job.CrossLoadingStatus ?? job.Status) == JobStatusType.Completed)
             {
-                fileSize = await _reportService.GetReportFileSizeAsync($"{Ukprn}/{jobId}/Reports.zip");
+                fileSize = await _reportService.GetReportFileSizeAsync(job);
                 Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
             }
             else
             {
-                Logger.LogInfo($"Got job status for job id : {jobId}, it is still : {job.Status}");
+                Logger.LogInfo($"Got job status for job id : {jobId}, it is still : {job.Status}, cross loading status :{job.CrossLoadingStatus}");
             }
 
             var result = new SubmissionResultViewModel()
@@ -52,7 +52,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 PeriodName = job.PeriodNumber.ToPeriodName(),
                 PeriodNumber = job.PeriodNumber,
                 FileSize = fileSize.ToString("N1"),
-                Status = job.Status
+                Status = job.CrossLoadingStatus ?? job.Status
             };
 
             return View(result);
@@ -61,13 +61,15 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [Route("Download/{jobId}")]
         public async Task<FileResult> Download(long jobId)
         {
-            var reportFileName = $"{Ukprn}/{jobId}/Reports.zip";
+            var job = await _submissionService.GetJob(Ukprn, jobId);
+
+            var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId, job.CrossLoadingStatus);
             Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
 
             try
             {
-                var csvBlobStream = await _reportService.GetReportStreamAsync(reportFileName);
-                return File(csvBlobStream, "application/zip", reportFileName.Replace("/", "_"));
+                var blobStream = await _reportService.GetReportStreamAsync(reportFileName);
+                return File(blobStream, "application/zip", $"{jobId}_Reports.zip");
             }
             catch (Exception e)
             {

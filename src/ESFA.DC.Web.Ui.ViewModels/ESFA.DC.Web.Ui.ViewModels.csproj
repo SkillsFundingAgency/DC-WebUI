@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.17-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.21-beta0001" />
   </ItemGroup>
 
   <ItemGroup>
