@@ -32,6 +32,13 @@ namespace DC.Web.Ui.Services.BespokeHttpClient
             return await response.Content.ReadAsStringAsync();
         }
 
+        public async Task<string> SendAsync(string url)
+        {
+            var response = await _pollyPolicy.ExecuteAsync(() => _httpClient.PostAsync(url, null));
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
         public async Task<string> GetDataAsync(string url)
         {
             var response = await _pollyPolicy.ExecuteAsync(() => _httpClient.GetAsync(new Uri(url)));

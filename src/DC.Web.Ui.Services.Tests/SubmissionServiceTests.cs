@@ -38,9 +38,8 @@ namespace DC.Web.Ui.Services.Tests
         {
             var service = GetService();
 
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission)
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
             {
-                Ukprn = 100,
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
                 CollectionName = "ILR1819",
@@ -57,9 +56,8 @@ namespace DC.Web.Ui.Services.Tests
         [Fact]
         public async Task SubmitJob_Success_CrossLoading()
         {
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission)
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
             {
-                Ukprn = 100,
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
                 CollectionName = "ILR1819",

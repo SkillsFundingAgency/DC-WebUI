@@ -6,9 +6,11 @@ namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class SubmissionMessageViewModel
     {
-        public SubmissionMessageViewModel(JobType jobType)
+        public SubmissionMessageViewModel(JobType jobType, long ukprn, long upin)
         {
             JobType = jobType;
+            Ukprn = ukprn;
+            Upin = upin;
         }
 
         public string CollectionName { get; set; }
@@ -28,5 +30,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public JobType JobType { get; }
 
         public string StorageReference { get; set; }
+
+        public long Upin { get; set; }
     }
 }

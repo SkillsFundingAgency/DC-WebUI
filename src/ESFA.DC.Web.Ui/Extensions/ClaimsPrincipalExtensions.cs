@@ -15,6 +15,12 @@ namespace DC.Web.Ui.Extensions
             return result;
         }
 
+        public static long Upin(this ClaimsPrincipal claimsPrincipal)
+        {
+            long.TryParse(GetClaimValue(claimsPrincipal, IdamsClaimTypes.Upin), out var result);
+            return result;
+        }
+
         public static string DisplayName(this ClaimsPrincipal claimsPrincipal)
         {
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.DisplayName);

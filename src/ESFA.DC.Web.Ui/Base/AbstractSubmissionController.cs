@@ -65,12 +65,11 @@ namespace DC.Web.Ui.Base
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType)
+                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType, Ukprn, Upin)
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
                     SubmittedBy = User.Name(),
-                    Ukprn = Ukprn,
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
