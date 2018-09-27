@@ -61,7 +61,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
-            return RedirectToAction("Index", "SubmissionConfirmation", new { area = AreaNames.Ilr, jobId = jobId });
+            return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId });
         }
 
         [HttpGet]
