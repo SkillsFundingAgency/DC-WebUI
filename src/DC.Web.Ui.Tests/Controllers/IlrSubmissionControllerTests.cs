@@ -145,11 +145,14 @@ namespace DC.Web.Ui.Tests.Controllers
             var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
             configs.Setup(x => x[JobType.IlrSubmission]).Returns(new CloudStorageSettings());
 
+            var filevalidationServicesMock = new Mock<IIndex<JobType, IFileNameValidationService>>();
+            filevalidationServicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockFilenameValidationService.Object);
+
             var controller = new SubmissionController(
                 submissionService,
                 new Mock<ILogger>().Object,
                 collectionManagementService ?? mockCollectionmanagementService.Object,
-                mockFilenameValidationService.Object,
+                filevalidationServicesMock.Object,
                 servicesMock.Object,
                 configs.Object);
 
