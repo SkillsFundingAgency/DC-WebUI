@@ -56,6 +56,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return RedirectToAction("Index", "ReturnWindowClosed");
             }
 
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData["ErrorMessage"].ToString());
+                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData["ErrorMessage"].ToString());
+            }
+
             return View();
         }
 

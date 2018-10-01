@@ -36,8 +36,8 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc)
         {
-            var ilrValidationResult = await GetValidationResultsData(ukprn, jobId);
-            if (ilrValidationResult == null)
+            var validationResult = await GetValidationResultsData(ukprn, jobId);
+            if (validationResult == null)
             {
                 return null;
             }
@@ -45,22 +45,23 @@ namespace DC.Web.Ui.Services.Services
             return new ValidationResultViewModel()
             {
                 JobId = jobId,
-                TotalErrors = ilrValidationResult.TotalErrors,
-                TotalErrorLearners = ilrValidationResult.TotalErrorLearners,
-                TotalWarningLearners = ilrValidationResult.TotalWarningLearners,
-                TotalWarnings = ilrValidationResult.TotalWarnings,
-                TotalLearners = ilrValidationResult.TotalLearners,
-                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N1")
+                TotalErrors = validationResult.TotalErrors,
+                TotalErrorLearners = validationResult.TotalErrorLearners,
+                TotalWarningLearners = validationResult.TotalWarningLearners,
+                TotalWarnings = validationResult.TotalWarnings,
+                TotalLearners = validationResult.TotalLearners,
+                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N1"),
+                ErrorMessage = validationResult.ErrorMessage
             };
         }
 
-        public async Task<IlrValidationResult> GetValidationResultsData(long ukprn, long jobId)
+        public async Task<FileValidationResult> GetValidationResultsData(long ukprn, long jobId)
         {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/ValidationResults/{ukprn}/{jobId}");
 
             if (!string.IsNullOrEmpty(data))
             {
-                return _serializationService.Deserialize<IlrValidationResult>(data);
+                return _serializationService.Deserialize<FileValidationResult>(data);
             }
 
             return null;
