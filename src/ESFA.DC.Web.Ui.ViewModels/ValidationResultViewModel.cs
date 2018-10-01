@@ -19,5 +19,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public int TotalWarningLearners { get; set; }
 
         public string CollectionName { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }
