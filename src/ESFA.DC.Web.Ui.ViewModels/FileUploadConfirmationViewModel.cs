@@ -12,5 +12,7 @@
 
         public string PeriodName { get; set; }
 
+        public string HeaderMessage { get; set; }
+
     }
 }

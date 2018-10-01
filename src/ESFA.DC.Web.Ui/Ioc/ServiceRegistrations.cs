@@ -49,9 +49,11 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().WithAttributeFiltering().InstancePerLifetimeScope();
-            builder.RegisterType<IlrFileNameValidationService>().As<IFileNameValidationService>().WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<QueuePublishService<MessageCrossLoadDctToDcftDto>>().As<IQueuePublishService<MessageCrossLoadDctToDcftDto>>().InstancePerLifetimeScope();
             builder.RegisterType<CrossLoadMessageMapper>().InstancePerLifetimeScope();
+
+            builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

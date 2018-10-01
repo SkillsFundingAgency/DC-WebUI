@@ -27,12 +27,12 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             ISubmissionService submissionService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
-            IFileNameValidationService fileNameValidationService,
+            IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
             : base(JobType.EsfSubmission, submissionService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationService;
+            _fileNameValidationService = fileNameValidationServices[JobType.EsfSubmission];
         }
 
         [HttpGet]
@@ -69,14 +69,14 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
-                AddError(ErrorMessageKeys.IlrSubmission_FileFieldKey, validationResult.FieldError);
+                AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
                 return View();
             }
 
             var jobId = await SubmitJob(collectionName, file);
-            return RedirectToAction("Index", "InProgress", new { area = string.Empty, jobId });
+            return RedirectToAction("Index", "InProgress", new { area = AreaNames.Esf, jobId });
         }
     }
 }

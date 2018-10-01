@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area(AreaNames.Ilr)]
-    [Route(AreaNames.Ilr + "/submission-confirmation")]
+    [Route("submission-confirmation")]
     public class SubmissionConfirmationController : BaseController
     {
         private readonly ISubmissionService _submissionService;

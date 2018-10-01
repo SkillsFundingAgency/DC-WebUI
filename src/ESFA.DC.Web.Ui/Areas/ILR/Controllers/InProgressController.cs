@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Route("inprogress")]
+    [Area(AreaNames.Ilr)]
+    [Route(AreaNames.Ilr + "/inprogress")]
     public class InProgressController : BaseController
     {
         private readonly ISubmissionService _submissionService;
