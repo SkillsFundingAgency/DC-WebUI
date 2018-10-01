@@ -19,6 +19,8 @@ namespace DC.Web.Ui.Base
 
         protected long Ukprn => User.Ukprn();
 
+        protected long Upin => User.Upin();
+
         protected void AddError(string key)
         {
             ModelState.AddModelError(key, ErrorMessageLookup.GetErrorMessage(key));

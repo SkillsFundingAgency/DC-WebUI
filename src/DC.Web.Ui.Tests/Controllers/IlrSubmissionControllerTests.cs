@@ -79,7 +79,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission)
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission, 10, 0)
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));

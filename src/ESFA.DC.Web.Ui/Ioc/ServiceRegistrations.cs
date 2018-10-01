@@ -12,6 +12,9 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.CrossLoad;
+using ESFA.DC.CrossLoad.Dto;
+using ESFA.DC.CrossLoad.Message;
 using ESFA.DC.DateTimeProvider;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.AzureStorage;
@@ -21,6 +24,8 @@ using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
 using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Queueing;
+using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using Polly;
@@ -40,10 +45,13 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
             builder.RegisterType<ValidationResultsService>().As<IValidationResultsService>().InstancePerLifetimeScope();
             builder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>().InstancePerLifetimeScope();
+            builder.RegisterType<JsonSerializationService>().As<ISerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
             builder.RegisterType<ReportService>().As<IReportService>().WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<IlrFileNameValidationService>().As<IFileNameValidationService>().WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<QueuePublishService<MessageCrossLoadDctToDcftDto>>().As<IQueuePublishService<MessageCrossLoadDctToDcftDto>>().InstancePerLifetimeScope();
+            builder.RegisterType<CrossLoadMessageMapper>().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

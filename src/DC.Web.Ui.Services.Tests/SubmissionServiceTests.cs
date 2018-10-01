@@ -6,11 +6,14 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.CrossLoad;
+using ESFA.DC.CrossLoad.Dto;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -35,9 +38,8 @@ namespace DC.Web.Ui.Services.Tests
         {
             var service = GetService();
 
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission)
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
             {
-                Ukprn = 100,
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
                 CollectionName = "ILR1819",
@@ -48,6 +50,44 @@ namespace DC.Web.Ui.Services.Tests
             };
 
             var result = service.SubmitJob(job).Result;
+            result.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task SubmitJob_Success_CrossLoading()
+        {
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
+            {
+                SubmittedBy = "test user",
+                FileName = "22222_test1.xml",
+                CollectionName = "ILR1819",
+                FileSizeBytes = 100,
+                NotifyEmail = "test@test.com",
+                Period = 10,
+                StorageReference = "test",
+            };
+
+            var jsonSerialisationMock = new Mock<IJsonSerializationService>();
+            jsonSerialisationMock.Setup(x => x.Deserialize<FileUploadJob>(It.IsAny<string>())).Returns(new FileUploadJob()
+            {
+                CrossLoadingStatus = JobStatusType.Ready,
+                JobType = JobType.IlrSubmission,
+                Ukprn = 1000,
+                JobId = 10
+            });
+
+            var queuPublishService = new Mock<IQueuePublishService<MessageCrossLoadDctToDcftDto>>();
+            queuPublishService.Setup(x => x.PublishAsync(new MessageCrossLoadDctToDcftDto()));
+
+            var reportServieMock = new Mock<IReportService>();
+            reportServieMock
+                .Setup(x => x.GetReportsZipFileName(It.IsAny<long>(), It.IsAny<long>(), JobStatusType.Ready))
+                .Returns(string.Empty);
+
+            var service = GetService(serializationService: jsonSerialisationMock.Object, queuePublishService: queuPublishService.Object, reportService: reportServieMock.Object);
+            var result = service.SubmitJob(job).Result;
+                        queuPublishService.Verify(x => x.PublishAsync(It.IsAny<MessageCrossLoadDctToDcftDto>()), Times.Once());
+
             result.Should().Be(1);
         }
 
@@ -152,7 +192,9 @@ namespace DC.Web.Ui.Services.Tests
 
         private ISubmissionService GetService(
             IBespokeHttpClient httpClient = null,
-            IJsonSerializationService serializationService = null)
+            IJsonSerializationService serializationService = null,
+            IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService = null,
+            IReportService reportService = null)
         {
             var dateTimeprovider = new Mock<IDateTimeProvider>();
             dateTimeprovider.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
@@ -161,11 +203,22 @@ namespace DC.Web.Ui.Services.Tests
             httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => "1");
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => string.Empty);
 
+            var jsonSerialisationMock = new Mock<IJsonSerializationService>();
+            jsonSerialisationMock.Setup(x => x.Deserialize<FileUploadJob>(It.IsAny<string>())).Returns(new FileUploadJob()
+            {
+                CrossLoadingStatus = null,
+                JobType = JobType.IlrSubmission,
+                Ukprn = 1000,
+                JobId = 10
+            });
             return new SubmissionService(
                 httpClient ?? httpClientMock.Object,
                 new ApiSettings(),
-                serializationService ?? new Mock<IJsonSerializationService>().Object,
-                dateTimeprovider.Object);
+                serializationService ?? jsonSerialisationMock.Object,
+                dateTimeprovider.Object,
+                queuePublishService ?? It.IsAny<IQueuePublishService<MessageCrossLoadDctToDcftDto>>(),
+                new CrossLoadMessageMapper(),
+                reportService ?? It.IsAny<IReportService>());
         }
     }
 }

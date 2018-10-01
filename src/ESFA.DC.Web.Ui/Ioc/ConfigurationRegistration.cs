@@ -3,6 +3,7 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
+using ESFA.DC.Queueing.Interface.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace DC.Web.Ui.Ioc
@@ -27,6 +28,8 @@ namespace DC.Web.Ui.Ioc
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission).SingleInstance();
             builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("IlrCloudStorageSettings"))
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission).SingleInstance();
+
+            builder.Register(c => configuration.GetConfigSection<CrossLoadingQueueConfiguration>()).As<IQueueConfiguration>().SingleInstance();
         }
     }
 }
