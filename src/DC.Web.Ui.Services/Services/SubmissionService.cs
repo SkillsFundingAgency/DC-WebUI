@@ -138,6 +138,9 @@ namespace DC.Web.Ui.Services.Services
             {
                 var reportsFileName =
                     _reportService.GetReportsZipFileName(submissionMessage.Ukprn, jobId, job.CrossLoadingStatus);
+
+                var reportFileNameWithoutExtension = reportsFileName.Substring(0, reportsFileName.Length - 4);
+
                 var message = new MessageCrossLoadDctToDcft(
                     jobId,
                     submissionMessage.Ukprn,
@@ -146,8 +149,8 @@ namespace DC.Web.Ui.Services.Services
                     submissionMessage.FileName,
                     MapJobType(submissionMessage.JobType),
                     submissionMessage.SubmittedBy,
-                    $"{reportsFileName}1",
-                    $"{reportsFileName}2");
+                    $"{reportFileNameWithoutExtension}1.zip",
+                    $"{reportFileNameWithoutExtension}2.zip");
 
                 await _queuePublishService.PublishAsync(_crossLoadMessageMapper.FromMessage(message));
                 await _httpClient.SendAsync($"{_apiBaseUrl}/cross-loading/status/{jobId}/{JobStatusType.MovedForProcessing}");
