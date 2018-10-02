@@ -6,9 +6,10 @@ using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.ILR.Controllers
+namespace DC.Web.Ui.Areas.ESF.Controllers
 {
-    [Route("inprogress")]
+    [Area(AreaNames.Esf)]
+    [Route(AreaNames.Esf + "/inprogress")]
     public class InProgressController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -24,12 +25,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             ViewBag.AutoRefresh = true;
             var jobStatus = await _submissionService.GetJobStatus(jobId);
-            if (jobStatus != JobStatusType.Waiting)
+            if (jobStatus == JobStatusType.Ready)
             {
                 return View();
             }
 
-            return RedirectToAction("Index", "ValidationResults", new { area= AreaNames.Ilr, jobId });
+            return RedirectToAction("Index", "SubmissionConfirmation", new { area= string.Empty, jobId });
         }
     }
 }

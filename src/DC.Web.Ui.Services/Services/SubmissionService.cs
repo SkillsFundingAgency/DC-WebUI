@@ -125,7 +125,9 @@ namespace DC.Web.Ui.Services.Services
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
                 SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mmtt").ToLower(), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
-                SubmittedBy = job.SubmittedBy
+                SubmittedBy = job.SubmittedBy,
+                HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
+                JobType = job.JobType
             };
         }
 
@@ -136,6 +138,9 @@ namespace DC.Web.Ui.Services.Services
             {
                 var reportsFileName =
                     _reportService.GetReportsZipFileName(submissionMessage.Ukprn, jobId, job.CrossLoadingStatus);
+
+                var reportFileNameWithoutExtension = reportsFileName.Substring(0, reportsFileName.Length - 4);
+
                 var message = new MessageCrossLoadDctToDcft(
                     jobId,
                     submissionMessage.Ukprn,
@@ -144,8 +149,8 @@ namespace DC.Web.Ui.Services.Services
                     submissionMessage.FileName,
                     MapJobType(submissionMessage.JobType),
                     submissionMessage.SubmittedBy,
-                    submissionMessage.StorageReference,
-                    reportsFileName);
+                    $"{reportFileNameWithoutExtension}1.zip",
+                    $"{reportFileNameWithoutExtension}2.zip");
 
                 await _queuePublishService.PublishAsync(_crossLoadMessageMapper.FromMessage(message));
                 await _httpClient.SendAsync($"{_apiBaseUrl}/cross-loading/status/{jobId}/{JobStatusType.MovedForProcessing}");
@@ -165,6 +170,19 @@ namespace DC.Web.Ui.Services.Services
                 default:
                     throw new Exception("unknown job type");
             }
+        }
+
+        public string GetHeader(JobType jobType, int period)
+        {
+            switch (jobType)
+            {
+                case JobType.IlrSubmission:
+                    return string.Concat("R", period.ToString("00"), " ILR file submitted");
+                case JobType.EsfSubmission:
+                    return string.Concat("R", period.ToString("00"), " supplementary data file submitted");
+            }
+
+            return string.Empty;
         }
     }
 }

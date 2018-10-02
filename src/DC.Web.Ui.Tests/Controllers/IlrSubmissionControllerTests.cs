@@ -29,6 +29,12 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void Index_Success()
         {
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
+            {
+                ["ErrorMessage"] = "test"
+            };
+
             var mockCollectionmanagementService = new Mock<ICollectionManagementService>();
             mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
                 .ReturnsAsync(() => true);
@@ -37,6 +43,7 @@ namespace DC.Web.Ui.Tests.Controllers
                 .ReturnsAsync(() => new ReturnPeriodViewModel(1));
 
             var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+            controller.TempData = tempData;
 
             var result = controller.Index("ILR1819").Result;
             result.Should().BeOfType(typeof(ViewResult));
@@ -145,11 +152,14 @@ namespace DC.Web.Ui.Tests.Controllers
             var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
             configs.Setup(x => x[JobType.IlrSubmission]).Returns(new CloudStorageSettings());
 
+            var filevalidationServicesMock = new Mock<IIndex<JobType, IFileNameValidationService>>();
+            filevalidationServicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockFilenameValidationService.Object);
+
             var controller = new SubmissionController(
                 submissionService,
                 new Mock<ILogger>().Object,
                 collectionManagementService ?? mockCollectionmanagementService.Object,
-                mockFilenameValidationService.Object,
+                filevalidationServicesMock.Object,
                 servicesMock.Object,
                 configs.Object);
 

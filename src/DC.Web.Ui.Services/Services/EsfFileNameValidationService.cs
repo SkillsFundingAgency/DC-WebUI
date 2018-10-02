@@ -12,12 +12,12 @@ using ESFA.DC.Web.Ui.ViewModels.Enums;
 
 namespace DC.Web.Ui.Services.Services
 {
-    public class IlrFileNameValidationService : IFileNameValidationService
+    public class EsfFileNameValidationService : IFileNameValidationService
     {
         private readonly IKeyValuePersistenceService _persistenceService;
         private readonly Regex _fileNameRegex = new Regex("^(ILR)-([1-9][0-9]{7})-(1819)-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-(([1-9][0-9])|(0[1-9])).((XML)|(ZIP)|(xml)|(zip))$", RegexOptions.Compiled);
 
-        public IlrFileNameValidationService([KeyFilter(JobType.IlrSubmission)]IKeyValuePersistenceService persistenceService)
+        public EsfFileNameValidationService([KeyFilter(JobType.EsfSubmission)]IKeyValuePersistenceService persistenceService)
         {
             _persistenceService = persistenceService;
         }
@@ -40,36 +40,10 @@ namespace DC.Web.Ui.Services.Services
                 return new FileNameValidationResultViewModel()
                 {
                     ValidationResult = FileNameValidationResult.InvalidFileExtension,
-                    FieldError = "Your file must be in an XML or Zip format",
-                    SummaryError = "Your file must be in an XML or Zip format"
+                    FieldError = "Your file must be in a CSV format",
+                    SummaryError = "Your file must be in a CSV format"
                 };
             }
-
-            if (!IsValidRegex(fileName))
-            {
-                var fileExtension = fileName.Substring(fileName.Length - 4);
-                return new FileNameValidationResultViewModel()
-                {
-                    ValidationResult = FileNameValidationResult.InvalidFileNameFormat,
-                    FieldError = $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{fileExtension}",
-                    SummaryError = $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{fileExtension}"
-                };
-            }
-
-            if (!IsValidUkprn(fileName, ukprn))
-            {
-                return new FileNameValidationResultViewModel()
-                {
-                    ValidationResult = FileNameValidationResult.InvalidFileNameFormat,
-                    FieldError = "The UKPRN in the filename does not match the UKPRN associated with your IdAMS account",
-                    SummaryError = "The UKPRN in the filename does not match the UKPRN associated with your IdAMS account"
-                };
-            }
-
-            //if (!(await IsUniqueFileAsync(fileName)))
-            //{
-            //    return FileNameValidationResult.FileAlreadyExists;
-            //}
 
             return new FileNameValidationResultViewModel()
             {
@@ -79,8 +53,7 @@ namespace DC.Web.Ui.Services.Services
 
         public bool IsValidExtension(string fileName)
         {
-            return fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ||
-                   fileName.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase);
+            return fileName.EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase);
         }
 
         public bool IsValidRegex(string fileName)

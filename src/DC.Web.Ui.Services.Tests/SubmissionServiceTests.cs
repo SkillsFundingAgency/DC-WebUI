@@ -82,7 +82,7 @@ namespace DC.Web.Ui.Services.Tests
             var reportServieMock = new Mock<IReportService>();
             reportServieMock
                 .Setup(x => x.GetReportsZipFileName(It.IsAny<long>(), It.IsAny<long>(), JobStatusType.Ready))
-                .Returns(string.Empty);
+                .Returns("019191/10/rerports.zip");
 
             var service = GetService(serializationService: jsonSerialisationMock.Object, queuePublishService: queuPublishService.Object, reportService: reportServieMock.Object);
             var result = service.SubmitJob(job).Result;

@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.Web.Ui.ViewModels
+﻿using ESFA.DC.Jobs.Model.Enums;
+
+namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class FileUploadConfirmationViewModel
     {
@@ -11,6 +13,10 @@
         public string SubmittedAt { get; set; }
 
         public string PeriodName { get; set; }
+
+        public string HeaderMessage { get; set; }
+
+        public JobType JobType { get; set; }
 
     }
 }
