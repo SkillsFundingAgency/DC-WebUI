@@ -1,4 +1,6 @@
-﻿@using DC.Web.Ui.Extensions
+﻿@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
+@using ESFA.DC.Jobs.Model.Enums
 @model ESFA.DC.Web.Ui.ViewModels.FileUploadConfirmationViewModel
 
 @{
@@ -32,10 +34,10 @@
         <p>If your email address is wrong, you will need to <a href="https://logon.fasst.org.uk/">update it in your IdAMS account</a>.</p>
         <p>
             If you haven't received an email, it may be in your junkmail folder.
-            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResults", new { jobId = Model.JobId }) as your reports may still have been generated.
+            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResults", new { jobId = Model.JobId, area = Model.JobType == JobType.IlrSubmission ? AreaNames.Ilr : AreaNames.Esf}) as your reports may still have been generated.
         </p>
     </div>
 </details>
 
-<p>@Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId })</p>
+<p>@Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId, area= Model.JobType == JobType.IlrSubmission? AreaNames.Ilr : AreaNames.Esf})</p>
 <p><a href="/submission-options">Submit another data return</a></p>

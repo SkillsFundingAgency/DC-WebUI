@@ -36,7 +36,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             if (job == null)
             {
                 Logger.LogDebug($"Loading in progress page for job id : {jobId}, job not found");
-               throw new Exception($"Loading in progress page for job id : {jobId}, job not found");
+                throw new Exception($"Loading in progress page for job id : {jobId}, job not found");
+            }
+
+            if (job.Status == JobStatusType.Failed || job.Status == JobStatusType.FailedRetry)
+            {
+                throw new Exception($"Loading in progress page for job id : {jobId}, job is in status ; {job.Status} - user will be sent to service error page");
             }
 
             if (job.Status != JobStatusType.Waiting)

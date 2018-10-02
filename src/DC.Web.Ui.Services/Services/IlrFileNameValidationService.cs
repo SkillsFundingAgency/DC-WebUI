@@ -45,15 +45,26 @@ namespace DC.Web.Ui.Services.Services
                 };
             }
 
-            //if (!IsValidRegex(fileName))
-            //{
-            //    return FileNameValidationResult.InvalidFileNameFormat;
-            //}
+            if (!IsValidRegex(fileName))
+            {
+                var fileExtension = fileName.Substring(fileName.Length - 4);
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.InvalidFileNameFormat,
+                    FieldError = $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{fileExtension}",
+                    SummaryError = $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{fileExtension}"
+                };
+            }
 
-            //if (!IsValidUkprn(fileName, ukprn))
-            //{
-            //    return FileNameValidationResult.UkprnDifferentToFileName;
-            //}
+            if (!IsValidUkprn(fileName, ukprn))
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.InvalidFileNameFormat,
+                    FieldError = "The UKPRN in the filename does not match the UKPRN associated with your IdAMS account",
+                    SummaryError = "The UKPRN in the filename does not match the UKPRN associated with your IdAMS account"
+                };
+            }
 
             //if (!(await IsUniqueFileAsync(fileName)))
             //{
