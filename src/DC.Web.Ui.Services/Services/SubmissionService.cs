@@ -146,8 +146,8 @@ namespace DC.Web.Ui.Services.Services
                     submissionMessage.FileName,
                     MapJobType(submissionMessage.JobType),
                     submissionMessage.SubmittedBy,
-                    submissionMessage.StorageReference,
-                    reportsFileName);
+                    $"{reportsFileName}1",
+                    $"{reportsFileName}2");
 
                 await _queuePublishService.PublishAsync(_crossLoadMessageMapper.FromMessage(message));
                 await _httpClient.SendAsync($"{_apiBaseUrl}/cross-loading/status/{jobId}/{JobStatusType.MovedForProcessing}");
