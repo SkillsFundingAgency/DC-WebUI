@@ -1,5 +1,5 @@
 ﻿using DC.Web.Ui.Areas.ILR.Controllers;
-using DC.Web.Ui.Controllers.IlrSubmission;
+using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;

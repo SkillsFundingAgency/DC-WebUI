@@ -8,7 +8,7 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Controllers
 {
     [Route("submission-options")]
     public class SubmissionOptionsController : BaseController
