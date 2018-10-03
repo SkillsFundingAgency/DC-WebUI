@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using DC.Web.Ui.Base;
-using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.ILR.Controllers
+namespace DC.Web.Ui.Controllers
 {
     [Route("submission-confirmation")]
     public class SubmissionConfirmationController : BaseController

@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area(AreaNames.Ilr)]
-    [Route(AreaNames.Ilr + "/submission-results")]
+    //[Area(AreaNames.Ilr)]
+    //[Route(AreaNames.Ilr + "/submission-results")]
     public class SubmissionResultsController : BaseController
     {
         private readonly ISubmissionService _submissionService;
