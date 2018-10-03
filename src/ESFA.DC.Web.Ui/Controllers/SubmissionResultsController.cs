@@ -9,10 +9,9 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.ILR.Controllers
+namespace DC.Web.Ui.Controllers
 {
-    //[Area(AreaNames.Ilr)]
-    //[Route(AreaNames.Ilr + "/submission-results")]
+    [Route("submission-results")]
     public class SubmissionResultsController : BaseController
     {
         private readonly ISubmissionService _submissionService;
@@ -52,7 +51,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 PeriodName = job.PeriodNumber.ToPeriodName(),
                 PeriodNumber = job.PeriodNumber,
                 FileSize = fileSize.ToString("N1"),
-                Status = job.CrossLoadingStatus ?? job.Status
+                Status = job.CrossLoadingStatus ?? job.Status,
+                JobType = job.JobType
             };
 
             return View(result);
