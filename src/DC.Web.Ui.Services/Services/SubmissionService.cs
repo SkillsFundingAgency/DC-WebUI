@@ -108,7 +108,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
-            var job = new JobStatusDto()
+            var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
             {
                 JobId = jobId,
                 JobStatus = (int)status
