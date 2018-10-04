@@ -180,7 +180,7 @@ namespace DC.Web.Ui.Services.Tests
         [Fact]
         public async Task UpdateJobStatus_Success()
         {
-            var job = new JobStatusDto()
+            var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
             {
                 JobId = 10,
                 JobStatus = 4
