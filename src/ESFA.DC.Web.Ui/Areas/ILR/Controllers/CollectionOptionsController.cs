@@ -40,7 +40,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return View(data);
             }
 
-            return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Ilr });
+            return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf });
         }
     }
 }

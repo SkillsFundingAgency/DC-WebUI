@@ -124,7 +124,7 @@ namespace DC.Web.Ui.Services.Tests
                 EndDateTimeUtc = new DateTime(2018, 9, 04)
             };
 
-            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/returns-calendar/ILR1819")).ReturnsAsync(() => serialisationService.Serialize(rp));
+            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/returns-calendar/ILR1819/current")).ReturnsAsync(() => serialisationService.Serialize(rp));
 
             var pollyRegistryMock = new Mock<IReadOnlyPolicyRegistry<string>>();
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);

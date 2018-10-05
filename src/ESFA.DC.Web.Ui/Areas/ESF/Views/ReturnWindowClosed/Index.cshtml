@@ -1,0 +1,20 @@
+﻿@model ESFA.DC.Web.Ui.ViewModels.ReturnPeriodViewModel
+@{
+    ViewData["Title"] = "Return period closed";
+}
+
+
+<div class="govuk-highlight-summary" aria-labelledby="highlight-summary-title" role="alert" tabindex="-1" data-module="highlight-summary">
+    <h2 class="govuk-highlight-summary__title" id="highlight-summary-title">
+        Service desk helpline unavailable
+    </h2>
+    <div class="govuk-highlight-summary__body">
+        <p>The service desk helpline is currently unavailable. Please email <a href="mailto:sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a> for support.</p>
+    </div>
+</div>
+<h1 class="govuk-heading-xl">Return period closed</h1>
+<p>You cannot submit any data until the next return period opens.</p>
+<div class="govuk-inset-text">
+    Return period @Model.PeriodNumber.ToString("00") opens @Model.NextOpeningDate
+</div>
+

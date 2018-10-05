@@ -15,5 +15,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<IEnumerable<CollectionViewModel>> GetAvailableCollectionsAsync(long ukprn, string collectionType);
 
         Task<bool> IsValidCollectionAsync(long ukprn, string collectionType);
+
+        Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName);
     }
 }
