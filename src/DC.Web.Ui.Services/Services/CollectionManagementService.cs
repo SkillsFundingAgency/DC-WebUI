@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -48,16 +49,47 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}");
-            ReturnPeriodViewModel result = null;
-
-            if (data != null)
+            try
             {
-                var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
-                result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber);
-            }
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/current");
+                ReturnPeriodViewModel result = null;
 
-            return result;
+                if (data != null)
+                {
+                    var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
+                    result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber);
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName)
+        {
+            try
+            {
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/next");
+                ReturnPeriodViewModel result = null;
+
+                if (data != null)
+                {
+                    var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
+                    result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber)
+                    {
+                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToString("dddd dd MMMM")
+                    };
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<CollectionViewModel>> GetAvailableCollectionsAsync(long ukprn, string collectionType)
