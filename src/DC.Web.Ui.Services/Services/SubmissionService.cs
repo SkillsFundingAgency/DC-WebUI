@@ -79,11 +79,11 @@ namespace DC.Web.Ui.Services.Services
             var response = await _httpClient.SendDataAsync($"{_apiBaseUrl}", job);
             long.TryParse(response, out var result);
 
-            //Send for cross loading
-            if (result > 0)
-            {
-                await SendMessageForCrossLoading(result, submissionMessage);
-            }
+            ////Send for cross loading
+            //if (result > 0)
+            //{
+            //    await SendMessageForCrossLoading(result, submissionMessage);
+            //}
 
             return result;
         }
