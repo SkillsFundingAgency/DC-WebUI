@@ -18,5 +18,7 @@ namespace DC.Web.Ui.Services.Interfaces
         bool IsValidUkprn(string fileName, long ukprn);
 
         Task<bool> IsUniqueFileAsync(string fileName);
+
+        bool IsValidYear(string fileName);
     }
 }

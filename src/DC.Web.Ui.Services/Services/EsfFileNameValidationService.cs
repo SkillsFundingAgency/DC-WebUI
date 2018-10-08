@@ -73,5 +73,10 @@ namespace DC.Web.Ui.Services.Services
         {
             return !(await _persistenceService.ContainsAsync(fileName));
         }
+
+        public bool IsValidYear(string fileName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
