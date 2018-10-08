@@ -54,44 +54,6 @@ namespace DC.Web.Ui.Services.Tests
         }
 
         [Fact]
-        public async Task SubmitJob_Success_CrossLoading()
-        {
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
-            {
-                SubmittedBy = "test user",
-                FileName = "22222_test1.xml",
-                CollectionName = "ILR1819",
-                FileSizeBytes = 100,
-                NotifyEmail = "test@test.com",
-                Period = 10,
-                StorageReference = "test",
-            };
-
-            var jsonSerialisationMock = new Mock<IJsonSerializationService>();
-            jsonSerialisationMock.Setup(x => x.Deserialize<FileUploadJob>(It.IsAny<string>())).Returns(new FileUploadJob()
-            {
-                CrossLoadingStatus = JobStatusType.Ready,
-                JobType = JobType.IlrSubmission,
-                Ukprn = 1000,
-                JobId = 10
-            });
-
-            var queuPublishService = new Mock<IQueuePublishService<MessageCrossLoadDctToDcftDto>>();
-            queuPublishService.Setup(x => x.PublishAsync(new MessageCrossLoadDctToDcftDto()));
-
-            var reportServieMock = new Mock<IReportService>();
-            reportServieMock
-                .Setup(x => x.GetReportsZipFileName(It.IsAny<long>(), It.IsAny<long>(), JobStatusType.Ready))
-                .Returns("019191/10/rerports.zip");
-
-            var service = GetService(serializationService: jsonSerialisationMock.Object, queuePublishService: queuPublishService.Object, reportService: reportServieMock.Object);
-            var result = service.SubmitJob(job).Result;
-                        queuPublishService.Verify(x => x.PublishAsync(It.IsAny<MessageCrossLoadDctToDcftDto>()), Times.Once());
-
-            result.Should().Be(1);
-        }
-
-        [Fact]
         public async Task GetJob_Success()
         {
             var job = new FileUploadJob()
