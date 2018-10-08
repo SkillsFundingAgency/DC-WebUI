@@ -66,6 +66,16 @@ namespace DC.Web.Ui.Services.Services
                 };
             }
 
+            if (!IsValidYear(fileName))
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.InvalidYear,
+                    FieldError = "The year in the filename should match the current year",
+                    SummaryError = "The year in the filename should match the current year"
+                };
+            }
+
             //if (!(await IsUniqueFileAsync(fileName)))
             //{
             //    return FileNameValidationResult.FileAlreadyExists;
@@ -91,9 +101,15 @@ namespace DC.Web.Ui.Services.Services
         public bool IsValidUkprn(string fileName, long ukprn)
         {
             var matches = _fileNameRegex.Match(fileName);
-            var fileUkprn = long.Parse(matches.Groups[2].Value);
-
+            long.TryParse(matches.Groups[2].Value, out var fileUkprn);
             return fileUkprn == ukprn;
+        }
+
+        public bool IsValidYear(string fileName)
+        {
+            var matches = _fileNameRegex.Match(fileName);
+            int.TryParse(matches.Groups[5].Value, out var year);
+            return year == DateTime.Now.Year;
         }
 
         public async Task<bool> IsUniqueFileAsync(string fileName)

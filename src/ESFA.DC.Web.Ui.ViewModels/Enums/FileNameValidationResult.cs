@@ -9,6 +9,7 @@ namespace ESFA.DC.Web.Ui.ViewModels.Enums
         UkprnDifferentToFileName = 20,
         InvalidFileNameFormat = 30,
         InvalidFileExtension = 40,
-        FileAlreadyExists = 50
+        FileAlreadyExists = 50,
+        InvalidYear = 60
     }
 }
