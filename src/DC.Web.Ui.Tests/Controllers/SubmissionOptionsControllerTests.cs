@@ -29,6 +29,11 @@ namespace DC.Web.Ui.Tests.Controllers
                 {
                     Name = "ILR",
                     Title = "ILR data submission"
+                },
+                new SubmissionOptionViewModel()
+                {
+                    Name = "ESF",
+                    Title = "ESF data submission"
                 }
             };
 
@@ -40,7 +45,7 @@ namespace DC.Web.Ui.Tests.Controllers
 
             result.Should().BeOfType(typeof(ViewResult));
             var resultModel = (ViewResult)result;
-            resultModel.Model.As<IEnumerable<SubmissionOptionViewModel>>().Count().Should().Be(1);
+            resultModel.Model.As<IEnumerable<SubmissionOptionViewModel>>().Count().Should().Be(2);
         }
     }
 }
