@@ -29,6 +29,13 @@ namespace DC.Web.Ui.Controllers
             if (data.Any())
             {
                 Logger.LogInfo($"Ukprn : {Ukprn}, returned {data.Count()} collection types ");
+
+                //if there is one collection type skip this step
+                if (data.Count == 1)
+                {
+                    return RedirectToNext(data.First().Name);
+                }
+
                 return View(data);
             }
 
@@ -48,15 +55,7 @@ namespace DC.Web.Ui.Controllers
             {
                 if (data.Any(x => x.Name == submissionType))
                 {
-                    switch (submissionType)
-                    {
-                        case "ILR":
-                            return RedirectToAction("Index", "CollectionOptions", new { area="ilr", collectionType = submissionType });
-                        case "ESF":
-                            return RedirectToAction("Index", "Submission", new { area = "esf", collectionName= submissionType });
-                        default:
-                            throw new Exception("Not supported");
-                    }
+                    return RedirectToNext(submissionType);
                 }
             }
             else
@@ -68,6 +67,19 @@ namespace DC.Web.Ui.Controllers
             }
 
             return View("Index", data);
+        }
+
+        private IActionResult RedirectToNext(string submissionType)
+        {
+            switch (submissionType)
+            {
+                case "ILR":
+                    return RedirectToAction("Index", "CollectionOptions", new { area = "ilr", collectionType = submissionType });
+                case "ESF":
+                    return RedirectToAction("Index", "Submission", new { area = "esf", collectionName = submissionType });
+                default:
+                    throw new Exception("Not supported");
+            }
         }
     }
 }
