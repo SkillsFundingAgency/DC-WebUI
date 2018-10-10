@@ -53,7 +53,9 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             if (await GetCurrentPeriodAsync(collectionName) == null)
             {
                 Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed");
+
+                var nextPeriod = await GetNextPeriodAsync(collectionName);
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod.NextOpeningDate;
             }
 
             if (TempData.ContainsKey("ErrorMessage"))

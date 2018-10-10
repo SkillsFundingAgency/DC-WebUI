@@ -22,7 +22,7 @@ namespace DC.Web.Ui.Services.Services
             IJsonSerializationService serializationService)
         {
             _httpClient = httpClient;
-            _baseUrl = apiSettings?.CollectionManagementBaseUrl;
+            _baseUrl = apiSettings?.JobManagementApiBaseUrl;
             _serializationService = serializationService;
         }
 
@@ -54,7 +54,7 @@ namespace DC.Web.Ui.Services.Services
                 var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/current");
                 ReturnPeriodViewModel result = null;
 
-                if (data != null)
+                if (!string.IsNullOrEmpty(data))
                 {
                     var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
                     result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber);
@@ -75,7 +75,7 @@ namespace DC.Web.Ui.Services.Services
                 var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/next");
                 ReturnPeriodViewModel result = null;
 
-                if (data != null)
+                if (!string.IsNullOrEmpty(data))
                 {
                     var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
                     result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber)

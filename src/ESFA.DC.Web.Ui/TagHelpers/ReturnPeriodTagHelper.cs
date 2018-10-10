@@ -27,7 +27,14 @@ namespace DC.Web.Ui.TagHelpers
             if (!string.IsNullOrEmpty(Collection))
             {
                 var period = await _collectionManagementService.GetCurrentPeriodAsync(Collection);
-                output.Content.SetHtmlContent($"Return Period {period?.PeriodNumber} ({period?.PeriodName()})");
+                if (period != null)
+                {
+                    output.Content.SetHtmlContent($"Return Period {period?.PeriodNumber} ({period?.PeriodName()})");
+                }
+                else
+                {
+                    output.SuppressOutput();
+                }
             }
         }
     }

@@ -54,7 +54,7 @@ namespace DC.Web.Ui.Base
             if (period == null)
             {
                 Logger.LogWarning($"No active period for collection : {collectionName}");
-                throw new Exception($"No active period for collection : {collectionName}");
+                period = await GetNextPeriodAsync(collectionName);
             }
 
             try
@@ -93,6 +93,11 @@ namespace DC.Web.Ui.Base
         protected async Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName)
         {
             return await _collectionManagementService.GetCurrentPeriodAsync(collectionName);
+        }
+
+        protected async Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName)
+        {
+            return await _collectionManagementService.GetNextPeriodAsync(collectionName);
         }
     }
 }
