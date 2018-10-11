@@ -8,9 +8,6 @@ namespace DC.Web.Ui.Settings.Models
     public class ApiSettings : ISettings
     {
         [JsonRequired]
-        public string JobQueueBaseUrl { get; set; }
-
-        [JsonRequired]
-        public string CollectionManagementBaseUrl { get; set; }
+        public string JobManagementApiBaseUrl { get; set; }
     }
 }

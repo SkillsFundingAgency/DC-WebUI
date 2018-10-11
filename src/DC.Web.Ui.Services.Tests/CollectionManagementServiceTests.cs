@@ -44,7 +44,7 @@ namespace DC.Web.Ui.Services.Tests
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
             var apiSettings = new ApiSettings()
             {
-                CollectionManagementBaseUrl = "testurl/api"
+                JobManagementApiBaseUrl = "testurl/api"
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
@@ -64,7 +64,7 @@ namespace DC.Web.Ui.Services.Tests
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
             var apiSettings = new ApiSettings()
             {
-                CollectionManagementBaseUrl = "testurl/api"
+                JobManagementApiBaseUrl = "testurl/api"
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
@@ -99,7 +99,7 @@ namespace DC.Web.Ui.Services.Tests
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
             var apiSettings = new ApiSettings()
             {
-                CollectionManagementBaseUrl = "testurl/api"
+                JobManagementApiBaseUrl = "testurl/api"
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());
@@ -130,7 +130,7 @@ namespace DC.Web.Ui.Services.Tests
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
             var apiSettings = new ApiSettings()
             {
-                CollectionManagementBaseUrl = "testurl/api"
+                JobManagementApiBaseUrl = "testurl/api"
             };
 
             var service = new CollectionManagementService(httpClientMock.Object, apiSettings, new JsonSerializationService());

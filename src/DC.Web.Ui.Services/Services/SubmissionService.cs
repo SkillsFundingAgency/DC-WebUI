@@ -44,7 +44,7 @@ namespace DC.Web.Ui.Services.Services
             IReportService reportService)
         {
             _httpClient = httpClient;
-            _apiBaseUrl = $"{apiSettings?.JobQueueBaseUrl}/job";
+            _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _queuePublishService = queuePublishService;
@@ -78,12 +78,6 @@ namespace DC.Web.Ui.Services.Services
 
             var response = await _httpClient.SendDataAsync($"{_apiBaseUrl}", job);
             long.TryParse(response, out var result);
-
-            ////Send for cross loading
-            //if (result > 0)
-            //{
-            //    await SendMessageForCrossLoading(result, submissionMessage);
-            //}
 
             return result;
         }
@@ -129,47 +123,6 @@ namespace DC.Web.Ui.Services.Services
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType
             };
-        }
-
-        public async Task SendMessageForCrossLoading(long jobId, SubmissionMessageViewModel submissionMessage)
-        {
-            var job = await GetJob(submissionMessage.Ukprn, jobId);
-            if (job.CrossLoadingStatus.HasValue)
-            {
-                var reportsFileName =
-                    _reportService.GetReportsZipFileName(submissionMessage.Ukprn, jobId, job.CrossLoadingStatus);
-
-                var reportFileNameWithoutExtension = reportsFileName.Substring(0, reportsFileName.Length - 4);
-
-                var message = new MessageCrossLoadDctToDcft(
-                    jobId,
-                    submissionMessage.Ukprn,
-                    submissionMessage.Upin,
-                    submissionMessage.StorageReference,
-                    submissionMessage.FileName,
-                    MapJobType(submissionMessage.JobType),
-                    submissionMessage.SubmittedBy,
-                    $"{reportFileNameWithoutExtension}1.zip",
-                    $"{reportFileNameWithoutExtension}2.zip");
-
-                await _queuePublishService.PublishAsync(_crossLoadMessageMapper.FromMessage(message));
-                await _httpClient.SendAsync($"{_apiBaseUrl}/cross-loading/status/{jobId}/{JobStatusType.MovedForProcessing}");
-            }
-        }
-
-        public CrossLoadJobType MapJobType(JobType jobType)
-        {
-            switch (jobType)
-            {
-                case JobType.IlrSubmission:
-                    return CrossLoadJobType.ILR;
-                case JobType.EsfSubmission:
-                    return CrossLoadJobType.ESF;
-                case JobType.EasSubmission:
-                    return CrossLoadJobType.EAS;
-                default:
-                    throw new Exception("unknown job type");
-            }
         }
 
         public string GetHeader(JobType jobType, int period)

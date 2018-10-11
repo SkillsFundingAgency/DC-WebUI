@@ -20,7 +20,5 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<JobStatusType> GetJobStatus(long jobId);
 
         Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId);
-
-        Task SendMessageForCrossLoading(long jobId, SubmissionMessageViewModel submissionMessage);
     }
 }

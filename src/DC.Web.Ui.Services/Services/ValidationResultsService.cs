@@ -31,7 +31,7 @@ namespace DC.Web.Ui.Services.Services
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
             _httpClient = httpClient;
-            _baseUrl = apiSettings?.JobQueueBaseUrl;
+            _baseUrl = apiSettings?.JobManagementApiBaseUrl;
         }
 
         public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc)
