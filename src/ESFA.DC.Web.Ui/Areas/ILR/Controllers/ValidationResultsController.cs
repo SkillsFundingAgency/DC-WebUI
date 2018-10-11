@@ -18,17 +18,20 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         private readonly IValidationResultsService _validationResultsService;
         private readonly ISubmissionService _submissionService;
         private readonly IReportService _reportService;
+        private readonly ICollectionManagementService _collectionManagementService;
 
         public ValidationResultsController(
             IValidationResultsService validationResultsService,
             ISubmissionService submissionService,
             IReportService reportService,
+            ICollectionManagementService collectionManagementService,
             ILogger logger)
             : base(logger)
         {
             _validationResultsService = validationResultsService;
             _submissionService = submissionService;
             _reportService = reportService;
+            _collectionManagementService = collectionManagementService;
         }
 
         [Route("{jobId}")]
@@ -44,6 +47,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
                 return View(new ValidationResultViewModel());
+            }
+
+            if (await _collectionManagementService.GetCurrentPeriodAsync(job.CollectionName) == null)
+            {
+                var nextPeriod = await _collectionManagementService.GetNextPeriodAsync(job.CollectionName);
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod.NextOpeningDate;
             }
 
             valResult.CollectionName = job.CollectionName;
