@@ -85,6 +85,7 @@ namespace DC.Web.Ui.Tests.Controllers
                 validationErrorsServiceMock.Object,
                 submissionServiceMock.Object,
                 reportServiceMock.Object,
+                new Mock<ICollectionManagementService>().Object,
                 new Mock<ILogger>().Object)
             {
                 TempData = tempData

@@ -52,7 +52,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             if (await _collectionManagementService.GetCurrentPeriodAsync(job.CollectionName) == null)
             {
                 var nextPeriod = await _collectionManagementService.GetNextPeriodAsync(job.CollectionName);
-                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod.NextOpeningDate;
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod?.NextOpeningDate;
             }
 
             valResult.CollectionName = job.CollectionName;
