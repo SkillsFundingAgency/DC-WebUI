@@ -80,7 +80,7 @@ namespace DC.Web.Ui.Services.Services
                     var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
                     result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber)
                     {
-                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToString("dddd dd MMMM")
+                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToString("dd MMMM yyyy")
                     };
                 }
 
