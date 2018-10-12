@@ -28,7 +28,8 @@ namespace DC.Web.Ui.Controllers
         public async Task<IActionResult> Index(long jobId)
         {
             var data = await _submissionService.GetConfirmation(Ukprn, jobId);
-            await SetupNextPeriod(data.CollectionName);
+
+            await SetupNextPeriod(data?.CollectionName);
 
             return View(data);
         }
