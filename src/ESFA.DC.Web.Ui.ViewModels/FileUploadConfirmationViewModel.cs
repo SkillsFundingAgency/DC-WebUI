@@ -18,5 +18,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public JobType JobType { get; set; }
 
+        public string CollectionName { get; set; }
+
     }
 }

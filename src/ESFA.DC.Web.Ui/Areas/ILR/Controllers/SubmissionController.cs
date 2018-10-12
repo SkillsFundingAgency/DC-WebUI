@@ -94,7 +94,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 Logger.LogWarning($"No active period for collection : {collectionName}");
 
                 var nextPeriod = await GetNextPeriodAsync(collectionName);
-                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod.NextOpeningDate;
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod?.NextOpeningDate;
             }
         }
     }
