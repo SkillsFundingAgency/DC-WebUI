@@ -24,9 +24,14 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpGet]
-        [Route("{jobId}")]
-        public async Task<IActionResult> Index(long jobId)
+        [Route("{jobId}/{isCleanFile?}")]
+        public async Task<IActionResult> Index(long jobId, bool isCleanFile = false)
         {
+            if (isCleanFile)
+            {
+                ViewData[ViewDataConstants.IsCleanFile] = true;
+            }
+
             var data = await _submissionService.GetConfirmation(Ukprn, jobId);
 
             await SetupNextPeriod(data?.CollectionName);

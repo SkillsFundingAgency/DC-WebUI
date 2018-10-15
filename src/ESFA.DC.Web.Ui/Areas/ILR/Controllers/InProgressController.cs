@@ -56,12 +56,20 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return View();
             }
 
+            //if no error or warning then skip middle page
+            if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0)
+            {
+                await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
+                Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
+                return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId, IsCleanFile = true });
+            }
+
             if (string.IsNullOrEmpty(valResult.ErrorMessage))
             {
                 return RedirectToAction("Index", "ValidationResults", new { area = AreaNames.Ilr, jobId });
             }
 
-            TempData["ErrorMessage"] = valResult.ErrorMessage;
+            TempData[TempDataConstants.ErrorMessage] = valResult.ErrorMessage;
             return RedirectToAction("Index", "Submission", new { area = AreaNames.Ilr, collectionName = job.CollectionName });
         }
     }

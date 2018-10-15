@@ -20,7 +20,11 @@
 <p>Submitted by: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedBy)</span></p>
 <p>At: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedAt)</span></p>
 
-<h3 class="govuk-heading-m">What happens next?</h3>
+@if (ViewData.ContainsKey(ViewDataConstants.IsCleanFile))
+{
+    <p>We didn’t find any errors or warnings for the data in your file.</p>
+}
+    <h3 class="govuk-heading-m">What happens next?</h3>
 <p>We’ve sent an email to @User.Email() to confirm we’ve received your file.</p>
 <p>
     We will email you again to let you know when your funding breakdown for

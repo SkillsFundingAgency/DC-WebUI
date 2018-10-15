@@ -52,10 +52,10 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             await SetupNextPeriod(collectionName);
 
-            if (TempData.ContainsKey("ErrorMessage"))
+            if (TempData.ContainsKey(TempDataConstants.ErrorMessage))
             {
-                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData["ErrorMessage"].ToString());
-                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData["ErrorMessage"].ToString());
+                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData[TempDataConstants.ErrorMessage].ToString());
+                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData[TempDataConstants.ErrorMessage].ToString());
             }
 
             return View();
