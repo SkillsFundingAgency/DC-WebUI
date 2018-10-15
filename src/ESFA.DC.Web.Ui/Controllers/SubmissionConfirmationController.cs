@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpGet]
-        [Route("{jobId}/{isCleanFile}")]
+        [Route("{jobId}/{isCleanFile?}")]
         public async Task<IActionResult> Index(long jobId, bool isCleanFile = false)
         {
             if (isCleanFile)
