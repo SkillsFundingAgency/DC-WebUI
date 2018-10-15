@@ -35,7 +35,7 @@ namespace DC.Web.Ui.Controllers
             }
 
             decimal fileSize = 0;
-            if ((job.CrossLoadingStatus ?? job.Status) == JobStatusType.Completed)
+            if (job.Status == JobStatusType.Completed)
             {
                 fileSize = await _reportService.GetReportFileSizeAsync(job);
                 Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
