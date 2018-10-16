@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
+using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -16,12 +21,14 @@ namespace DC.Web.Ui.Controllers
     {
         private readonly ISubmissionService _submissionService;
         private readonly IReportService _reportService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SubmissionResultsController(ISubmissionService submissionService, ILogger logger, IReportService reportService)
+        public SubmissionResultsController(ISubmissionService submissionService, ILogger logger, IReportService reportService, IDateTimeProvider dateTimeProvider)
             : base(logger)
         {
             _submissionService = submissionService;
             _reportService = reportService;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         [Route("{jobId}")]
@@ -52,7 +59,8 @@ namespace DC.Web.Ui.Controllers
                 PeriodNumber = job.PeriodNumber,
                 FileSize = fileSize.ToString("N1"),
                 Status = job.CrossLoadingStatus ?? job.Status,
-                JobType = job.JobType
+                JobType = job.JobType,
+                SubmissonHistoryViewModels = await GetSubmissionHistory(jobId)
             };
 
             return View(result);
@@ -76,6 +84,20 @@ namespace DC.Web.Ui.Controllers
                 Logger.LogError($"Download zip failed for job id : {jobId}", e);
                 throw;
             }
+        }
+
+        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory(long currentJobId)
+        {
+            var jobsList = await _submissionService.GetAllJobs(Ukprn);
+            var jobsViewList = new List<SubmissonHistoryViewModel>();
+            jobsList.Where(x => x.JobId != currentJobId).ToList().ForEach(x => jobsViewList.Add(new SubmissonHistoryViewModel()
+            {
+                FileName = x.FileName.Split('/')[1],
+                JobType = x.JobType.ToString(),
+                DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat()
+            }));
+
+            return jobsViewList;
         }
     }
 }

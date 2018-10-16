@@ -77,8 +77,7 @@ namespace DC.Web.Ui.Services.Services
 
         public string GetReportsZipFileName(long ukprn, long jobId, JobStatusType? crossLoadingStatus)
         {
-            var fileNamePart = crossLoadingStatus.HasValue ? "DC" : string.Empty;
-            return $"{ukprn}/{jobId}/Reports{fileNamePart}.zip";
+            return $"{ukprn}/{jobId}/Reports.zip";
         }
 
         public CloudBlockBlob GetBlob(string fileName)

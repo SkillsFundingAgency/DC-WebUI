@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissonHistoryViewModel>
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<h2 class="govuk-heading-l">Submission history</h2>
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-visually-hidden">Dates and file name</caption>
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        <th class="govuk-table__header" scope="col">Date</th>
+        <th class="govuk-table__header" scope="col">Type</th>
+        <th class="govuk-table__header" scope="col">File</th>
+    
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    @foreach (var historyViewModel in Model)
+    {
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</th>
+            <td class="govuk-table__cell">@historyViewModel.JobType</td>
+            <td class="govuk-table__cell"><a href="#">@historyViewModel.FileName</a></td>
+    
+        </tr>
+    }
+   
+    </tbody>
+</table>

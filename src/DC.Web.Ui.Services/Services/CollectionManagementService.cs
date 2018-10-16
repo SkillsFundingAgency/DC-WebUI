@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.CollectionsManagement.Models;
@@ -80,7 +81,7 @@ namespace DC.Web.Ui.Services.Services
                     var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
                     result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber)
                     {
-                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToString("dd MMMM yyyy")
+                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToDateDisplayFormat()
                     };
                 }
 
