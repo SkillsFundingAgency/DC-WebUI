@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IValidationResultsService
     {
-        Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc);
+        Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc);
 
         string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc);
 
@@ -17,6 +18,6 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<FileValidationResult> GetValidationResultsData(long ukprn, long jobId);
 
-        Task<decimal> GetFileSize(long ukprn, long jobId, DateTime dateTimeUtc);
+        Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc);
     }
 }

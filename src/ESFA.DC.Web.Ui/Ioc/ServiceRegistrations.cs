@@ -48,7 +48,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<JsonSerializationService>().As<ISerializationService>().InstancePerLifetimeScope();
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<CollectionManagementService>().As<ICollectionManagementService>().InstancePerLifetimeScope();
-            builder.RegisterType<ReportService>().As<IReportService>().WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<StorageService>().As<IStorageService>().WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<QueuePublishService<MessageCrossLoadDctToDcftDto>>().As<IQueuePublishService<MessageCrossLoadDctToDcftDto>>().InstancePerLifetimeScope();
             builder.RegisterType<CrossLoadMessageMapper>().InstancePerLifetimeScope();
 

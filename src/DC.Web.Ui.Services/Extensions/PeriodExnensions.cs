@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
-namespace DC.Web.Ui.Extensions
+namespace DC.Web.Ui.Services.Extensions
 {
     public static class PeriodExnensions
     {

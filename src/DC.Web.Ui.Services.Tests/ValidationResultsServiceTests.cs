@@ -7,6 +7,7 @@ using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
@@ -46,7 +47,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var service = GetService(httpClientMock.Object);
 
-            var result = service.GetValidationResult(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
+            var result = service.GetValidationResult(1000, 500, JobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
             result.Should().BeNull();
         }
 
@@ -59,7 +60,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var service = GetService(httpClientMock.Object);
 
-            var result = service.GetValidationResult(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
+            var result = service.GetValidationResult(1000, 500, JobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
             result.TotalErrors.Should().Be(200);
             result.TotalErrorLearners.Should().Be(30);
             result.TotalLearners.Should().Be(10);
@@ -82,7 +83,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var service = new ValidationResultsService(
                 new JsonSerializationService(),
-                new Mock<IReportService>().Object,
+                new Mock<IStorageService>().Object,
                 dateTimeProviderMock.Object,
                 httpClient,
                 new ApiSettings());
