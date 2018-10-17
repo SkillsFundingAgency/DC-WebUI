@@ -4,6 +4,7 @@ using System.IO;
 using DC.Web.Ui.Areas.ILR.Controllers;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
@@ -56,7 +57,7 @@ namespace DC.Web.Ui.Tests.Controllers
 
             var validationErrorsServiceMock = new Mock<IValidationResultsService>();
             var submissionServiceMock = new Mock<ISubmissionService>();
-            var reportServiceMock = new Mock<IReportService>();
+            var reportServiceMock = new Mock<IStorageService>();
 
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(() => new FileUploadJob()
             {
@@ -65,7 +66,7 @@ namespace DC.Web.Ui.Tests.Controllers
                 CollectionName = "ILR1819"
             });
 
-            validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DateTime>()))
+            validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<JobType>(), It.IsAny<DateTime>()))
                 .ReturnsAsync(() => new ValidationResultViewModel()
                 {
                     JobId = 1000,
@@ -78,7 +79,7 @@ namespace DC.Web.Ui.Tests.Controllers
                     TotalWarnings = 40
                 });
 
-            reportServiceMock.Setup(x => x.GetReportStreamAsync(It.IsAny<string>()))
+            reportServiceMock.Setup(x => x.GetBlobFileStreamAsync(It.IsAny<string>(), It.IsAny<JobType>()))
                 .ReturnsAsync(() => new MemoryStream());
 
             var controller = new ValidationResultsController(

@@ -49,7 +49,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return View();
             }
 
-            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
+            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.JobType, job.DateTimeSubmittedUtc);
             if (valResult == null)
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");

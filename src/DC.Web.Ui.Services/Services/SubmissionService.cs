@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.CrossLoad;
@@ -32,7 +33,7 @@ namespace DC.Web.Ui.Services.Services
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IQueuePublishService<MessageCrossLoadDctToDcftDto> _queuePublishService;
         private readonly CrossLoadMessageMapper _crossLoadMessageMapper;
-        private readonly IReportService _reportService;
+        private readonly IStorageService _reportService;
 
         public SubmissionService(
             IBespokeHttpClient httpClient,
@@ -41,7 +42,7 @@ namespace DC.Web.Ui.Services.Services
             IDateTimeProvider dateTimeProvider,
             IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService,
             CrossLoadMessageMapper crossLoadMessageMapper,
-            IReportService reportService)
+            IStorageService reportService)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
@@ -100,6 +101,12 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
+        public async Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/period/{period}");
+            return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+        }
+
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
@@ -115,7 +122,7 @@ namespace DC.Web.Ui.Services.Services
             var job = await GetJob(ukprn, jobId);
             return new FileUploadConfirmationViewModel()
             {
-                FileName = (job.FileName.Contains("/") ? job.FileName.Split('/')[1] : job.FileName).ToUpper(),
+                FileName = job.FileName.FileNameWithoutUkprn(),
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
                 SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mmtt").ToLower(), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),

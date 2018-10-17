@@ -9,6 +9,7 @@ using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -20,10 +21,10 @@ namespace DC.Web.Ui.Controllers
     public class SubmissionResultsController : BaseController
     {
         private readonly ISubmissionService _submissionService;
-        private readonly IReportService _reportService;
+        private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SubmissionResultsController(ISubmissionService submissionService, ILogger logger, IReportService reportService, IDateTimeProvider dateTimeProvider)
+        public SubmissionResultsController(ISubmissionService submissionService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
             : base(logger)
         {
             _submissionService = submissionService;
@@ -60,7 +61,7 @@ namespace DC.Web.Ui.Controllers
                 FileSize = fileSize.ToString("N1"),
                 Status = job.CrossLoadingStatus ?? job.Status,
                 JobType = job.JobType,
-                SubmissonHistoryViewModels = await GetSubmissionHistory(jobId)
+                SubmissonHistoryViewModels = await GetSubmissionHistory(job.PeriodNumber)
             };
 
             return View(result);
@@ -76,7 +77,7 @@ namespace DC.Web.Ui.Controllers
 
             try
             {
-                var blobStream = await _reportService.GetReportStreamAsync(reportFileName);
+                var blobStream = await _reportService.GetBlobFileStreamAsync(reportFileName, job.JobType);
                 return File(blobStream, "application/zip", $"{jobId}_Reports.zip");
             }
             catch (Exception e)
@@ -86,18 +87,55 @@ namespace DC.Web.Ui.Controllers
             }
         }
 
-        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory(long currentJobId)
+        [Route("DownloadFile/{jobId}")]
+        public async Task<FileResult> DownloadFile(long jobId)
         {
-            var jobsList = await _submissionService.GetAllJobs(Ukprn);
-            var jobsViewList = new List<SubmissonHistoryViewModel>();
-            jobsList.Where(x => x.JobId != currentJobId).ToList().ForEach(x => jobsViewList.Add(new SubmissonHistoryViewModel()
+            var job = await _submissionService.GetJob(Ukprn, jobId);
+
+            Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
+
+            try
             {
-                FileName = x.FileName.Split('/')[1],
-                JobType = x.JobType.ToString(),
-                DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat()
+                var blobStream = await _reportService.GetBlobFileStreamAsync(job.FileName, job.JobType);
+                return File(blobStream, $"application/{job.FileName.FileExtension()}", $"{job.FileName.FileNameWithoutUkprn()}");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download source file failed for job id : {jobId}", e);
+                throw;
+            }
+        }
+
+        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory(int period)
+        {
+            var jobsList = await _submissionService.GetAllJobsForPeriod(Ukprn, period);
+            var jobsViewList = new List<SubmissonHistoryViewModel>();
+            jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
+                .ToList()
+                .ForEach(x => jobsViewList.Add(new SubmissonHistoryViewModel()
+            {
+                JobId = x.JobId,
+                FileName = x.FileName.FileNameWithoutUkprn(),
+                JobType = MapJobType(x.JobType),
+                DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat(),
             }));
 
             return jobsViewList;
+        }
+
+        private string MapJobType(JobType jobType)
+        {
+            switch (jobType)
+            {
+                case JobType.IlrSubmission:
+                    return "ILR";
+                case JobType.EsfSubmission:
+                    return "ESF";
+                case JobType.EasSubmission:
+                    return "EAS";
+                default:
+                    throw new Exception("invalid job type");
+            }
         }
     }
 }

@@ -21,7 +21,9 @@
         <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</th>
             <td class="govuk-table__cell">@historyViewModel.JobType</td>
-            <td class="govuk-table__cell"><a href="#">@historyViewModel.FileName</a></td>
+            <td class="govuk-table__cell">
+                @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "SubmissionResults",new {JobId =  @historyViewModel.JobId})
+            </td>
     
         </tr>
     }

@@ -156,7 +156,7 @@ namespace DC.Web.Ui.Services.Tests
             IBespokeHttpClient httpClient = null,
             IJsonSerializationService serializationService = null,
             IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService = null,
-            IReportService reportService = null)
+            IStorageService reportService = null)
         {
             var dateTimeprovider = new Mock<IDateTimeProvider>();
             dateTimeprovider.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
@@ -180,7 +180,7 @@ namespace DC.Web.Ui.Services.Tests
                 dateTimeprovider.Object,
                 queuePublishService ?? It.IsAny<IQueuePublishService<MessageCrossLoadDctToDcftDto>>(),
                 new CrossLoadMessageMapper(),
-                reportService ?? It.IsAny<IReportService>());
+                reportService ?? It.IsAny<IStorageService>());
         }
     }
 }

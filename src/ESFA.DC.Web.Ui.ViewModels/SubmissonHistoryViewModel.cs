@@ -11,5 +11,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string FileName { get; set; }
 
         public string DateTimeSubmitted { get; set; }
+
+        public long JobId { get; set; }
     }
 }

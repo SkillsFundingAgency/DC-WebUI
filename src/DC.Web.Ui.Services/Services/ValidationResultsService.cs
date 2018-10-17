@@ -7,6 +7,7 @@ using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 
@@ -15,14 +16,14 @@ namespace DC.Web.Ui.Services.Services
     public class ValidationResultsService : IValidationResultsService
     {
         private readonly IJsonSerializationService _serializationService;
-        private readonly IReportService _reportService;
+        private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _baseUrl;
 
         public ValidationResultsService(
             IJsonSerializationService serializationService,
-            IReportService reportService,
+            IStorageService reportService,
             IDateTimeProvider dateTimeProvider,
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings)
@@ -34,7 +35,7 @@ namespace DC.Web.Ui.Services.Services
             _baseUrl = apiSettings?.JobManagementApiBaseUrl;
         }
 
-        public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, DateTime dateTimeUtc)
+        public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc)
         {
             var validationResult = await GetValidationResultsData(ukprn, jobId);
             if (validationResult == null)
@@ -50,7 +51,7 @@ namespace DC.Web.Ui.Services.Services
                 TotalWarningLearners = validationResult.TotalWarningLearners,
                 TotalWarnings = validationResult.TotalWarnings,
                 TotalLearners = validationResult.TotalLearners,
-                ReportFileSize = (await GetFileSize(ukprn, jobId, dateTimeUtc)).ToString("N1"),
+                ReportFileSize = (await GetFileSize(ukprn, jobId, jobType, dateTimeUtc)).ToString("N1"),
                 ErrorMessage = validationResult.ErrorMessage
             };
         }
@@ -81,10 +82,10 @@ namespace DC.Web.Ui.Services.Services
             return string.Format(reportFileName, jobDateTime);
         }
 
-        public async Task<decimal> GetFileSize(long ukprn, long jobId, DateTime dateTimeUtc)
+        public async Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc)
         {
             var fileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc)}.csv";
-            return await _reportService.GetReportFileSizeAsync(fileName);
+            return await _reportService.GetReportFileSizeAsync(fileName, jobType);
         }
     }
 }
