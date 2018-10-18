@@ -21,6 +21,6 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId);
 
-        Task SendMessageForCrossLoading(long jobId, SubmissionMessageViewModel submissionMessage);
+        Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
     }
 }

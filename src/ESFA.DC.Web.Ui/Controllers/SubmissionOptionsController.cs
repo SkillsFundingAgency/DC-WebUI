@@ -8,7 +8,7 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers.IlrSubmission
+namespace DC.Web.Ui.Controllers
 {
     [Route("submission-options")]
     public class SubmissionOptionsController : BaseController
@@ -29,6 +29,13 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             if (data.Any())
             {
                 Logger.LogInfo($"Ukprn : {Ukprn}, returned {data.Count()} collection types ");
+
+                //if there is one collection type skip this step
+                if (data.Count == 1)
+                {
+                    return RedirectToNext(data.First().Name);
+                }
+
                 return View(data);
             }
 
@@ -48,15 +55,7 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             {
                 if (data.Any(x => x.Name == submissionType))
                 {
-                    switch (submissionType)
-                    {
-                        case "ILR":
-                            return RedirectToAction("Index", "CollectionOptions", new { area="ilr", collectionType = submissionType });
-                        case "ESF":
-                            return RedirectToAction("Index", "Submission", new { area = "esf", collectionName= submissionType });
-                        default:
-                            throw new Exception("Not supported");
-                    }
+                    return RedirectToNext(submissionType);
                 }
             }
             else
@@ -68,6 +67,19 @@ namespace DC.Web.Ui.Controllers.IlrSubmission
             }
 
             return View("Index", data);
+        }
+
+        private IActionResult RedirectToNext(string submissionType)
+        {
+            switch (submissionType)
+            {
+                case "ILR":
+                    return RedirectToAction("Index", "CollectionOptions", new { area = "ilr", collectionType = submissionType });
+                case "ESF":
+                    return RedirectToAction("Index", "Submission", new { area = "esf", collectionName = submissionType });
+                default:
+                    throw new Exception("Not supported");
+            }
         }
     }
 }

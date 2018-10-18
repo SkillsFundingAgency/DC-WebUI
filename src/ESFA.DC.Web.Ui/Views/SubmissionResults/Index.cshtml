@@ -1,0 +1,32 @@
+﻿@using ESFA.DC.Jobs.Model.Enums
+@using ESFA.DC.JobStatus.Interface
+@model ESFA.DC.Web.Ui.ViewModels.SubmissionResultViewModel
+
+@{
+    ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
+}
+
+<h1 class="govuk-heading-xl">Reports</h1>
+
+@if (Model.Status == JobStatusType.Completed)
+{
+    <h2 class="govuk-heading-l">Return Period @Html.DisplayFor(model => model.PeriodNumber) (@Html.DisplayFor(model => model.PeriodName))</h2>
+
+    <p>
+        @Html.ActionLink($"Download all your reports", "Download", "SubmissionResults") <span>(Zip,  @(Model.FileSize)KB) for this return period.</span>
+
+    </p>
+    <p>If you need to correct the data you've submitted, <a href="/submission-options">submit another file</a>.</p>
+    <p><a href="https://hub.fasst.org.uk">View reports for other periods</a></p>
+
+    if (Model.SubmissonHistoryViewModels.Any())
+    {
+        @await Html.PartialAsync("_submissionHistory", Model.SubmissonHistoryViewModels)
+    }
+
+}
+else
+{
+    <h2 class="govuk-heading-l">Your file is still being processed. Please come back later.</h2>
+
+}

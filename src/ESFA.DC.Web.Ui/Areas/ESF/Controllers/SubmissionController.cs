@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Areas.ESF.Controllers
 {
     [Area(AreaNames.Esf)]
-    [Route("esf/submission")]
+    [Route(AreaNames.Esf + "/submission")]
     public class SubmissionController : AbstractSubmissionController
     {
         private readonly IFileNameValidationService _fileNameValidationService;
@@ -54,7 +54,7 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             if (await GetCurrentPeriodAsync(collectionName) == null)
             {
                 Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed");
+                return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf, collectionName });
             }
 
             return View();

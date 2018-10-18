@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
@@ -14,5 +16,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string FileSize { get; set; }
 
         public JobStatusType Status { get; set; }
+
+        public JobType JobType { get; set; }
+
+        public List<SubmissonHistoryViewModel> SubmissonHistoryViewModels { get; set; }
     }
 }

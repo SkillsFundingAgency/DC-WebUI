@@ -17,18 +17,21 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
     {
         private readonly IValidationResultsService _validationResultsService;
         private readonly ISubmissionService _submissionService;
-        private readonly IReportService _reportService;
+        private readonly IStorageService _reportService;
+        private readonly ICollectionManagementService _collectionManagementService;
 
         public ValidationResultsController(
             IValidationResultsService validationResultsService,
             ISubmissionService submissionService,
-            IReportService reportService,
+            IStorageService reportService,
+            ICollectionManagementService collectionManagementService,
             ILogger logger)
             : base(logger)
         {
             _validationResultsService = validationResultsService;
             _submissionService = submissionService;
             _reportService = reportService;
+            _collectionManagementService = collectionManagementService;
         }
 
         [Route("{jobId}")]
@@ -39,11 +42,17 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             var job = await GetJob(jobId);
 
-            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
+            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.JobType, job.DateTimeSubmittedUtc);
             if (valResult == null)
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
                 return View(new ValidationResultViewModel());
+            }
+
+            if (await _collectionManagementService.GetCurrentPeriodAsync(job.CollectionName) == null)
+            {
+                var nextPeriod = await _collectionManagementService.GetNextPeriodAsync(job.CollectionName);
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod?.NextOpeningDate;
             }
 
             valResult.CollectionName = job.CollectionName;
@@ -87,7 +96,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 var downloadFileName = $"{_validationResultsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
                 var storageFileName = $"{_validationResultsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
 
-                var csvBlobStream = await _reportService.GetReportStreamAsync(storageFileName);
+                var csvBlobStream = await _reportService.GetBlobFileStreamAsync(storageFileName, job.JobType);
                 return File(csvBlobStream, "text/csv", downloadFileName);
             }
             catch (Exception e)

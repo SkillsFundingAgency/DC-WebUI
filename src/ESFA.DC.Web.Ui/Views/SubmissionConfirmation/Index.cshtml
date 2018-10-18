@@ -20,9 +20,24 @@
 <p>Submitted by: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedBy)</span></p>
 <p>At: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.SubmittedAt)</span></p>
 
-<h3 class="govuk-heading-m">What happens next?</h3>
+@if (ViewData.ContainsKey(ViewDataConstants.IsCleanFile))
+{
+    <p>We didn’t find any errors or warnings for the data in your file.</p>
+}
+    <h3 class="govuk-heading-m">What happens next?</h3>
 <p>We’ve sent an email to @User.Email() to confirm we’ve received your file.</p>
-<p>We will email you again to let you know when your funding breakdown for @Html.DisplayFor(model => model.PeriodName)  and related reports are ready to view. This usually takes about 30 minutes.</p>
+<p>
+    We will email you again to let you know when your funding breakdown for
+    @Html.DisplayFor(model => model.PeriodName)  and related reports are ready to view.
+    @if (ViewData.ContainsKey(ViewDataConstants.NextReturnOpenDate))
+    { 
+        <span>This will be after the next return period opens on @ViewData[ViewDataConstants.NextReturnOpenDate].</span>
+    }
+    else
+    { 
+        <span>This usually takes about 30 minutes.</span>
+    }
+</p>
 
 <details class="govuk-details">
     <summary class="govuk-details__summary">
@@ -34,10 +49,10 @@
         <p>If your email address is wrong, you will need to <a href="https://logon.fasst.org.uk/">update it in your IdAMS account</a>.</p>
         <p>
             If you haven't received an email, it may be in your junkmail folder.
-            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResults", new { jobId = Model.JobId, area = Model.JobType == JobType.IlrSubmission ? AreaNames.Ilr : AreaNames.Esf}) as your reports may still have been generated.
+            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResults", new { jobId = Model.JobId}) as your reports may still have been generated.
         </p>
     </div>
 </details>
 
-<p>@Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId, area= Model.JobType == JobType.IlrSubmission? AreaNames.Ilr : AreaNames.Esf})</p>
+<p>@Html.ActionLink("View reports page", "Index", "SubmissionResults", new { jobId = Model.JobId})</p>
 <p><a href="/submission-options">Submit another data return</a></p>

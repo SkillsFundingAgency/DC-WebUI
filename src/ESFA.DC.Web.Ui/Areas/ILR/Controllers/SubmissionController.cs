@@ -50,16 +50,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return RedirectToAction("Index", "ReturnWindowClosed");
             }
 
-            if (await GetCurrentPeriodAsync(collectionName) == null)
-            {
-                Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed");
-            }
+            await SetupNextPeriod(collectionName);
 
-            if (TempData.ContainsKey("ErrorMessage"))
+            if (TempData.ContainsKey(TempDataConstants.ErrorMessage))
             {
-                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData["ErrorMessage"].ToString());
-                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData["ErrorMessage"].ToString());
+                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData[TempDataConstants.ErrorMessage].ToString());
+                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData[TempDataConstants.ErrorMessage].ToString());
             }
 
             return View();
@@ -71,6 +67,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName, IFormFile file)
         {
+            await SetupNextPeriod(collectionName);
+
             var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
@@ -82,6 +80,22 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             var jobId = await SubmitJob(collectionName, file);
             return RedirectToAction("Index", "InProgress", new { area = AreaNames.Ilr, jobId });
+        }
+
+        private async Task SetupNextPeriod(string collectionName)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+            {
+                return;
+            }
+
+            if (await GetCurrentPeriodAsync(collectionName) == null)
+            {
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+
+                var nextPeriod = await GetNextPeriodAsync(collectionName);
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod?.NextOpeningDate;
+            }
         }
     }
 }

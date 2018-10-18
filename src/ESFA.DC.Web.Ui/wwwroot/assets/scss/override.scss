@@ -247,6 +247,12 @@ a:focus, .govuk-list a:focus {
 		margin-bottom: 50px
 	}
 }
+.govuk-highlight-summary-yellow {
+    color: #0b0c0c;
+    padding: 15px;
+    margin-bottom: 30px;
+    border: 4px solid #ffbf47
+}
 .govuk-highlight-summary:focus {
 	outline: 3px solid #ffbf47;
 	outline-offset: 0

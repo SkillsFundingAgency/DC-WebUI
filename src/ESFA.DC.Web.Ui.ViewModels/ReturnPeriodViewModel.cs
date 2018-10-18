@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -15,5 +16,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public int PeriodNumber { get; set; }
 
         public string PeriodName() => _periodName;
+
+        public string NextOpeningDate { get; set; }
     }
 }

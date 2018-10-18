@@ -49,11 +49,19 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return View();
             }
 
-            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.DateTimeSubmittedUtc);
+            var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.JobType, job.DateTimeSubmittedUtc);
             if (valResult == null)
             {
                 Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
                 return View();
+            }
+
+            //if no error or warning then skip middle page
+            if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0)
+            {
+                await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
+                Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
+                return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId, IsCleanFile = true });
             }
 
             if (string.IsNullOrEmpty(valResult.ErrorMessage))
@@ -61,7 +69,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 return RedirectToAction("Index", "ValidationResults", new { area = AreaNames.Ilr, jobId });
             }
 
-            TempData["ErrorMessage"] = valResult.ErrorMessage;
+            TempData[TempDataConstants.ErrorMessage] = valResult.ErrorMessage;
             return RedirectToAction("Index", "Submission", new { area = AreaNames.Ilr, collectionName = job.CollectionName });
         }
     }

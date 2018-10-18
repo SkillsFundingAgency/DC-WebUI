@@ -1,4 +1,5 @@
-﻿@using ESFA.DC.Web.Ui.ViewModels
+﻿@using DC.Web.Ui.Constants
+@using ESFA.DC.Web.Ui.ViewModels
 @model ESFA.DC.Web.Ui.ViewModels.ValidationResultViewModel
 
 @{
@@ -17,6 +18,10 @@
             <ul class="govuk-list govuk-error-summary__list">
                 <li>
                     <p>There are errors and warnings for the learner data in your file.</p>
+                    @if (ViewData.ContainsKey(ViewDataConstants.NextReturnOpenDate))
+                    {
+                    <p>If you submit this file, we’ll process it when the next return period opens on @ViewData[ViewDataConstants.NextReturnOpenDate].</p>
+                    }
                 </li>
             </ul>
         </div>
@@ -43,7 +48,7 @@
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        If you submit this file you may not be paid the correct amount for this period.
+        You’ll only be paid for learners that do not have errors in their data.
     </strong>
 </div>
 <form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">

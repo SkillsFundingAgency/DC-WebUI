@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
+using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.CollectionsManagement.Models;
@@ -21,7 +23,7 @@ namespace DC.Web.Ui.Services.Services
             IJsonSerializationService serializationService)
         {
             _httpClient = httpClient;
-            _baseUrl = apiSettings?.CollectionManagementBaseUrl;
+            _baseUrl = apiSettings?.JobManagementApiBaseUrl;
             _serializationService = serializationService;
         }
 
@@ -48,16 +50,47 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}");
-            ReturnPeriodViewModel result = null;
-
-            if (data != null)
+            try
             {
-                var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
-                result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber);
-            }
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/current");
+                ReturnPeriodViewModel result = null;
 
-            return result;
+                if (!string.IsNullOrEmpty(data))
+                {
+                    var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
+                    result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber);
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName)
+        {
+            try
+            {
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/next");
+                ReturnPeriodViewModel result = null;
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    var returnPeriod = _serializationService.Deserialize<ReturnPeriod>(data);
+                    result = new ReturnPeriodViewModel(returnPeriod.PeriodNumber)
+                    {
+                        NextOpeningDate = returnPeriod.StartDateTimeUtc.ToDateDisplayFormat()
+                    };
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<CollectionViewModel>> GetAvailableCollectionsAsync(long ukprn, string collectionType)

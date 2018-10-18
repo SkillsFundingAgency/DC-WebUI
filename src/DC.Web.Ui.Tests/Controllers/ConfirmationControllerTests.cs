@@ -1,9 +1,12 @@
-﻿using DC.Web.Ui.Areas.ILR.Controllers;
-using DC.Web.Ui.Controllers.IlrSubmission;
+﻿using System.Threading.Tasks;
+using DC.Web.Ui.Areas.ILR.Controllers;
+using DC.Web.Ui.Controllers;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +21,10 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_ValidData()
         {
-            var controller = new SubmissionConfirmationController(new Mock<ISubmissionService>().Object, new Mock<ILogger>().Object);
+            var controller = new SubmissionConfirmationController(
+                new Mock<ICollectionManagementService>().Object,
+                new Mock<ISubmissionService>().Object,
+                new Mock<ILogger>().Object);
 
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -33,7 +39,18 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_InValidData()
         {
-            var controller = new SubmissionConfirmationController(new Mock<ISubmissionService>().Object, new Mock<ILogger>().Object);
+            var collectionManagementServiceMock = new Mock<ICollectionManagementService>();
+            collectionManagementServiceMock.Setup(x => x.GetCurrentPeriodAsync("ILR1819"))
+                .ReturnsAsync(() => new ReturnPeriodViewModel(1));
+
+            var submissionServiceMock = new Mock<ISubmissionService>();
+            submissionServiceMock.Setup(x => x.GetConfirmation(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(() => null);
+
+            var controller = new SubmissionConfirmationController(
+               collectionManagementServiceMock.Object,
+               submissionServiceMock.Object,
+                new Mock<ILogger>().Object);
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
