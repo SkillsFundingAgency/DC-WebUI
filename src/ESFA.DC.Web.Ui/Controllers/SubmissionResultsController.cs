@@ -59,7 +59,7 @@ namespace DC.Web.Ui.Controllers
                 PeriodName = job.PeriodNumber.ToPeriodName(),
                 PeriodNumber = job.PeriodNumber,
                 FileSize = fileSize.ToString("N1"),
-                Status = job.CrossLoadingStatus ?? job.Status,
+                Status = job.Status,
                 JobType = job.JobType,
                 SubmissonHistoryViewModels = await GetSubmissionHistory(job.PeriodNumber)
             };
