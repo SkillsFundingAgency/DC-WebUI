@@ -28,6 +28,8 @@ namespace DC.Web.Ui.Ioc
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission).SingleInstance();
             builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("IlrCloudStorageSettings"))
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission).SingleInstance();
+            builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("EasCloudStorageSettings"))
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission).SingleInstance();
 
             builder.Register(c => configuration.GetConfigSection<CrossLoadingQueueConfiguration>()).As<IQueueConfiguration>().SingleInstance();
         }

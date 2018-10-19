@@ -1,0 +1,77 @@
+﻿@using DC.Web.Authorization
+@using DC.Web.Authorization.Data.Constants
+@using DC.Web.Ui.Constants
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+
+@{
+    ViewData["Title"] = "Choose file to upload";
+    ViewData["secondaryHeading"] = "EAS Submission";
+    var collection = ViewContext.RouteData.Values["collectionName"];
+    ViewData["BackUrl"] = "/submission-options";
+
+}
+
+@section RelatedContent
+    {
+    <h2 class="govuk-heading-m" id="subsection-title">
+        Related content
+    </h2>
+    <nav role="navigation" aria-labelledby="subsection-title">
+        <nav role="navigation" aria-labelledby="subsection-title">
+            <ul class="govuk-list govuk-!-font-size-16">
+                <li>
+                    <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018" target="_blank">
+                        Provider support manual for 2016 to 2017  
+                    </a>
+                </li> 
+                <li>
+                    <a href="https://www.gov.uk/government/publications/sfa-supplementary-data-collection" target="_blank">
+                        ESFA: supplementary data collection guidance  
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </nav>
+}
+
+    <form asp-controller="Submission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
+        
+        @Html.AntiForgeryToken()
+
+        <h1 class="govuk-heading-xl">
+            Choose file to upload
+            <span class="govuk-caption-xl" collection="@collection"></span>
+        </h1>
+        <p>Before uploading your file you should make sure that:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>it’s in a CSV format</li>
+            <li>it’s using the <a href="#">EAS data return template</a></li>
+            <li>the data it contains is as complete as possible</li>
+            <li>the data it contains is as accurate as possible</li>
+        </ul>
+        <div class="govuk-form-group" error-class id="controls">
+            <label class="govuk-label govuk-!-font-weight-bold">
+                Upload a file
+            </label>
+            <div error-field-name="@ErrorMessageKeys.Submission_FileFieldKey"></div>
+            <input class="govuk-file-upload" name="file" id="file" type="file" accept=".csv">
+        </div>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="confirm">    
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="confirm" name="confirm" type="checkbox" value="false" >
+                        <label class="govuk-label govuk-checkboxes__label" for="confirm">
+                            I confirm that the above payments have been made and I hold appropriate evidence to substantiate them.
+                        </label>
+                    </div>      
+                </div>
+            </fieldset>
+        </div>
+        <button class="govuk-button">
+            Upload file
+        </button>
+    </form>
+
+
+
