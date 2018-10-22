@@ -1,4 +1,5 @@
 ﻿@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
 @using ESFA.DC.Web.Ui.ViewModels
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissionOptionViewModel>
 
@@ -9,7 +10,7 @@
 }
 
 <form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
-    <div class="govuk-form-group" error-class id="controls">
+    <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey)">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                 <h1 class="govuk-fieldset__heading">

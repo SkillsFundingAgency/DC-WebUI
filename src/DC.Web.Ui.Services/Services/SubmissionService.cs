@@ -74,7 +74,8 @@ namespace DC.Web.Ui.Services.Services
                 CollectionName = submissionMessage.CollectionName,
                 PeriodNumber = submissionMessage.Period,
                 NotifyEmail = submissionMessage.NotifyEmail,
-                JobType = submissionMessage.JobType
+                JobType = submissionMessage.JobType,
+                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null
             };
 
             var response = await _httpClient.SendDataAsync($"{_apiBaseUrl}", job);
@@ -141,6 +142,8 @@ namespace DC.Web.Ui.Services.Services
                     return string.Concat("R", period.ToString("00"), " ILR file submitted");
                 case JobType.EsfSubmission:
                     return string.Concat("R", period.ToString("00"), " supplementary data file submitted");
+                case JobType.EasSubmission:
+                    return string.Concat("R", period.ToString("00"), " EAS data file submitted");
             }
 
             return string.Empty;
