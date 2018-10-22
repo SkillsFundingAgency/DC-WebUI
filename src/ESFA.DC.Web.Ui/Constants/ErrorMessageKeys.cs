@@ -10,5 +10,6 @@ namespace DC.Web.Ui.Constants
         public const string ErrorSummaryKey = "Summary";
         public const string SubmissionOptions_OptionsFieldKey = "Options";
         public const string Submission_FileFieldKey = "File";
+        public const string Submission_CheckboxFieldKey = "CheckBox";
     }
 }

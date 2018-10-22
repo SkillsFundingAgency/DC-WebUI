@@ -1,6 +1,7 @@
 ﻿@using DC.Web.Authorization
 @using DC.Web.Authorization.Data.Constants
 @using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
 @using Microsoft.AspNetCore.Mvc.ModelBinding
 
 @{
@@ -49,22 +50,29 @@
             <li>the data it contains is as complete as possible</li>
             <li>the data it contains is as accurate as possible</li>
         </ul>
-        <div class="govuk-form-group" error-class id="controls">
+        
+        <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.Submission_FileFieldKey)">
             <label class="govuk-label govuk-!-font-weight-bold">
                 Upload a file
             </label>
             <div error-field-name="@ErrorMessageKeys.Submission_FileFieldKey"></div>
             <input class="govuk-file-upload" name="file" id="file" type="file" accept=".csv">
+
         </div>
-        <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" aria-describedby="confirm">    
+
+        <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.Submission_CheckboxFieldKey)">
+
+            <div error-field-name="@ErrorMessageKeys.Submission_CheckboxFieldKey"></div>
+
+            <fieldset class="govuk-fieldset" aria-describedby="confirm">
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="confirm" name="confirm" type="checkbox" value="false" >
+                        @Html.CheckBox("confirm", false, new {@class = "govuk-checkboxes__input"})
+
                         <label class="govuk-label govuk-checkboxes__label" for="confirm">
                             I confirm that the above payments have been made and I hold appropriate evidence to substantiate them.
                         </label>
-                    </div>      
+                    </div>
                 </div>
             </fieldset>
         </div>

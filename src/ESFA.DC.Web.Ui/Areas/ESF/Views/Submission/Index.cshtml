@@ -1,6 +1,7 @@
 ﻿@using DC.Web.Authorization
 @using DC.Web.Authorization.Data.Constants
 @using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
 @using Microsoft.AspNetCore.Mvc.ModelBinding
 
 @{
@@ -33,7 +34,7 @@
 }
 
     <form asp-controller="Submission" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
-        
+
         @Html.AntiForgeryToken()
 
         <h1 class="govuk-heading-xl">
@@ -47,7 +48,7 @@
             <li>the data it contains is as complete as possible</li>
             <li>the data it contains is as accurate as possible</li>
         </ul>
-        <div class="govuk-form-group" error-class id="controls">
+        <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.Submission_FileFieldKey)">
             <label class="govuk-label govuk-!-font-weight-bold">
                 Upload a file
             </label>

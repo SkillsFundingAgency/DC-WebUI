@@ -61,7 +61,7 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
         [Route("{collectionName}")]
-        public async Task<IActionResult> Index(string collectionName, IFormFile file, string confirm)
+        public async Task<IActionResult> Index(string collectionName, IFormFile file, bool confirm)
         {
             var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
@@ -69,6 +69,13 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
+                return View();
+            }
+
+            if (!confirm)
+            {
+                AddError(ErrorMessageKeys.Submission_CheckboxFieldKey, "Please accpet terms");
+                AddError(ErrorMessageKeys.ErrorSummaryKey, "Please accpet terms");
                 return View();
             }
 
