@@ -54,7 +54,7 @@ namespace DC.Web.Ui.Ioc
 
             builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
-            builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EasSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<EasFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EasSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
