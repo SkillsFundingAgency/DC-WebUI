@@ -24,11 +24,11 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
         public async Task<IActionResult> Index(long jobId)
         {
             ViewBag.AutoRefresh = true;
-            var jobStatus = await _submissionService.GetJobStatus(jobId);
-            if (jobStatus == JobStatusType.Ready)
-            {
-                return View();
-            }
+            //var jobStatus = await _submissionService.GetJobStatus(jobId);
+            //if (jobStatus == JobStatusType.Ready)
+            //{
+            //    return View();
+            //}
 
             return RedirectToAction("Index", "SubmissionConfirmation", new { area= string.Empty, jobId });
         }
