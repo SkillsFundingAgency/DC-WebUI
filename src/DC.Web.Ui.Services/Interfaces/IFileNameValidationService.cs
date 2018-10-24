@@ -11,14 +11,10 @@ namespace DC.Web.Ui.Services.Interfaces
     {
         Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn);
 
-        bool IsValidExtension(string fileName);
+        FileNameValidationResultViewModel ValidateExtension(string fileName, string errorMessage);
 
-        bool IsValidRegex(string fileName);
+        FileNameValidationResultViewModel ValidateUkprn(string fileName, long ukprn);
 
-        bool IsValidUkprn(string fileName, long ukprn);
-
-        Task<bool> IsUniqueFileAsync(string fileName);
-
-        bool IsValidYear(string fileName);
+        Task<FileNameValidationResultViewModel> ValidateUniqueFileAsync(string fileName, long ukprn);
     }
 }
