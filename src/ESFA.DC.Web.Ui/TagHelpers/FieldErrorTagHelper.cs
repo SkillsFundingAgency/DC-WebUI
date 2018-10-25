@@ -22,7 +22,7 @@ namespace DC.Web.Ui.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var errorMessage = ViewContext.ModelState.ContainsKey(ErrorFieldName) ?
-                ViewContext.ModelState[ErrorFieldName]?.Errors?.First()?.ErrorMessage :
+                ViewContext.ModelState[ErrorFieldName]?.Errors?.FirstOrDefault()?.ErrorMessage :
                 string.Empty;
 
             if (string.IsNullOrEmpty(errorMessage))

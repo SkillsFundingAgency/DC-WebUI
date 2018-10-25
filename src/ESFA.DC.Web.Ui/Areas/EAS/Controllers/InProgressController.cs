@@ -6,10 +6,10 @@ using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.ESF.Controllers
+namespace DC.Web.Ui.Areas.EAS.Controllers
 {
-    [Area(AreaNames.Esf)]
-    [Route(AreaNames.Esf + "/inprogress")]
+    [Area(AreaNames.Eas)]
+    [Route(AreaNames.Eas + "/inprogress")]
     public class InProgressController : BaseController
     {
         private readonly ISubmissionService _submissionService;

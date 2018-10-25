@@ -13,14 +13,14 @@ using ESFA.DC.Web.Ui.ViewModels.Enums;
 
 namespace DC.Web.Ui.Services.Services
 {
-    public class EsfFileNameValidationService : AbstractFileNameValidationService
+    public class EasFileNameValidationService : AbstractFileNameValidationService
     {
-        public EsfFileNameValidationService([KeyFilter(JobType.EsfSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
+        public EasFileNameValidationService([KeyFilter(JobType.EasSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
             : base(persistenceService, featureFlags)
         {
         }
 
-        protected override Regex FileNameRegex => new Regex("^(SUPPDATA)-([1-9][0-9]{7})-([0-9a-zA-Z-]{1,20})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])).((csv)|(CSV))$", RegexOptions.Compiled);
+        protected override Regex FileNameRegex => new Regex("^(EASDATA)-([1-9][0-9]{7})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])).((csv)|(CSV))$", RegexOptions.Compiled);
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".csv", ".CSV" };
 
@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = ValidateRegex(fileName, "File name should use the format SUPPDATA-LLLLLLLL-CCCCCCCCCCCCCCCCCCCC-yyyymmdd-hhmmss.csv");
+            result = ValidateRegex(fileName, "File name should use the format EASDATA-LLLLLLLL-yyyymmdd-hhmmss.csv");
             if (result != null)
             {
                 return result;

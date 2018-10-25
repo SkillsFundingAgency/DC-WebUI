@@ -54,6 +54,7 @@ namespace DC.Web.Ui.Ioc
 
             builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<EasFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EasSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
@@ -69,6 +70,12 @@ namespace DC.Web.Ui.Ioc
 
             builder.Register(context =>
             {
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission);
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EasSubmission).InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
                 var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
             }).Keyed<IKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
@@ -78,6 +85,12 @@ namespace DC.Web.Ui.Ioc
                 var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
             }).Keyed<IKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
+
+            builder.Register(context =>
+            {
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission);
+                return new AzureStorageKeyValuePersistenceService(config);
+            }).Keyed<IKeyValuePersistenceService>(JobType.EasSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
