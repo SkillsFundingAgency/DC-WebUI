@@ -74,8 +74,8 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
 
             if (!confirm)
             {
-                AddError(ErrorMessageKeys.Submission_CheckboxFieldKey, "Please accpet terms");
-                AddError(ErrorMessageKeys.ErrorSummaryKey, "Please accpet terms");
+                AddError(ErrorMessageKeys.Submission_CheckboxFieldKey, "You must agree to this statement before you can upload a file");
+                AddError(ErrorMessageKeys.ErrorSummaryKey, "Check confirmation box");
                 return View();
             }
 

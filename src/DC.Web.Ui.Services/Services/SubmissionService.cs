@@ -121,12 +121,13 @@ namespace DC.Web.Ui.Services.Services
         public async Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId)
         {
             var job = await GetJob(ukprn, jobId);
+            var localTime = _dateTimeProvider.ConvertUtcToUk(job.DateTimeSubmittedUtc);
             return new FileUploadConfirmationViewModel()
             {
                 FileName = job.FileName.FileNameWithoutUkprn(),
                 JobId = jobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
-                SubmittedAt = string.Concat(job.DateTimeSubmittedUtc.ToString("hh:mmtt").ToLower(), " on ", job.DateTimeSubmittedUtc.ToString("dddd dd MMMM yyyy")),
+                SubmittedAt = string.Concat(localTime.ToString("hh:mmtt").ToLower(), " on ", localTime.ToString("dddd dd MMMM yyyy")),
                 SubmittedBy = job.SubmittedBy,
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType,
