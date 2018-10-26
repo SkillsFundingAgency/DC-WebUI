@@ -160,6 +160,7 @@ namespace DC.Web.Ui.Services.Tests
         {
             var dateTimeprovider = new Mock<IDateTimeProvider>();
             dateTimeprovider.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
+            dateTimeprovider.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(new DateTime(2018, 10, 10, 10, 20, 30));
 
             var httpClientMock = new Mock<IBespokeHttpClient>();
             httpClientMock.Setup(x => x.SendDataAsync(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => "1");
