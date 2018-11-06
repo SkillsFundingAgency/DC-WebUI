@@ -41,12 +41,12 @@
 
 
 <p>
-    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { ValidationResultsReportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
+    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
 </p>
 @if (Model.HasDataMatchReport)
 {
     <p>
-        @Html.ActionLink($"Download data match report", "Download", "ValidationResults", new { ValidationResultsReportType = "DataMatch" }) <span>(CSV,  @(Model.DataMatchReportFileSize)KB) showing all errors and warnings</span>
+        @Html.ActionLink($"Download data match report", "Download", "ValidationResults", new { reportType = "DataMatch" }) <span>(CSV,  @(Model.DataMatchReportFileSize)KB) showing all errors and warnings</span>
     </p>
 }
 
