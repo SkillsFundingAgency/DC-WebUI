@@ -36,7 +36,7 @@ namespace DC.Web.Ui.Services.Tests
             var service = GetService();
 
             var fileName = service.GetReportFileName(new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DataMatch);
-            fileName.Should().Be("Apprenticeship data match 20181010-203040");
+            fileName.Should().Be("Apprenticeship Data Match Report 20181010-203040");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace DC.Web.Ui.Services.Tests
             var service = GetService();
 
             var fileName = service.GetStorageFileName(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DataMatch);
-            fileName.Should().Be("1000/500/Apprenticeship Data Match 20181010-203040");
+            fileName.Should().Be("1000/500/Apprenticeship Data Match Report 20181010-203040");
         }
 
         [Fact]
