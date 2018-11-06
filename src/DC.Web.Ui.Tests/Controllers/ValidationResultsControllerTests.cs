@@ -39,10 +39,10 @@ namespace DC.Web.Ui.Tests.Controllers
         }
 
         [Fact]
-        public void Download_Test()
+        public void Download_DetailedErrors_Test()
         {
             var controller = GetController();
-            var result = controller.Download(It.IsAny<long>()).Result;
+            var result = controller.Download(It.IsAny<long>(), Services.Services.Enums.ValidationResultsReportType.DetailedErrors).Result;
 
             result.Should().BeOfType(typeof(FileStreamResult));
         }

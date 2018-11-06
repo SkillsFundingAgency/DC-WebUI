@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Services.Enums;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
@@ -86,22 +87,22 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         }
 
         [Route("Download/{jobId}")]
-        public async Task<FileResult> Download(long jobId)
+        public async Task<FileResult> Download(long jobId, ValidationResultsReportType reportType)
         {
-            Logger.LogInfo($"Downlaod csv request for Job id : {jobId}");
+            Logger.LogInfo($"Download csv request for Job id : {jobId} {reportType}");
 
             try
             {
                 var job = await GetJob(jobId);
-                var downloadFileName = $"{_validationResultsService.GetReportFileName(job.DateTimeSubmittedUtc)}.csv";
-                var storageFileName = $"{_validationResultsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc)}.csv";
+                var downloadFileName = $"{_validationResultsService.GetReportFileName(job.DateTimeSubmittedUtc, reportType)}.csv";
+                var storageFileName = $"{_validationResultsService.GetStorageFileName(Ukprn, jobId, job.DateTimeSubmittedUtc, reportType)}.csv";
 
                 var csvBlobStream = await _reportService.GetBlobFileStreamAsync(storageFileName, job.JobType);
                 return File(csvBlobStream, "text/csv", downloadFileName);
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download csv failed for job id : {jobId}", e);
+                Logger.LogError($"Download csv failed for job id : {jobId} {reportType}", e);
                 throw;
             }
         }
