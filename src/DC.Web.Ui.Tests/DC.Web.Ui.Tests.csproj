@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.24-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.25-beta0001" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
