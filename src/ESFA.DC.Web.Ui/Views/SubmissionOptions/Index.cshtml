@@ -29,7 +29,16 @@
                         <label class="govuk-label govuk-radios__label" for="@so.Name">@so.Title</label>
                     </div>
                 }
+                
+                @if (Model.Any())
+                {
+                    <div class="govuk-radios__divider">or</div>
+                }
 
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="Reports" name="submissionType" type="radio" value="Reports">
+                    <label class="govuk-label govuk-radios__label" for="Reports">Download reports</label>
+                </div>
 
             </div>
         </fieldset>

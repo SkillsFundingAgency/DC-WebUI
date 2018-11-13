@@ -29,13 +29,6 @@ namespace DC.Web.Ui.Controllers
             if (data.Any())
             {
                 Logger.LogInfo($"Ukprn : {Ukprn}, returned {data.Count()} collection types ");
-
-                //if there is one collection type skip this step
-                if (data.Count == 1)
-                {
-                    return RedirectToNext(data.First().Name);
-                }
-
                 return View(data);
             }
 
@@ -53,7 +46,7 @@ namespace DC.Web.Ui.Controllers
 
             if (!string.IsNullOrEmpty(submissionType))
             {
-                if (data.Any(x => x.Name == submissionType))
+                if (submissionType == "Reports" || data.Any(x => x.Name == submissionType))
                 {
                     return RedirectToNext(submissionType);
                 }
@@ -79,6 +72,8 @@ namespace DC.Web.Ui.Controllers
                     return RedirectToAction("Index", "Submission", new { area = "esf", collectionName = submissionType });
                 case "EAS":
                     return RedirectToAction("Index", "Submission", new { area = "eas", collectionName = submissionType });
+                case "Reports":
+                    return RedirectToAction("Index", "SubmissionResults");
                 default:
                     throw new Exception("Not supported");
             }

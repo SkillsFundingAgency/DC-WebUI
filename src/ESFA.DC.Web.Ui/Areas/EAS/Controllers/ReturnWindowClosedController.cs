@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.EAS.Controllers
 {
-    [Area(AreaNames.Esf)]
-    [Route(AreaNames.Esf + "/window-closed")]
+    [Area(AreaNames.Eas)]
+    [Route(AreaNames.Eas + "/window-closed")]
     public class ReturnWindowClosedController : Controller
     {
         private readonly ICollectionManagementService _collectionManagementService;
