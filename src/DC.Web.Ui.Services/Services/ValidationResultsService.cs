@@ -57,7 +57,9 @@ namespace DC.Web.Ui.Services.Services
                 ReportFileSize = (await GetFileSize(ukprn, jobId, jobType, dateTimeUtc, ValidationResultsReportType.DetailedErrors)).ToString("N1"),
                 ErrorMessage = validationResult.ErrorMessage,
                 DataMatchReportFileSize = dataMatchSize.ToString("N1"),
-                HasDataMatchReport = dataMatchSize > 0
+                HasDataMatchReport = dataMatchSize > 0,
+                TotalDataMatchErrors = validationResult.TotalDataMatchErrors,
+                TotalDataMatchLearners = validationResult.TotalDataMatchLearners
             };
         }
 

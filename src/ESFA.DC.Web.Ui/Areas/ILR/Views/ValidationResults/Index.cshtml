@@ -35,11 +35,14 @@
 
 <p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners</p>
 
-<p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)
+<p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)</p>
 
-<p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)
+<p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
 
-
+@if (Model.HasDataMatchReport)
+{
+    <p><span class="govuk-!-font-weight-bold">Total data match problems</span>: @Model.TotalDataMatchErrors (affecting @Model.TotalDataMatchLearners learners)</p>
+}
 <p>
     @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
 </p>
@@ -54,7 +57,7 @@
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        You’ll only be paid for learners that do not have errors in their data.
+        You’ll only be paid for learners that do not have errors or data match problems with their data.
     </strong>
 </div>
 <form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">

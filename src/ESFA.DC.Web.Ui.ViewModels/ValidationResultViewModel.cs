@@ -28,5 +28,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         /// data match reports are only generated if the underlying ILR data contains FM36 learners (apprentices)
         /// </summary>
         public bool HasDataMatchReport { get; set; }
+
+        public int TotalDataMatchLearners { get; set; }
+
+        public int TotalDataMatchErrors { get; set; }
     }
 }
