@@ -64,19 +64,12 @@ namespace DC.Web.Ui.Controllers
 
         private IActionResult RedirectToNext(string submissionType)
         {
-            switch (submissionType)
+            if (submissionType.Equals("Reports", StringComparison.CurrentCultureIgnoreCase))
             {
-                case "ILR":
-                    return RedirectToAction("Index", "CollectionOptions", new { area = "ilr", collectionType = submissionType });
-                case "ESF":
-                    return RedirectToAction("Index", "Submission", new { area = "esf", collectionName = submissionType });
-                case "EAS":
-                    return RedirectToAction("Index", "Submission", new { area = "eas", collectionName = submissionType });
-                case "Reports":
-                    return RedirectToAction("Index", "SubmissionResults");
-                default:
-                    throw new Exception("Not supported");
+                return RedirectToAction("Index", "SubmissionResults");
             }
+
+            return RedirectToAction("Index", "CollectionOptions", new { collectionType = submissionType });
         }
     }
 }

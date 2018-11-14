@@ -31,6 +31,11 @@ namespace DC.Web.Ui.Extensions
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Name);
         }
 
+        public static string NameIdentifier(this ClaimsPrincipal claimsPrincipal)
+        {
+            return GetClaimValue(claimsPrincipal, IdamsClaimTypes.NameIdentifier);
+        }
+
         public static string Email(this ClaimsPrincipal claimsPrincipal)
         {
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Email);

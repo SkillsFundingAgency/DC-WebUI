@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area(AreaNames.Ilr)]
-    [Route("ilr/CollectionOptions")]
     public class CollectionOptionsController : BaseController
     {
         private readonly ICollectionManagementService _collectionManagementService;
@@ -34,13 +32,13 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 //if there is only one then redirect to submission page
                 if (data.Count() == 1)
                 {
-                   return RedirectToAction("Index", "Submission", new { area= AreaNames.Ilr, data.First().CollectionName });
+                   return RedirectToAction("Index", "Submission", new { area= collectionType.ToLower(), data.First().CollectionName });
                 }
 
                 return View(data);
             }
 
-            return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf });
+            return RedirectToAction("Index", "ReturnWindowClosed", new { area = collectionType.ToLower() });
         }
     }
 }
