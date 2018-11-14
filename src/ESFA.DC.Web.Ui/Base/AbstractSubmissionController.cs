@@ -69,7 +69,7 @@ namespace DC.Web.Ui.Base
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
-                    SubmittedBy = User.Name(),
+                    SubmittedBy = User.NameIdentifier(),
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
