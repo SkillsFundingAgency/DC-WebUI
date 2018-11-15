@@ -108,6 +108,12 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
+        public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{_dateTimeProvider.GetNowUtc().AddDays(-60)}/{_dateTimeProvider.GetNowUtc()}");
+            return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+        }
+
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()

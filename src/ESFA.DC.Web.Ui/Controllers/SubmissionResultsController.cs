@@ -32,43 +32,18 @@ namespace DC.Web.Ui.Controllers
             _dateTimeProvider = dateTimeProvider;
         }
 
-        [Route("{jobId}")]
-        public async Task<IActionResult> Index(long jobId)
+        public async Task<IActionResult> Index()
         {
-            var job = await _submissionService.GetJob(Ukprn, jobId);
-            if (job == null)
-            {
-                Logger.LogInfo($"Loading submission results page for job id : {jobId}, job not found");
-                return View(new SubmissionResultViewModel());
-            }
-
-            decimal fileSize = 0;
-            if (job.Status == JobStatusType.Completed)
-            {
-                fileSize = await _reportService.GetReportFileSizeAsync(job);
-                Logger.LogInfo($"Got report size for job id : {jobId}, filesize : {fileSize}");
-            }
-            else
-            {
-                Logger.LogInfo($"Got job status for job id : {jobId}, it is still : {job.Status}, cross loading status :{job.CrossLoadingStatus}");
-            }
-
             var result = new SubmissionResultViewModel()
             {
-                JobId = jobId,
-                PeriodName = job.PeriodNumber.ToPeriodName(),
-                PeriodNumber = job.PeriodNumber,
-                FileSize = fileSize.ToString("N1"),
-                Status = job.Status,
-                JobType = job.JobType,
-                SubmissonHistoryViewModels = await GetSubmissionHistory(job.PeriodNumber)
+                SubmissonHistoryViewModels = await GetSubmissionHistory()
             };
 
             return View(result);
         }
 
-        [Route("Download/{jobId}")]
-        public async Task<FileResult> Download(long jobId)
+        [Route("DownloadReport/{jobId}")]
+        public async Task<FileResult> DownloadReport(long jobId)
         {
             var job = await _submissionService.GetJob(Ukprn, jobId);
 
@@ -106,9 +81,9 @@ namespace DC.Web.Ui.Controllers
             }
         }
 
-        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory(int period)
+        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory()
         {
-            var jobsList = await _submissionService.GetAllJobsForPeriod(Ukprn, period);
+            var jobsList = await _submissionService.GetAllJobsForHistory(Ukprn);
             var jobsViewList = new List<SubmissonHistoryViewModel>();
             jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
                 .ToList()
@@ -117,6 +92,8 @@ namespace DC.Web.Ui.Controllers
                 JobId = x.JobId,
                 FileName = x.FileName.FileNameWithoutUkprn(),
                 JobType = MapJobType(x.JobType),
+                ReportsFileName = $"{x.JobId}_Reports.zip",
+                Status = x.Status,
                 DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat(),
             }));
 

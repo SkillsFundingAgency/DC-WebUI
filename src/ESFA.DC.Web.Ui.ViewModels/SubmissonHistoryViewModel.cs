@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -13,5 +14,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string DateTimeSubmitted { get; set; }
 
         public long JobId { get; set; }
+
+        public JobStatusType Status { get; set; }
+
+        public string ReportsFileName { get; set; }
     }
 }

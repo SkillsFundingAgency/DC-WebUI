@@ -22,5 +22,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId);
 
         Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
+
+        Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn);
     }
 }
