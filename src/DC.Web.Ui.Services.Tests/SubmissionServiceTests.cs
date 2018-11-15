@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Services.Tests
         {
             var service = GetService();
 
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100)
             {
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
@@ -46,7 +46,8 @@ namespace DC.Web.Ui.Services.Tests
                 FileSizeBytes = 100,
                 NotifyEmail = "test@test.com",
                 Period = 10,
-                StorageReference = "test"
+                StorageReference = "test",
+                CollectionYear = 1819
             };
 
             var result = service.SubmitJob(job).Result;

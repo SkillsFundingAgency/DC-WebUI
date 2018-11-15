@@ -43,7 +43,8 @@ namespace DC.Web.Ui.Base
         {
             long jobId;
 
-            if (!(await IsValidCollection(collectionName)))
+            var collection = await _collectionManagementService.GetCollectionAsync(Ukprn, collectionName);
+            if (collection == null || !collection.IsOpen)
             {
                 Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available, but file is being uploaded");
                 throw new ArgumentOutOfRangeException(collectionName);
@@ -65,7 +66,7 @@ namespace DC.Web.Ui.Base
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType, Ukprn, Upin)
+                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType, Ukprn)
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
@@ -73,7 +74,8 @@ namespace DC.Web.Ui.Base
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
-                    StorageReference = _storageKeyValueConfig.ContainerName
+                    StorageReference = _storageKeyValueConfig.ContainerName,
+                    CollectionYear = collection.CollectionYear
                 });
             }
             catch (Exception ex)

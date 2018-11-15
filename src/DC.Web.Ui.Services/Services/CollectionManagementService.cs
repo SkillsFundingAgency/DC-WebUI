@@ -116,15 +116,20 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<bool> IsValidCollectionAsync(long ukprn, string collectionName)
         {
+            var collection = await GetCollectionAsync(ukprn, collectionName);
+            return collection != null && collection.IsOpen;
+        }
+
+        public async Task<Collection> GetCollectionAsync(long ukprn, string collectionName)
+        {
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}/{collectionName}");
 
             if (!string.IsNullOrEmpty(data))
             {
-                var collection = _serializationService.Deserialize<Collection>(data);
-                return collection.IsOpen;
+                return _serializationService.Deserialize<Collection>(data);
             }
 
-            return false;
+            return null;
         }
     }
 }
