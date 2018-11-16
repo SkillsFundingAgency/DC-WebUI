@@ -75,7 +75,8 @@ namespace DC.Web.Ui.Services.Services
                 PeriodNumber = submissionMessage.Period,
                 NotifyEmail = submissionMessage.NotifyEmail,
                 JobType = submissionMessage.JobType,
-                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null
+                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null,
+                CollectionYear = submissionMessage.CollectionYear
             };
 
             var response = await _httpClient.SendDataAsync($"{_apiBaseUrl}", job);

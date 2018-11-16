@@ -7,6 +7,7 @@ using DC.Web.Ui.Areas.ILR.Controllers;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using DC.Web.Ui.ViewModels;
+using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
@@ -85,7 +86,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<ISubmissionService>();
-            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission, 10, 0)
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission, 10)
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));
@@ -135,6 +136,8 @@ namespace DC.Web.Ui.Tests.Controllers
 
             mockCollectionmanagementService.Setup(x => x.IsValidCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
                 .ReturnsAsync(() => true);
+            mockCollectionmanagementService.Setup(x => x.GetCollectionAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => new Collection { IsOpen = true, CollectionYear = 1819 });
             mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(10));
 
