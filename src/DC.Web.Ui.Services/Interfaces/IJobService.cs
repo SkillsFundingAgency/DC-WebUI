@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DC.Web.Ui.Services.Interfaces
 {
-    public interface ISubmissionService
+    public interface IJobService
     {
         Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage);
 
@@ -24,5 +24,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
 
         Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn);
+
+        Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName);
     }
 }

@@ -11,16 +11,16 @@ namespace DC.Web.Ui.Controllers
     public class SubmissionConfirmationController : BaseController
     {
         private readonly ICollectionManagementService _collectionManagementService;
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
 
         public SubmissionConfirmationController(
             ICollectionManagementService collectionManagementService,
-            ISubmissionService submissionService,
+            IJobService jobService,
             ILogger logger)
             : base(logger)
         {
             _collectionManagementService = collectionManagementService;
-            _submissionService = submissionService;
+            _jobService = jobService;
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace DC.Web.Ui.Controllers
                 ViewData[ViewDataConstants.IsCleanFile] = true;
             }
 
-            var data = await _submissionService.GetConfirmation(Ukprn, jobId);
+            var data = await _jobService.GetConfirmation(Ukprn, jobId);
 
             await SetupNextPeriod(data?.CollectionName);
 

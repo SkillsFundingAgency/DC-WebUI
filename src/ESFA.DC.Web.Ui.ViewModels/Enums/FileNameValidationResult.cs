@@ -11,6 +11,7 @@ namespace ESFA.DC.Web.Ui.ViewModels.Enums
         InvalidFileExtension = 40,
         FileAlreadyExists = 50,
         InvalidYear = 60,
-        InvalidSerialNumber = 70
+        InvalidSerialNumber = 70,
+        LaterFileAlreadySubmitted = 80
     }
 }

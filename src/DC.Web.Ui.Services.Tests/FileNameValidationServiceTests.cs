@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.Interfaces;
@@ -22,7 +23,7 @@ namespace DC.Web.Ui.Services.Tests
         [InlineData(".XML")]
         public void IsValidExtension_True(string extension)
         {
-            var service = new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags());
+            var service = new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object);
             service.ValidateExtension($"testfile{extension}", "error").Should().BeNull();
         }
 
@@ -69,7 +70,7 @@ namespace DC.Web.Ui.Services.Tests
         public void ValidateFileName_InvalidFileSize()
         {
             var service = GetService();
-            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 0, 10000).Result.ValidationResult.Should()
+            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 0, 10000, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.EmptyFile);
         }
 
@@ -85,7 +86,7 @@ namespace DC.Web.Ui.Services.Tests
         public void ValidateFileName_InvalidExtension()
         {
             var service = GetService();
-            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.x1ml", 10, 10000).Result.ValidationResult.Should()
+            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.x1ml", 10, 10000, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.InvalidFileExtension);
         }
 
@@ -93,7 +94,7 @@ namespace DC.Web.Ui.Services.Tests
         public void ValidateFileName_EmptyfileName()
         {
             var service = GetService();
-            service.ValidateFileNameAsync(null, 10, 10000).Result.ValidationResult.Should()
+            service.ValidateFileNameAsync(null, 10, 10000, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.EmptyFile);
         }
 
@@ -109,7 +110,7 @@ namespace DC.Web.Ui.Services.Tests
         public void ValidateFileName_Valid()
         {
             var service = GetService();
-            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 10, 10006341).Result.ValidationResult.Should()
+            service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 10, 10006341, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.Valid);
         }
 
@@ -120,14 +121,14 @@ namespace DC.Web.Ui.Services.Tests
             mockStorageService.Setup(x => x.ContainsAsync(It.IsAny<string>(), default(CancellationToken)))
                 .ReturnsAsync(() => true);
 
-            var service = new IlrFileNameValidationService(mockStorageService.Object, new FeatureFlags { DuplicateFileCheckEnabled = true });
+            var service = new IlrFileNameValidationService(mockStorageService.Object, new FeatureFlags { DuplicateFileCheckEnabled = true }, new Mock<IJobService>().Object);
             service.ValidateUniqueFileAsync("ILR-10006341-1819-20180118-023456-02.xml", 1000).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.FileAlreadyExists);
         }
 
         private IlrFileNameValidationService GetService()
         {
-            return new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags());
+            return new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object);
         }
     }
 }

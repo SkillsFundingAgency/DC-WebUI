@@ -28,7 +28,7 @@ namespace DC.Web.Ui.Services.Services
 
         protected abstract Regex FileNameRegex { get; }
 
-        public abstract Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn);
+        public abstract Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn, string collectionName);
 
         public FileNameValidationResultViewModel ValidateEmptyFile(string fileName, long? fileSize)
         {

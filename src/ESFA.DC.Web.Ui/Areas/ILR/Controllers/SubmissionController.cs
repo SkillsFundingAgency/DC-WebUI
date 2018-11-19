@@ -23,13 +23,13 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         private readonly IFileNameValidationService _fileNameValidationService;
 
         public SubmissionController(
-            ISubmissionService submissionService,
+            IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.IlrSubmission, submissionService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            : base(JobType.IlrSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
             _fileNameValidationService = fileNameValidationServices[JobType.IlrSubmission];
         }
@@ -69,7 +69,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             await SetupNextPeriod(collectionName);
 
-            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);

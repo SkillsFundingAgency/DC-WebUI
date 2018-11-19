@@ -17,20 +17,20 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
     public class ValidationResultsController : BaseController
     {
         private readonly IValidationResultsService _validationResultsService;
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly ICollectionManagementService _collectionManagementService;
 
         public ValidationResultsController(
             IValidationResultsService validationResultsService,
-            ISubmissionService submissionService,
+            IJobService jobService,
             IStorageService reportService,
             ICollectionManagementService collectionManagementService,
             ILogger logger)
             : base(logger)
         {
             _validationResultsService = validationResultsService;
-            _submissionService = submissionService;
+            _jobService = jobService;
             _reportService = reportService;
             _collectionManagementService = collectionManagementService;
         }
@@ -69,7 +69,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ");
             var job = await GetJob(jobId);
 
-            await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
+            await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
             return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId });
         }
@@ -80,7 +80,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             var job = await GetJob(jobId);
 
-            await _submissionService.UpdateJobStatus(jobId, JobStatusType.Completed);
+            await _jobService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
             return RedirectToAction("Index", "Submission", new { area = AreaNames.Ilr, job.CollectionName });
@@ -111,7 +111,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             Logger.LogInfo($"Trying to get Job for validation results report page for job id : {jobId}");
 
-            var job = await _submissionService.GetJob(Ukprn, jobId);
+            var job = await _jobService.GetJob(Ukprn, jobId);
             if (job == null || job.Ukprn != Ukprn)
             {
                 throw new Exception($"invalid job id provider for validation results page jobid: {jobId} and ukprn : {Ukprn}");

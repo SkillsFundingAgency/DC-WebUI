@@ -15,16 +15,22 @@ namespace DC.Web.Ui.Services.Services
 {
     public class IlrFileNameValidationService : AbstractFileNameValidationService
     {
-        public IlrFileNameValidationService([KeyFilter(JobType.IlrSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
+        private readonly IJobService _jobService;
+
+        public IlrFileNameValidationService(
+            [KeyFilter(JobType.IlrSubmission)]IKeyValuePersistenceService persistenceService,
+            FeatureFlags featureFlags,
+            IJobService jobService)
             : base(persistenceService, featureFlags)
         {
+            _jobService = jobService;
         }
 
         protected override Regex FileNameRegex => new Regex("^(ILR)-([1-9][0-9]{7})-([0-9]{4})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-([0-9]{2}).((XML)|(ZIP)|(xml)|(zip))$", RegexOptions.Compiled);
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".zip", ".xml", ".ZIP", ".XML" };
 
-        public override async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn)
+        public override async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn, string collectionName)
         {
             var result = ValidateEmptyFile(fileName, fileSize);
             if (result != null)
@@ -77,6 +83,16 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
+            if (LaterFileExists(ukprn, fileName, collectionName))
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.LaterFileAlreadySubmitted,
+                    FieldError = "The date/time of the file is earlier than a previous transmission for this collection",
+                    SummaryError = "The date/time of the file is earlier than a previous transmission for this collection"
+                };
+            }
+
             return new FileNameValidationResultViewModel()
             {
                 ValidationResult = FileNameValidationResult.Valid
@@ -103,6 +119,34 @@ namespace DC.Web.Ui.Services.Services
 
             var matches = FileNameRegex.Match(fileName);
             return matches.Groups[3].Value == "1819";
+        }
+
+        public bool LaterFileExists(long ukprn, string fileName, string collectionName)
+        {
+            var job = _jobService.GetLatestJob(ukprn, collectionName).Result;
+            if (job == null)
+            {
+                return false;
+            }
+
+            if (!IsValidRegex(fileName))
+            {
+                return true;
+            }
+
+            var fileDateTime = GetDateTime(fileName);
+            var existingJobFileDateTime = GetDateTime(job.FileName.Split('/')[1]);
+            return fileDateTime < existingJobFileDateTime;
+        }
+
+        private DateTime GetDateTime(string fileName)
+        {
+            var matches = FileNameRegex.Match(fileName);
+
+            return DateTime.ParseExact(
+                $"{matches.Groups[4].Value}-{matches.Groups[8].Value}",
+                "yyyyMMdd-HHmmss",
+                System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

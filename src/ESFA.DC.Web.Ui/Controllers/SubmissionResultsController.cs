@@ -20,14 +20,14 @@ namespace DC.Web.Ui.Controllers
     [Route("submission-results")]
     public class SubmissionResultsController : BaseController
     {
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SubmissionResultsController(ISubmissionService submissionService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
+        public SubmissionResultsController(IJobService jobService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
             : base(logger)
         {
-            _submissionService = submissionService;
+            _jobService = jobService;
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
         }
@@ -45,7 +45,7 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadReport/{jobId}")]
         public async Task<FileResult> DownloadReport(long jobId)
         {
-            var job = await _submissionService.GetJob(Ukprn, jobId);
+            var job = await _jobService.GetJob(Ukprn, jobId);
 
             var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId, job.CrossLoadingStatus);
             Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
@@ -65,7 +65,7 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadFile/{jobId}")]
         public async Task<FileResult> DownloadFile(long jobId)
         {
-            var job = await _submissionService.GetJob(Ukprn, jobId);
+            var job = await _jobService.GetJob(Ukprn, jobId);
 
             Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
 
@@ -83,7 +83,7 @@ namespace DC.Web.Ui.Controllers
 
         private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory()
         {
-            var jobsList = await _submissionService.GetAllJobsForHistory(Ukprn);
+            var jobsList = await _jobService.GetAllJobsForHistory(Ukprn);
             var jobsViewList = new List<SubmissonHistoryViewModel>();
             jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
                 .ToList()
