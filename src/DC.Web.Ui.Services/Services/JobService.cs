@@ -25,32 +25,23 @@ using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Services
 {
-    public class SubmissionService : ISubmissionService
+    public class JobService : IJobService
     {
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _apiBaseUrl;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IQueuePublishService<MessageCrossLoadDctToDcftDto> _queuePublishService;
-        private readonly CrossLoadMessageMapper _crossLoadMessageMapper;
-        private readonly IStorageService _reportService;
 
-        public SubmissionService(
+        public JobService(
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
-            IDateTimeProvider dateTimeProvider,
-            IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService,
-            CrossLoadMessageMapper crossLoadMessageMapper,
-            IStorageService reportService)
+            IDateTimeProvider dateTimeProvider)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
-            _queuePublishService = queuePublishService;
-            _crossLoadMessageMapper = crossLoadMessageMapper;
-            _reportService = reportService;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -113,6 +104,17 @@ namespace DC.Web.Ui.Services.Services
         {
             var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{_dateTimeProvider.GetNowUtc().AddDays(-60)}/{_dateTimeProvider.GetNowUtc()}");
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+        }
+
+        public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{collectionName}/latest");
+            if (data == null)
+            {
+                return null;
+            }
+
+            return _serializationService.Deserialize<FileUploadJob>(data);
         }
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)

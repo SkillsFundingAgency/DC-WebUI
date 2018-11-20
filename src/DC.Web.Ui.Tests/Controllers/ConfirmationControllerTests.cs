@@ -23,7 +23,7 @@ namespace DC.Web.Ui.Tests.Controllers
         {
             var controller = new SubmissionConfirmationController(
                 new Mock<ICollectionManagementService>().Object,
-                new Mock<ISubmissionService>().Object,
+                new Mock<IJobService>().Object,
                 new Mock<ILogger>().Object);
 
             var httpContext = new DefaultHttpContext();
@@ -43,7 +43,7 @@ namespace DC.Web.Ui.Tests.Controllers
             collectionManagementServiceMock.Setup(x => x.GetCurrentPeriodAsync("ILR1819"))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(1));
 
-            var submissionServiceMock = new Mock<ISubmissionService>();
+            var submissionServiceMock = new Mock<IJobService>();
             submissionServiceMock.Setup(x => x.GetConfirmation(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(() => null);
 

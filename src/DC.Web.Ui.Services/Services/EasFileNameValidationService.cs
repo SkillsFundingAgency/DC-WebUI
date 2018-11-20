@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Services.Services
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".csv", ".CSV" };
 
-        public override async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn)
+        public override async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn, string collectionName)
         {
             var result = ValidateEmptyFile(fileName, fileSize);
             if (result != null)

@@ -12,19 +12,19 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
     [Route(AreaNames.Eas + "/inprogress")]
     public class InProgressController : BaseController
     {
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
 
-        public InProgressController(ISubmissionService submissionService, ILogger logger)
+        public InProgressController(IJobService jobService, ILogger logger)
             : base(logger)
         {
-            _submissionService = submissionService;
+            _jobService = jobService;
         }
 
         [Route("{jobId}")]
         public async Task<IActionResult> Index(long jobId)
         {
             ViewBag.AutoRefresh = true;
-            //var jobStatus = await _submissionService.GetJobStatus(jobId);
+            //var jobStatus = await _jobService.GetJobStatus(jobId);
             //if (jobStatus == JobStatusType.Ready)
             //{
             //    return View();

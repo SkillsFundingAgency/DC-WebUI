@@ -56,7 +56,7 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var validationErrorsServiceMock = new Mock<IValidationResultsService>();
-            var submissionServiceMock = new Mock<ISubmissionService>();
+            var submissionServiceMock = new Mock<IJobService>();
             var reportServiceMock = new Mock<IStorageService>();
 
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(() => new FileUploadJob()

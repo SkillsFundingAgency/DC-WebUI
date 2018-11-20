@@ -14,16 +14,16 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
     [Route(AreaNames.Ilr + "/inprogress")]
     public class InProgressController : BaseController
     {
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
         private readonly IValidationResultsService _validationResultsService;
 
         public InProgressController(
-            ISubmissionService submissionService,
+            IJobService jobService,
             ILogger logger,
             IValidationResultsService validationResultsService)
             : base(logger)
         {
-            _submissionService = submissionService;
+            _jobService = jobService;
             _validationResultsService = validationResultsService;
         }
 
@@ -32,7 +32,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             ViewBag.AutoRefresh = true;
 
-            var job = await _submissionService.GetJob(Ukprn, jobId);
+            var job = await _jobService.GetJob(Ukprn, jobId);
             if (job == null)
             {
                 Logger.LogDebug($"Loading in progress page for job id : {jobId}, job not found");
@@ -59,7 +59,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             //if no error or warning then skip middle page
             if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0)
             {
-                await _submissionService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
+                await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
                 Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
                 return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId, IsCleanFile = true });
             }
