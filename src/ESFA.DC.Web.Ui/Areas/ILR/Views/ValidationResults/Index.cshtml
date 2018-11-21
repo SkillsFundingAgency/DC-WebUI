@@ -8,43 +8,47 @@
 
 }
 
-@if (Model.TotalErrors > 0)
-{
-    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">
-            ILR file not submitted
-        </h2>
-        <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-                <li>
-                    <p>There are errors and warnings for the learner data in your file.</p>
-                    @if (ViewData.ContainsKey(ViewDataConstants.NextReturnOpenDate))
-                    {
-                        <p>If you submit this file, we’ll process it when the next return period opens on @ViewData[ViewDataConstants.NextReturnOpenDate].</p>
-                    }
-                </li>
-            </ul>
-        </div>
-    </div>
-}
+
+
+
 
 <h1 class="govuk-heading-xl">
     ILR file not submitted
     <span class="govuk-caption-xl" collection="@Model.CollectionName"></span>
 </h1>
+<div class="govuk-inset-text">
+    @if ((@Model.TotalErrors > 0 || @Model.TotalWarnings > 0) && @Model.TotalDataMatchErrors == 0)
+    {
+        <p>There are errors and warnings for the learner data in your file.</p>
+    }
+    @if ((@Model.TotalErrors > 0 || @Model.TotalWarnings > 0) && @Model.TotalDataMatchErrors > 0)
+    {
+        <p>There are errors, warnings and data match problems for the learner data in your file.</p>
+    }
+    @if (@Model.TotalErrors == 0 && @Model.TotalWarnings == 0 && @Model.TotalDataMatchErrors > 0)
+    {
+        <p>There are data match problems for the learner data in your file.</p>
+    }
+    @if (ViewData.ContainsKey(ViewDataConstants.NextReturnOpenDate))
+    {
+        <p>If you submit this file, we’ll process it when the next return period opens on @ViewData[ViewDataConstants.NextReturnOpenDate].</p>
+    }
+</div>
 
-<p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners</p>
+@if (@Model.TotalErrors > 0 || @Model.TotalWarnings > 0)
+{
+    <p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners</p>
 
-<p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)</p>
+    <p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)</p>
 
-<p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
+    <p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
 
-<p>
-    @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
-</p>
+    <p>
+        @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
+    </p>
+}
 
-
-@if (Model.HasDataMatchReport)
+@if (Model.TotalDataMatchErrors > 0)
 {
     <h2 class="govuk-heading-m">Apprenticeships</h2>
     <p><span class="govuk-!-font-weight-bold">Total data match problems</span>: @Model.TotalDataMatchErrors (affecting @Model.TotalDataMatchLearners learners)</p>
@@ -58,7 +62,14 @@
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        You’ll only be paid for learners that do not have errors or data match problems with their data.
+        @if (@Model.TotalDataMatchErrors > 0)
+        {
+            @Html.Raw("You’ll only be paid for learners that do not have errors or data match problems with their data.");
+        }
+        else
+        {
+            @Html.Raw("You’ll only be paid for learners that do not have errors in their data.");
+        }
     </strong>
 </div>
 <form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">

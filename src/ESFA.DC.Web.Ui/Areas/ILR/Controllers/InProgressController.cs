@@ -57,7 +57,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             }
 
             //if no error or warning then skip middle page
-            if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0)
+            if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0 && valResult.TotalDataMatchErrors == 0)
             {
                 await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
                 Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
