@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using System.Web;
 using Autofac.Features.Indexed;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Extensions;
@@ -19,6 +21,7 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -31,17 +34,20 @@ namespace DC.Web.Ui.Services.Services
         private readonly string _apiBaseUrl;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger _logger;
 
         public JobService(
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ILogger logger)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -102,7 +108,9 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
         {
-            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{_dateTimeProvider.GetNowUtc().AddDays(-60)}/{_dateTimeProvider.GetNowUtc()}");
+            var url = $"{_apiBaseUrl}/{ukprn}/{_dateTimeProvider.GetNowUtc().AddDays(-60)}/{_dateTimeProvider.GetNowUtc()}";
+            _logger.LogInfo($"getting history url : {url}");
+            var data = await _httpClient.GetDataAsync(url);
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
