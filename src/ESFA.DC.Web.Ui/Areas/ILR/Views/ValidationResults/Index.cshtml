@@ -3,7 +3,7 @@
 @model ESFA.DC.Web.Ui.ViewModels.ValidationResultViewModel
 
 @{
-    ViewData["Title"] = "Problems with your data";
+    ViewData["Title"] = "ILR file not submitted";
     ViewData["BackUrl"] = $"/ilr/submission/{Model.CollectionName}";
 
 }
@@ -29,7 +29,7 @@
 }
 
 <h1 class="govuk-heading-xl">
-    Problems with your data
+    ILR file not submitted
     <span class="govuk-caption-xl" collection="@Model.CollectionName"></span>
 </h1>
 
@@ -39,15 +39,16 @@
 
 <p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
 
-@if (Model.HasDataMatchReport)
-{
-    <p><span class="govuk-!-font-weight-bold">Total data match problems</span>: @Model.TotalDataMatchErrors (affecting @Model.TotalDataMatchLearners learners)</p>
-}
 <p>
     @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
 </p>
+
+
 @if (Model.HasDataMatchReport)
 {
+    <h2 class="govuk-heading-m">Apprenticeships</h2>
+    <p><span class="govuk-!-font-weight-bold">Total data match problems</span>: @Model.TotalDataMatchErrors (affecting @Model.TotalDataMatchLearners learners)</p>
+
     <p>
         @Html.ActionLink($"Download data match report", "Download", "ValidationResults", new { reportType = "DataMatch" }) <span>(CSV,  @(Model.DataMatchReportFileSize)KB) showing all errors and warnings</span>
     </p>

@@ -13,6 +13,7 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
@@ -179,7 +180,8 @@ namespace DC.Web.Ui.Services.Tests
                 httpClient ?? httpClientMock.Object,
                 new ApiSettings(),
                 serializationService ?? jsonSerialisationMock.Object,
-                dateTimeprovider.Object);
+                dateTimeprovider.Object,
+                new Mock<ILogger>().Object);
         }
     }
 }
