@@ -108,7 +108,10 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
         {
-            var url = $"{_apiBaseUrl}/{ukprn}/{_dateTimeProvider.GetNowUtc().AddDays(-60)}/{_dateTimeProvider.GetNowUtc()}";
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-60).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}";
             _logger.LogInfo($"getting history url : {url}");
             var data = await _httpClient.GetDataAsync(url);
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
