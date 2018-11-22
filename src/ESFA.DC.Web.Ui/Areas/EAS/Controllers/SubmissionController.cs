@@ -54,7 +54,8 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
                 return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf, collectionName });
             }
 
-            return View();
+            var lastSubmission = await GetLastSubmission(collectionName);
+            return View(lastSubmission);
         }
 
         [HttpPost]

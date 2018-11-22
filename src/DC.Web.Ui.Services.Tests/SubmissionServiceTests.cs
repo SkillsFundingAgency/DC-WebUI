@@ -125,7 +125,7 @@ namespace DC.Web.Ui.Services.Tests
             confirmation.FileName.Should().Be("TEST.XML");
             confirmation.PeriodName.Should().Be("R01");
             confirmation.SubmittedBy.Should().Be("test user");
-            confirmation.SubmittedAt.Should().Be("10:20am on Wednesday 10 October 2018");
+            confirmation.SubmittedAtDateTime.Should().Be("10:20am on Wednesday 10 October 2018");
         }
 
         [Fact]

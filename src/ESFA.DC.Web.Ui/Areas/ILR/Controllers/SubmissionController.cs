@@ -58,7 +58,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData[TempDataConstants.ErrorMessage].ToString());
             }
 
-            return View();
+            var lastSubmission = await GetLastSubmission(collectionName);
+            return View(lastSubmission);
         }
 
         [HttpPost]

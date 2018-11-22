@@ -1,0 +1,14 @@
+﻿@model ESFA.DC.Web.Ui.ViewModels.FileUploadConfirmationViewModel
+
+@if (@Model != null)
+{
+    <div class="govuk-highlight-summary" aria-labelledby="highlight-summary-title" role="alert" tabindex="-1" data-module="highlight-summary">
+        <h2 class="govuk-highlight-summary__title" id="highlight-summary-title">
+            Last file submitted on @Model.SubmittedAtDate
+        </h2>
+        <div class="govuk-highlight-summary__body">
+            <p>@Model.SubmittedBy submitted file @Model.FileName</p>
+            <p> <a href="~/submission-results">View submission history</a></p>
+        </div>
+    </div>
+}

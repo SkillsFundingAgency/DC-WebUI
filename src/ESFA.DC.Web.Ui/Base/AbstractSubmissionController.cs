@@ -70,7 +70,7 @@ namespace DC.Web.Ui.Base
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
-                    SubmittedBy = User.NameIdentifier(),
+                    SubmittedBy = User.Name(),
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
@@ -100,6 +100,13 @@ namespace DC.Web.Ui.Base
         protected async Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName)
         {
             return await _collectionManagementService.GetNextPeriodAsync(collectionName);
+        }
+
+        protected async Task<FileUploadConfirmationViewModel> GetLastSubmission(string collectionName)
+        {
+            var latestJob = await _jobService.GetLatestJob(Ukprn, collectionName);
+            var jobViewModel = _jobService.ConvertToViewModel(latestJob);
+            return jobViewModel;
         }
     }
 }
