@@ -10,7 +10,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public string SubmittedBy { get; set; }
 
-        public string SubmittedAt { get; set; }
+        public string SubmittedAtDateTime { get; set; }
 
         public string PeriodName { get; set; }
 
@@ -19,6 +19,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public JobType JobType { get; set; }
 
         public string CollectionName { get; set; }
+
+        public string SubmittedAtDate { get; set; }
+
 
     }
 }

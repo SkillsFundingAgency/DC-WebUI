@@ -26,5 +26,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn);
 
         Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName);
+
+        FileUploadConfirmationViewModel ConvertToViewModel(FileUploadJob job);
     }
 }

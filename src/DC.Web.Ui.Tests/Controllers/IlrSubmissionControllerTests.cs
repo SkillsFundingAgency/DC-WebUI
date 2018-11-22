@@ -10,6 +10,7 @@ using DC.Web.Ui.ViewModels;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -42,7 +43,11 @@ namespace DC.Web.Ui.Tests.Controllers
             mockCollectionmanagementService.Setup(x => x.GetCurrentPeriodAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new ReturnPeriodViewModel(1));
 
-            var controller = GetController(null, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
+            var jobServiceMock = new Mock<IJobService>();
+            jobServiceMock.Setup(x => x.GetLatestJob(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(() => new FileUploadJob());
+
+            var controller = GetController(jobServiceMock.Object, FileNameValidationResult.Valid, mockCollectionmanagementService.Object);
             controller.TempData = tempData;
 
             var result = controller.Index("ILR1819").Result;
