@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Services.Services.Enums;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
@@ -43,6 +44,8 @@ namespace DC.Web.Ui.Services.Services
                 return null;
             }
 
+            var dataMatchSize = await GetFileSize(ukprn, jobId, jobType, dateTimeUtc, ValidationResultsReportType.DataMatch);
+
             return new ValidationResultViewModel()
             {
                 JobId = jobId,
@@ -51,8 +54,12 @@ namespace DC.Web.Ui.Services.Services
                 TotalWarningLearners = validationResult.TotalWarningLearners,
                 TotalWarnings = validationResult.TotalWarnings,
                 TotalLearners = validationResult.TotalLearners,
-                ReportFileSize = (await GetFileSize(ukprn, jobId, jobType, dateTimeUtc)).ToString("N1"),
-                ErrorMessage = validationResult.ErrorMessage
+                ReportFileSize = (await GetFileSize(ukprn, jobId, jobType, dateTimeUtc, ValidationResultsReportType.DetailedErrors)).ToString("N1"),
+                ErrorMessage = validationResult.ErrorMessage,
+                DataMatchReportFileSize = dataMatchSize.ToString("N1"),
+                HasDataMatchReport = dataMatchSize > 0,
+                TotalDataMatchErrors = validationResult.TotalDataMatchErrors,
+                TotalDataMatchLearners = validationResult.TotalDataMatchLearners
             };
         }
 
@@ -68,23 +75,23 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc)
+        public string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
-            var reportFileName = "{0}/{1}/Validation Errors Report {2}";
+            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "{0}/{1}/Validation Errors Report {2}" : "{0}/{1}/Apprenticeship Data Match Report {2}";
             var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
             return string.Format(reportFileName, ukprn, jobId, jobDateTime);
         }
 
-        public string GetReportFileName(DateTime dateTimeUtc)
+        public string GetReportFileName(DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
-            var reportFileName = "Validation Errors Report {0}";
+            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "Validation Errors Report {0}" : "Apprenticeship Data Match Report {0}";
             var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
             return string.Format(reportFileName, jobDateTime);
         }
 
-        public async Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc)
+        public async Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
-            var fileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc)}.csv";
+            var fileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc, whichReport)}.csv";
             return await _reportService.GetReportFileSizeAsync(fileName, jobType);
         }
     }

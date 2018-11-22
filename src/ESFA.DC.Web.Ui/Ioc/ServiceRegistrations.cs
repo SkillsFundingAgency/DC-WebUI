@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Ioc
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SubmissionService>().As<ISubmissionService>().InstancePerLifetimeScope();
+            builder.RegisterType<JobService>().As<IJobService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizationPolicyService>().As<IAuthorizationPolicyService>().InstancePerLifetimeScope();
             builder.RegisterType<PermissionsQueryService>().As<IPermissionsQueryService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();

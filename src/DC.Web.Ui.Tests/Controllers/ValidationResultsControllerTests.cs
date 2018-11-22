@@ -39,10 +39,10 @@ namespace DC.Web.Ui.Tests.Controllers
         }
 
         [Fact]
-        public void Download_Test()
+        public void Download_DetailedErrors_Test()
         {
             var controller = GetController();
-            var result = controller.Download(It.IsAny<long>()).Result;
+            var result = controller.Download(It.IsAny<long>(), Services.Services.Enums.ValidationResultsReportType.DetailedErrors).Result;
 
             result.Should().BeOfType(typeof(FileStreamResult));
         }
@@ -56,7 +56,7 @@ namespace DC.Web.Ui.Tests.Controllers
             };
 
             var validationErrorsServiceMock = new Mock<IValidationResultsService>();
-            var submissionServiceMock = new Mock<ISubmissionService>();
+            var submissionServiceMock = new Mock<IJobService>();
             var reportServiceMock = new Mock<IStorageService>();
 
             submissionServiceMock.Setup(x => x.GetJob(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(() => new FileUploadJob()

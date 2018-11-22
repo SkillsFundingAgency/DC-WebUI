@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using System.Web;
 using Autofac.Features.Indexed;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Extensions;
@@ -19,38 +21,33 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 
 namespace DC.Web.Ui.Services.Services
 {
-    public class SubmissionService : ISubmissionService
+    public class JobService : IJobService
     {
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _apiBaseUrl;
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IQueuePublishService<MessageCrossLoadDctToDcftDto> _queuePublishService;
-        private readonly CrossLoadMessageMapper _crossLoadMessageMapper;
-        private readonly IStorageService _reportService;
+        private readonly ILogger _logger;
 
-        public SubmissionService(
+        public JobService(
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
-            IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService,
-            CrossLoadMessageMapper crossLoadMessageMapper,
-            IStorageService reportService)
+            ILogger logger)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
-            _queuePublishService = queuePublishService;
-            _crossLoadMessageMapper = crossLoadMessageMapper;
-            _reportService = reportService;
+            _logger = logger;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -75,7 +72,8 @@ namespace DC.Web.Ui.Services.Services
                 PeriodNumber = submissionMessage.Period,
                 NotifyEmail = submissionMessage.NotifyEmail,
                 JobType = submissionMessage.JobType,
-                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null
+                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null,
+                CollectionYear = submissionMessage.CollectionYear
             };
 
             var response = await _httpClient.SendDataAsync($"{_apiBaseUrl}", job);
@@ -106,6 +104,28 @@ namespace DC.Web.Ui.Services.Services
         {
             var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/period/{period}");
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+        }
+
+        public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
+        {
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-60).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}";
+            _logger.LogInfo($"getting history url : {url}");
+            var data = await _httpClient.GetDataAsync(url);
+            return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+        }
+
+        public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{collectionName}/latest");
+            if (data == null)
+            {
+                return null;
+            }
+
+            return _serializationService.Deserialize<FileUploadJob>(data);
         }
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)

@@ -12,12 +12,12 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
     [Route(AreaNames.Esf + "/inprogress")]
     public class InProgressController : BaseController
     {
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
 
-        public InProgressController(ISubmissionService submissionService, ILogger logger)
+        public InProgressController(IJobService jobService, ILogger logger)
             : base(logger)
         {
-            _submissionService = submissionService;
+            _jobService = jobService;
         }
 
         [Route("{jobId}")]

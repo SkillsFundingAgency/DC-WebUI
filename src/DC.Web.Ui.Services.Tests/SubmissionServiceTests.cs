@@ -13,6 +13,7 @@ using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Dto;
 using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
@@ -38,7 +39,7 @@ namespace DC.Web.Ui.Services.Tests
         {
             var service = GetService();
 
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100, 10)
+            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100)
             {
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
@@ -46,7 +47,8 @@ namespace DC.Web.Ui.Services.Tests
                 FileSizeBytes = 100,
                 NotifyEmail = "test@test.com",
                 Period = 10,
-                StorageReference = "test"
+                StorageReference = "test",
+                CollectionYear = 1819
             };
 
             var result = service.SubmitJob(job).Result;
@@ -152,7 +154,7 @@ namespace DC.Web.Ui.Services.Tests
             result.Should().Be("1");
         }
 
-        private ISubmissionService GetService(
+        private IJobService GetService(
             IBespokeHttpClient httpClient = null,
             IJsonSerializationService serializationService = null,
             IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService = null,
@@ -174,14 +176,12 @@ namespace DC.Web.Ui.Services.Tests
                 Ukprn = 1000,
                 JobId = 10
             });
-            return new SubmissionService(
+            return new JobService(
                 httpClient ?? httpClientMock.Object,
                 new ApiSettings(),
                 serializationService ?? jsonSerialisationMock.Object,
                 dateTimeprovider.Object,
-                queuePublishService ?? It.IsAny<IQueuePublishService<MessageCrossLoadDctToDcftDto>>(),
-                new CrossLoadMessageMapper(),
-                reportService ?? It.IsAny<IStorageService>());
+                new Mock<ILogger>().Object);
         }
     }
 }

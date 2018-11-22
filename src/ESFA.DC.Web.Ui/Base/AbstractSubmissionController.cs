@@ -17,7 +17,7 @@ namespace DC.Web.Ui.Base
 {
     public abstract class AbstractSubmissionController : BaseController
     {
-        private readonly ISubmissionService _submissionService;
+        private readonly IJobService _jobService;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IStreamableKeyValuePersistenceService _storageService;
         private readonly JobType _jobType;
@@ -25,14 +25,14 @@ namespace DC.Web.Ui.Base
 
         protected AbstractSubmissionController(
             JobType jobType,
-            ISubmissionService submissionService,
+            IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
             : base(logger)
         {
-            _submissionService = submissionService;
+            _jobService = jobService;
             _collectionManagementService = collectionManagementService;
             _storageService = storagePersistenceServices[jobType];
             _jobType = jobType;
@@ -43,7 +43,8 @@ namespace DC.Web.Ui.Base
         {
             long jobId;
 
-            if (!(await IsValidCollection(collectionName)))
+            var collection = await _collectionManagementService.GetCollectionAsync(Ukprn, collectionName);
+            if (collection == null || !collection.IsOpen)
             {
                 Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available, but file is being uploaded");
                 throw new ArgumentOutOfRangeException(collectionName);
@@ -65,15 +66,16 @@ namespace DC.Web.Ui.Base
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
 
                 // add to the queue
-                jobId = await _submissionService.SubmitJob(new SubmissionMessageViewModel(_jobType, Ukprn, Upin)
+                jobId = await _jobService.SubmitJob(new SubmissionMessageViewModel(_jobType, Ukprn)
                 {
                     FileName = fileName,
                     FileSizeBytes = file.Length,
-                    SubmittedBy = User.Name(),
+                    SubmittedBy = User.NameIdentifier(),
                     CollectionName = collectionName,
                     Period = period.PeriodNumber,
                     NotifyEmail = User.Email(),
-                    StorageReference = _storageKeyValueConfig.ContainerName
+                    StorageReference = _storageKeyValueConfig.ContainerName,
+                    CollectionYear = collection.CollectionYear
                 });
             }
             catch (Exception ex)

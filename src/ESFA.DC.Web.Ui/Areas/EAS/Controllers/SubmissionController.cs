@@ -21,13 +21,13 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
         private readonly IFileNameValidationService _fileNameValidationService;
 
         public SubmissionController(
-            ISubmissionService submissionService,
+            IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.EasSubmission, submissionService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            : base(JobType.EasSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
             _fileNameValidationService = fileNameValidationServices[JobType.EasSubmission];
         }
@@ -63,7 +63,7 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName, IFormFile file, bool confirm)
         {
-            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn);
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);

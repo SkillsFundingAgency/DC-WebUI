@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.24-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.27-beta0001" />
     <PackageReference Include="ESFA.DC.JobStatus" Version="0.1.12-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Json" Version="0.1.4-beta0001" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />

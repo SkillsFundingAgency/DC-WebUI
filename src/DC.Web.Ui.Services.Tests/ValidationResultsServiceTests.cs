@@ -22,21 +22,39 @@ namespace DC.Web.Ui.Services.Tests
     public class ValidationResultsServiceTests
     {
         [Fact]
-        public void ReportFileName_Success()
+        public void ReportFileName_DetailedErrors_Success()
         {
             var service = GetService();
 
-            var fileName = service.GetReportFileName(new DateTime(2018, 10, 10, 20, 30, 40));
+            var fileName = service.GetReportFileName(new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DetailedErrors);
             fileName.Should().Be("Validation Errors Report 20181010-203040");
         }
 
         [Fact]
-        public void GetStorageFileName_Success()
+        public void ReportFileName_DataMatch_Success()
         {
             var service = GetService();
 
-            var fileName = service.GetStorageFileName(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40));
+            var fileName = service.GetReportFileName(new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DataMatch);
+            fileName.Should().Be("Apprenticeship Data Match Report 20181010-203040");
+        }
+
+        [Fact]
+        public void GetStorageFileName_DetailedErrors_Success()
+        {
+            var service = GetService();
+
+            var fileName = service.GetStorageFileName(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DetailedErrors);
             fileName.Should().Be("1000/500/Validation Errors Report 20181010-203040");
+        }
+
+        [Fact]
+        public void GetStorageFileName_DataMatch_Success()
+        {
+            var service = GetService();
+
+            var fileName = service.GetStorageFileName(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DataMatch);
+            fileName.Should().Be("1000/500/Apprenticeship Data Match Report 20181010-203040");
         }
 
         [Fact]
