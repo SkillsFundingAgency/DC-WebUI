@@ -95,6 +95,7 @@ namespace DC.Web.Ui.Controllers
                 ReportsFileName = $"{x.JobId}_Reports.zip",
                 Status = x.Status,
                 DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat(),
+                SubmittedBy = x.SubmittedBy
             }));
 
             return jobsViewList;
