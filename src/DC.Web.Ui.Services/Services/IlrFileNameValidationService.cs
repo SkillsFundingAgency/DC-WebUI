@@ -124,7 +124,7 @@ namespace DC.Web.Ui.Services.Services
         public bool LaterFileExists(long ukprn, string fileName, string collectionName)
         {
             var job = _jobService.GetLatestJob(ukprn, collectionName).Result;
-            if (job == null)
+            if (job?.JobId == 0)
             {
                 return false;
             }
