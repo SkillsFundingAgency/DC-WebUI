@@ -13,6 +13,7 @@
     <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="col">Date</th>
         <th class="govuk-table__header" scope="col">File</th>
+        <th class="govuk-table__header" scope="col">Submitted by</th>
         <th class="govuk-table__header" scope="col">Reports</th>
     
     </tr>
@@ -21,10 +22,12 @@
     @foreach (var historyViewModel in Model)
     {
         <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</th>
+            <td class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</td>
             <td class="govuk-table__cell">
                 @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "SubmissionResults",new {JobId =  @historyViewModel.JobId})
             </td>
+            <td class="govuk-table__cell" scope="row">@historyViewModel.SubmittedBy</td>
+
             <td class="govuk-table__cell">
                 @if (historyViewModel.Status == JobStatusType.Completed)
                 {
