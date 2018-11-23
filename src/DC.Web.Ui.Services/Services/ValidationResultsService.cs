@@ -77,14 +77,14 @@ namespace DC.Web.Ui.Services.Services
 
         public string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
-            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "{0}/{1}/Validation Errors Report {2}" : "{0}/{1}/Apprenticeship Data Match Report {2}";
+            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "{0}/{1}/Rule Violation Report {2}" : "{0}/{1}/Apprenticeship Data Match Report {2}";
             var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
             return string.Format(reportFileName, ukprn, jobId, jobDateTime);
         }
 
         public string GetReportFileName(DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
-            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "Validation Errors Report {0}" : "Apprenticeship Data Match Report {0}";
+            var reportFileName = whichReport == ValidationResultsReportType.DetailedErrors ? "Rule Violation Report {0}" : "Apprenticeship Data Match Report {0}";
             var jobDateTime = _dateTimeProvider.ConvertUtcToUk(dateTimeUtc).ToString("yyyyMMdd-HHmmss");
             return string.Format(reportFileName, jobDateTime);
         }
