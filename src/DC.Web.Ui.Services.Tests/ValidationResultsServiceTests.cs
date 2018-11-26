@@ -27,7 +27,7 @@ namespace DC.Web.Ui.Services.Tests
             var service = GetService();
 
             var fileName = service.GetReportFileName(new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DetailedErrors);
-            fileName.Should().Be("Validation Errors Report 20181010-203040");
+            fileName.Should().Be("Rule Violation Report 20181010-203040");
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace DC.Web.Ui.Services.Tests
             var service = GetService();
 
             var fileName = service.GetStorageFileName(1000, 500, new DateTime(2018, 10, 10, 20, 30, 40), Services.Enums.ValidationResultsReportType.DetailedErrors);
-            fileName.Should().Be("1000/500/Validation Errors Report 20181010-203040");
+            fileName.Should().Be("1000/500/Rule Violation Report 20181010-203040");
         }
 
         [Fact]
