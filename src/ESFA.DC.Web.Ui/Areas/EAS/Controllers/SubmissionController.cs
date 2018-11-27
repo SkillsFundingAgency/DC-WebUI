@@ -70,14 +70,17 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
-                return View();
+                var lastSubmission = await GetLastSubmission(collectionName);
+                return View(lastSubmission);
             }
 
             if (!confirm)
             {
                 AddError(ErrorMessageKeys.Submission_CheckboxFieldKey, "You must agree to this statement before you can upload a file");
                 AddError(ErrorMessageKeys.ErrorSummaryKey, "Check confirmation box");
-                return View();
+
+                var lastSubmission = await GetLastSubmission(collectionName);
+                return View(lastSubmission);
             }
 
             var jobId = await SubmitJob(collectionName, file);

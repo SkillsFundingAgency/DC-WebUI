@@ -76,7 +76,8 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
-                return View();
+                var lastSubmission = await GetLastSubmission(collectionName);
+                return View(lastSubmission);
             }
 
             var jobId = await SubmitJob(collectionName, file);
