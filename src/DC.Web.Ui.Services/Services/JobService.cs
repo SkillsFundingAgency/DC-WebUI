@@ -175,7 +175,7 @@ namespace DC.Web.Ui.Services.Services
                 case JobType.EsfSubmission:
                     return string.Concat("R", period.ToString("00"), " supplementary data file submitted");
                 case JobType.EasSubmission:
-                    return string.Concat("R", period.ToString("00"), " EAS statement updated");
+                    return "EAS statement updated";
             }
 
             return string.Empty;
