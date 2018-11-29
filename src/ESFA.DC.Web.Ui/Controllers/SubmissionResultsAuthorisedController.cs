@@ -18,13 +18,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Controllers
 {
     [Route("submission-results")]
-    public class SubmissionResultsController : BaseController
+    public class SubmissionResultsAuthorisedController : BaseAuthorisedController
     {
         private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SubmissionResultsController(IJobService jobService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
+        public SubmissionResultsAuthorisedController(IJobService jobService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
             : base(logger)
         {
             _jobService = jobService;

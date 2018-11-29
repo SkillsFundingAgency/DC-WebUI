@@ -5,7 +5,6 @@ using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
@@ -15,24 +14,24 @@ using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.ESF.Controllers
+namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    [Area(AreaNames.Esf)]
-    [Route(AreaNames.Esf + "/submission")]
-    public class SubmissionController : AbstractSubmissionController
+    [Area(AreaNames.Ilr)]
+    [Route(AreaNames.Ilr + "/submission")]
+    public class SubmissionAuthorisedController : AbstractSubmissionAuthorisedController
     {
         private readonly IFileNameValidationService _fileNameValidationService;
 
-        public SubmissionController(
+        public SubmissionAuthorisedController(
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.EsfSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            : base(JobType.IlrSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationServices[JobType.EsfSubmission];
+            _fileNameValidationService = fileNameValidationServices[JobType.IlrSubmission];
         }
 
         [HttpGet]
@@ -48,13 +47,15 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             if (!(await IsValidCollection(collectionName)))
             {
                 Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available");
-                return RedirectToAction("Index", "ReturnWindowClosed");
+                return RedirectToAction("Index", "ReturnWindowClosedAuthorised");
             }
 
-            if (await GetCurrentPeriodAsync(collectionName) == null)
+            await SetupNextPeriod(collectionName);
+
+            if (TempData.ContainsKey(TempDataConstants.ErrorMessage))
             {
-                Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf, collectionName });
+                AddError(ErrorMessageKeys.ErrorSummaryKey, TempData[TempDataConstants.ErrorMessage].ToString());
+                AddError(ErrorMessageKeys.Submission_FileFieldKey, TempData[TempDataConstants.ErrorMessage].ToString());
             }
 
             var lastSubmission = await GetLastSubmission(collectionName);
@@ -67,6 +68,8 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName, IFormFile file)
         {
+            await SetupNextPeriod(collectionName);
+
             var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
@@ -78,7 +81,23 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             }
 
             var jobId = await SubmitJob(collectionName, file);
-            return RedirectToAction("Index", "InProgress", new { area = AreaNames.Esf, jobId });
+            return RedirectToAction("Index", "InProgressAuthorised", new { area = AreaNames.Ilr, jobId });
+        }
+
+        private async Task SetupNextPeriod(string collectionName)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+            {
+                return;
+            }
+
+            if (await GetCurrentPeriodAsync(collectionName) == null)
+            {
+                Logger.LogWarning($"No active period for collection : {collectionName}");
+
+                var nextPeriod = await GetNextPeriodAsync(collectionName);
+                ViewData[ViewDataConstants.NextReturnOpenDate] = nextPeriod?.NextOpeningDate;
+            }
         }
     }
 }

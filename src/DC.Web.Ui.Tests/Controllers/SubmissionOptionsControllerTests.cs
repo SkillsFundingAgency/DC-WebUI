@@ -40,7 +40,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var service = new Mock<ICollectionManagementService>();
             service.Setup(x => x.GetSubmssionOptionsAsync(It.IsAny<long>())).ReturnsAsync(() => items);
 
-            var controller = new SubmissionOptionsController(service.Object, mockLogger.Object);
+            var controller = new SubmissionOptionsAuthorisedController(service.Object, mockLogger.Object);
             var result = controller.Index().Result;
 
             result.Should().BeOfType(typeof(ViewResult));

@@ -36,6 +36,10 @@ namespace DC.Web.Ui.Ioc
                 .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission).SingleInstance();
 
             builder.Register(c => configuration.GetConfigSection<CrossLoadingQueueConfiguration>()).As<IQueueConfiguration>().SingleInstance();
+
+            builder.Register(c =>
+                    configuration.GetConfigSection<GoogleTrackingSettings>())
+                .As<GoogleTrackingSettings>().SingleInstance();
         }
     }
 }

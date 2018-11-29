@@ -24,14 +24,14 @@
         <tr class="govuk-table__row">
             <td class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</td>
             <td class="govuk-table__cell">
-                @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "SubmissionResults",new {JobId =  @historyViewModel.JobId})
+                @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "SubmissionResultsAuthorised",new {JobId =  @historyViewModel.JobId})
             </td>
             <td class="govuk-table__cell" scope="row">@historyViewModel.SubmittedBy</td>
 
             <td class="govuk-table__cell">
                 @if (historyViewModel.Status == JobStatusType.Completed)
                 {
-                    @Html.ActionLink(@historyViewModel.ReportsFileName, "DownloadReport", "SubmissionResults", new { JobId = @historyViewModel.JobId })
+                    @Html.ActionLink(@historyViewModel.ReportsFileName, "DownloadReport", "SubmissionResultsAuthorised", new { JobId = @historyViewModel.JobId })
                 }
                 else if (historyViewModel.Status == JobStatusType.Failed || historyViewModel.Status == JobStatusType.FailedRetry)
                 {

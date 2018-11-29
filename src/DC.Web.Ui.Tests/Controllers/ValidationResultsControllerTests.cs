@@ -47,7 +47,7 @@ namespace DC.Web.Ui.Tests.Controllers
             result.Should().BeOfType(typeof(FileStreamResult));
         }
 
-        private ValidationResultsController GetController()
+        private ValidationResultsAuthorisedController GetController()
         {
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>())
@@ -82,7 +82,7 @@ namespace DC.Web.Ui.Tests.Controllers
             reportServiceMock.Setup(x => x.GetBlobFileStreamAsync(It.IsAny<string>(), It.IsAny<JobType>()))
                 .ReturnsAsync(() => new MemoryStream());
 
-            var controller = new ValidationResultsController(
+            var controller = new ValidationResultsAuthorisedController(
                 validationErrorsServiceMock.Object,
                 submissionServiceMock.Object,
                 reportServiceMock.Object,

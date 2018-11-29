@@ -126,7 +126,7 @@ namespace DC.Web.Ui.Tests.Controllers
             result.Should().BeOfType(typeof(ViewResult));
         }
 
-        private SubmissionController GetController(IJobService jobService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid, ICollectionManagementService collectionManagementService = null)
+        private SubmissionAuthorisedController GetController(IJobService jobService, FileNameValidationResult fileNameValidationResult = FileNameValidationResult.Valid, ICollectionManagementService collectionManagementService = null)
         {
             var fileNameValidationResultViewModel = new FileNameValidationResultViewModel()
             {
@@ -162,7 +162,7 @@ namespace DC.Web.Ui.Tests.Controllers
             var filevalidationServicesMock = new Mock<IIndex<JobType, IFileNameValidationService>>();
             filevalidationServicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockFilenameValidationService.Object);
 
-            var controller = new SubmissionController(
+            var controller = new SubmissionAuthorisedController(
                 jobService,
                 new Mock<ILogger>().Object,
                 collectionManagementService ?? mockCollectionmanagementService.Object,

@@ -44,7 +44,7 @@
     <p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
 
     <p>
-        @Html.ActionLink($"Download detailed report", "Download", "ValidationResults", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
+        @Html.ActionLink($"Download detailed report", "Download", "ValidationResultsAuthorised", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>
     </p>
 }
 
@@ -54,7 +54,7 @@
     <p><span class="govuk-!-font-weight-bold">Total data match problems</span>: @Model.TotalDataMatchErrors (affecting @Model.TotalDataMatchLearners learners)</p>
 
     <p>
-        @Html.ActionLink($"Download data match report", "Download", "ValidationResults", new { reportType = "DataMatch" }) <span>(CSV,  @(Model.DataMatchReportFileSize)KB) showing all errors and warnings</span>
+        @Html.ActionLink($"Download data match report", "Download", "ValidationResultsAuthorised", new { reportType = "DataMatch" }) <span>(CSV,  @(Model.DataMatchReportFileSize)KB) showing all errors and warnings</span>
     </p>
 }
 
@@ -72,7 +72,7 @@
         }
     </strong>
 </div>
-<form asp-controller="ValidationResults" asp-action="SubmitAnyway" method="post" id="valForm">
+<form asp-controller="ValidationResultsAuthorised" asp-action="SubmitAnyway" method="post" id="valForm">
 
     <button class="govuk-button" type="submit">
         Submit anyway
@@ -80,6 +80,6 @@
 </form>
 
 <p>
-    @Html.ActionLink("Go back and upload an updated file", "SubmitAnother", "ValidationResults")
+    @Html.ActionLink("Go back and upload an updated file", "SubmitAnother", "ValidationResultsAuthorised")
 
 </p>

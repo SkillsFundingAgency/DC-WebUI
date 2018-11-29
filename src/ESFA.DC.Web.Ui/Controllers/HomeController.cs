@@ -8,7 +8,7 @@ namespace DC.Web.Ui.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "SubmissionOptions");
+                return RedirectToAction("Index", "SubmissionOptionsAuthorised");
             }
 
             return View();
