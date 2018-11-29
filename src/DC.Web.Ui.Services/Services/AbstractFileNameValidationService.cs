@@ -17,11 +17,13 @@ namespace DC.Web.Ui.Services.Services
     {
         private readonly IKeyValuePersistenceService _persistenceService;
         private readonly FeatureFlags _featureFlags;
+        private readonly IJobService _jobService;
 
-        protected AbstractFileNameValidationService(IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
+        protected AbstractFileNameValidationService(IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags, IJobService jobService)
         {
             _persistenceService = persistenceService;
             _featureFlags = featureFlags;
+            _jobService = jobService;
         }
 
         protected abstract IEnumerable<string> FileNameExtensions { get; }
@@ -29,6 +31,8 @@ namespace DC.Web.Ui.Services.Services
         protected abstract Regex FileNameRegex { get; }
 
         public abstract Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn, string collectionName);
+
+        public abstract DateTime GetFileDateTime(string fileName);
 
         public FileNameValidationResultViewModel ValidateEmptyFile(string fileName, long? fileSize)
         {
@@ -118,6 +122,34 @@ namespace DC.Web.Ui.Services.Services
                             "You have already uploaded a file with the same filename. Upload a file with a different filename"
                     };
                 }
+            }
+
+            return null;
+        }
+
+        public FileNameValidationResultViewModel LaterFileExists(long ukprn, string fileName, string collectionName)
+        {
+            var job = _jobService.GetLatestJob(ukprn, collectionName).Result;
+            if (job == null || job.JobId == 0)
+            {
+                return null;
+            }
+
+            if (!IsValidRegex(fileName))
+            {
+                return null;
+            }
+
+            var fileDateTime = GetFileDateTime(fileName);
+            var existingJobFileDateTime = GetFileDateTime(job.FileName.Split('/')[1]);
+            if (fileDateTime < existingJobFileDateTime)
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.LaterFileAlreadySubmitted,
+                    FieldError = "The date/time of the file is earlier than a previous transmission for this collection",
+                    SummaryError = "The date/time of the file is earlier than a previous transmission for this collection"
+                };
             }
 
             return null;

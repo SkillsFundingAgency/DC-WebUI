@@ -15,8 +15,8 @@ namespace DC.Web.Ui.Services.Services
 {
     public class EsfFileNameValidationService : AbstractFileNameValidationService
     {
-        public EsfFileNameValidationService([KeyFilter(JobType.EsfSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
-            : base(persistenceService, featureFlags)
+        public EsfFileNameValidationService([KeyFilter(JobType.EsfSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags, IJobService jobService)
+            : base(persistenceService, featureFlags, jobService)
         {
         }
 
@@ -56,10 +56,26 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
+            result = LaterFileExists(ukprn, fileName, collectionName);
+            if (result != null)
+            {
+                return result;
+            }
+
             return new FileNameValidationResultViewModel()
             {
                 ValidationResult = FileNameValidationResult.Valid
             };
+        }
+
+        public override DateTime GetFileDateTime(string fileName)
+        {
+            var matches = FileNameRegex.Match(fileName);
+
+            return DateTime.ParseExact(
+                $"{matches.Groups[4].Value}-{matches.Groups[8].Value}",
+                "yyyyMMdd-HHmmss",
+                System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }
