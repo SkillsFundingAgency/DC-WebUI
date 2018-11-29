@@ -8,7 +8,7 @@
     ViewData["Title"] = "What do you want to submit?";
 }
 
-<form asp-controller="SubmissionOptions" asp-action="Submit" method="post" id="choiceform">
+<form asp-controller="SubmissionOptionsAuthorised" asp-action="Submit" method="post" id="choiceform">
     <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.SubmissionOptions_OptionsFieldKey)">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">

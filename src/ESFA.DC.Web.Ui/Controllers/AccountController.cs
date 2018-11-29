@@ -19,7 +19,7 @@ namespace DC.Web.Ui.Controllers
         [HttpGet]
         public IActionResult PostSignIn()
         {
-            return RedirectToAction("Index", "SubmissionOptions");
+            return RedirectToAction("Index", "SubmissionOptionsAuthorised");
         }
 
         [HttpGet]
@@ -39,7 +39,7 @@ namespace DC.Web.Ui.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // Redirect to home page if the user is authenticated.
-                return RedirectToAction("Index", "SubmissionOptions");
+                return RedirectToAction("Index", "SubmissionOptionsAuthorised");
             }
 
             return RedirectToAction("Index", "Home");

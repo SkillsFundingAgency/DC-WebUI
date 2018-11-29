@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Controllers
 {
     [Route("submission-options")]
-    public class SubmissionOptionsController : BaseController
+    public class SubmissionOptionsAuthorisedController : BaseAuthorisedController
     {
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly string _summaryErrorMessage = "Check data you want to submit";
 
-        public SubmissionOptionsController(ICollectionManagementService collectionManagementService, ILogger logger)
+        public SubmissionOptionsAuthorisedController(ICollectionManagementService collectionManagementService, ILogger logger)
             : base(logger)
         {
             _collectionManagementService = collectionManagementService;
@@ -66,10 +66,10 @@ namespace DC.Web.Ui.Controllers
         {
             if (submissionType.Equals("Reports", StringComparison.CurrentCultureIgnoreCase))
             {
-                return RedirectToAction("Index", "SubmissionResults");
+                return RedirectToAction("Index", "SubmissionResultsAuthorised");
             }
 
-            return RedirectToAction("Index", "CollectionOptions", new { collectionType = submissionType });
+            return RedirectToAction("Index", "CollectionOptionsAuthorised", new { collectionType = submissionType });
         }
     }
 }

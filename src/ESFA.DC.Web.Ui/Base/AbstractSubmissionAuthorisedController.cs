@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DC.Web.Ui.Base
 {
-    public abstract class AbstractSubmissionController : BaseController
+    public abstract class AbstractSubmissionAuthorisedController : BaseAuthorisedController
     {
         private readonly IJobService _jobService;
         private readonly ICollectionManagementService _collectionManagementService;
@@ -23,7 +23,7 @@ namespace DC.Web.Ui.Base
         private readonly JobType _jobType;
         private readonly IAzureStorageKeyValuePersistenceServiceConfig _storageKeyValueConfig;
 
-        protected AbstractSubmissionController(
+        protected AbstractSubmissionAuthorisedController(
             JobType jobType,
             IJobService jobService,
             ILogger logger,

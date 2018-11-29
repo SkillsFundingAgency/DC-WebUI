@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    public class CollectionOptionsController : BaseController
+    public class CollectionOptionsAuthorisedController : BaseAuthorisedController
     {
         private readonly ICollectionManagementService _collectionManagementService;
 
-        public CollectionOptionsController(ICollectionManagementService collectionManagementService, ILogger logger)
+        public CollectionOptionsAuthorisedController(ICollectionManagementService collectionManagementService, ILogger logger)
             : base(logger)
         {
             _collectionManagementService = collectionManagementService;
@@ -32,13 +32,13 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 //if there is only one then redirect to submission page
                 if (data.Count() == 1)
                 {
-                   return RedirectToAction("Index", "Submission", new { area= collectionType.ToLower(), data.First().CollectionName });
+                   return RedirectToAction("Index", "SubmissionAuthorised", new { area= collectionType.ToLower(), data.First().CollectionName });
                 }
 
                 return View(data);
             }
 
-            return RedirectToAction("Index", "ReturnWindowClosed", new { area = collectionType.ToLower() });
+            return RedirectToAction("Index", "ReturnWindowClosedAuthorised", new { area = collectionType.ToLower() });
         }
     }
 }

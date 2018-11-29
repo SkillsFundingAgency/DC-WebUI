@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Base
 {
     [Authorize]
-    public abstract class BaseController : Controller
+    public abstract class BaseAuthorisedController : Controller
     {
-        protected BaseController(ILogger logger)
+        protected BaseAuthorisedController(ILogger logger)
         {
             Logger = logger;
         }

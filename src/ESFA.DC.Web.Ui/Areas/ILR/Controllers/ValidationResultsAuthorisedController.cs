@@ -14,14 +14,14 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 {
     [Area(AreaNames.Ilr)]
     [Route("ilr/validation-results")]
-    public class ValidationResultsController : BaseController
+    public class ValidationResultsAuthorisedController : BaseAuthorisedController
     {
         private readonly IValidationResultsService _validationResultsService;
         private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly ICollectionManagementService _collectionManagementService;
 
-        public ValidationResultsController(
+        public ValidationResultsAuthorisedController(
             IValidationResultsService validationResultsService,
             IJobService jobService,
             IStorageService reportService,
@@ -71,7 +71,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
 
             await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
             Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
-            return RedirectToAction("Index", "SubmissionConfirmation", new { area = string.Empty, jobId = jobId });
+            return RedirectToAction("Index", "SubmissionConfirmationAuthorised", new { area = string.Empty, jobId = jobId });
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             await _jobService.UpdateJobStatus(jobId, JobStatusType.Completed);
             Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
 
-            return RedirectToAction("Index", "Submission", new { area = AreaNames.Ilr, job.CollectionName });
+            return RedirectToAction("Index", "SubmissionAuthorised", new { area = AreaNames.Ilr, job.CollectionName });
         }
 
         [Route("Download/{jobId}")]

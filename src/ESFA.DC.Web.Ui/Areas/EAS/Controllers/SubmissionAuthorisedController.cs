@@ -16,11 +16,11 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
 {
     [Area(AreaNames.Eas)]
     [Route(AreaNames.Eas + "/submission")]
-    public class SubmissionController : AbstractSubmissionController
+    public class SubmissionAuthorisedController : AbstractSubmissionAuthorisedController
     {
         private readonly IFileNameValidationService _fileNameValidationService;
 
-        public SubmissionController(
+        public SubmissionAuthorisedController(
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
@@ -45,13 +45,13 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
             if (!(await IsValidCollection(collectionName)))
             {
                 Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available");
-                return RedirectToAction("Index", "ReturnWindowClosed");
+                return RedirectToAction("Index", "ReturnWindowClosedAuthorised");
             }
 
             if (await GetCurrentPeriodAsync(collectionName) == null)
             {
                 Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf, collectionName });
+                return RedirectToAction("Index", "ReturnWindowClosedAuthorised", new { area = AreaNames.Esf, collectionName });
             }
 
             var lastSubmission = await GetLastSubmission(collectionName);
@@ -84,7 +84,7 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
             }
 
             var jobId = await SubmitJob(collectionName, file);
-            return RedirectToAction("Index", "InProgress", new { area = AreaNames.Esf, jobId });
+            return RedirectToAction("Index", "InProgressAuthorised", new { area = AreaNames.Esf, jobId });
         }
     }
 }

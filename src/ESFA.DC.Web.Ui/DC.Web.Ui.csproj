@@ -144,13 +144,13 @@
     <Content Update="appsettings.salman.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Areas\EAS\Views\InProgress\Index.cshtml">
+    <Content Update="Areas\EAS\Views\InProgressAuthorised\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\EAS\Views\ReturnWindowClosed\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Areas\EAS\Views\Submission\Index.cshtml">
+    <Content Update="Areas\EAS\Views\SubmissionAuthorised\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\EAS\Views\_ViewImports.cshtml">
@@ -159,7 +159,7 @@
     <Content Update="Areas\EAS\_ViewStart.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Areas\ESF\Views\InProgress\Index.cshtml">
+    <Content Update="Areas\ESF\Views\InProgressAuthorised\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\ESF\Views\ReturnWindowClosed\Index.cshtml">
@@ -185,8 +185,8 @@
     <Folder Include="Views\Claims\" />
     <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
-    <Folder Include="Areas\ILR\Views\Submission\" />
-    <Folder Include="Areas\ILR\Views\ValidationResults\" />
+    <Folder Include="Areas\ILR\Views\SubmissionAuthorised\" />
+    <Folder Include="Areas\ILR\Views\ValidationResultsAuthorised\" />
     <Folder Include="wwwroot\assets\minified\" />
     <Folder Include="wwwroot\assets\stylesheets\" />
   </ItemGroup>

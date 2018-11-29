@@ -10,11 +10,11 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
 {
     [Area(AreaNames.Eas)]
     [Route(AreaNames.Eas + "/inprogress")]
-    public class InProgressController : BaseController
+    public class InProgressAuthorisedController : BaseAuthorisedController
     {
         private readonly IJobService _jobService;
 
-        public InProgressController(IJobService jobService, ILogger logger)
+        public InProgressAuthorisedController(IJobService jobService, ILogger logger)
             : base(logger)
         {
             _jobService = jobService;
@@ -30,7 +30,7 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
             //    return View();
             //}
 
-            return RedirectToAction("Index", "SubmissionConfirmation", new { area= string.Empty, jobId });
+            return RedirectToAction("Index", "SubmissionConfirmationAuthorised", new { area= string.Empty, jobId });
         }
     }
 }
