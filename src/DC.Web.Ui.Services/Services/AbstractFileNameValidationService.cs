@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
@@ -18,12 +20,24 @@ namespace DC.Web.Ui.Services.Services
         private readonly IKeyValuePersistenceService _persistenceService;
         private readonly FeatureFlags _featureFlags;
         private readonly IJobService _jobService;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IBespokeHttpClient _httpClient;
+        private readonly string _apiBaseUrl;
 
-        protected AbstractFileNameValidationService(IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags, IJobService jobService)
+        protected AbstractFileNameValidationService(
+            IKeyValuePersistenceService persistenceService,
+            FeatureFlags featureFlags,
+            IJobService jobService,
+            IDateTimeProvider dateTimeProvider,
+            IBespokeHttpClient httpClient,
+            ApiSettings apiSettings)
         {
             _persistenceService = persistenceService;
             _featureFlags = featureFlags;
             _jobService = jobService;
+            _dateTimeProvider = dateTimeProvider;
+            _httpClient = httpClient;
+            _apiBaseUrl = apiSettings?.JobManagementApiBaseUrl;
         }
 
         protected abstract IEnumerable<string> FileNameExtensions { get; }
@@ -149,6 +163,42 @@ namespace DC.Web.Ui.Services.Services
                     ValidationResult = FileNameValidationResult.LaterFileAlreadySubmitted,
                     FieldError = "The date/time of the file is earlier than a previous transmission for this collection",
                     SummaryError = "The date/time of the file is earlier than a previous transmission for this collection"
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<bool> IsProviderValidForSubmission(params string[] parameters)
+        {
+            var parametersString = string.Join("/", parameters);
+
+            try
+            {
+                await _httpClient.GetDataAsync($"{_apiBaseUrl}/file-validation/{parametersString}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public FileNameValidationResultViewModel IsFileAfterCurrentDateTime(long ukprn, string fileName, string collectionName)
+        {
+            if (!IsValidRegex(fileName))
+            {
+                return null;
+            }
+
+            var fileDateTime = GetFileDateTime(fileName);
+            if (fileDateTime > _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()))
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.EarlierThanTodayFileSubmitted,
+                    FieldError = "The date and time in the filename must not be later than today’s date and time",
+                    SummaryError = "The date and time in the filename must not be later than today’s date and time"
                 };
             }
 

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
@@ -23,7 +25,7 @@ namespace DC.Web.Ui.Services.Tests
         [InlineData(".XML")]
         public void IsValidExtension_True(string extension)
         {
-            var service = new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object);
+            var service = new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object, new Mock<IDateTimeProvider>().Object, new Mock<IBespokeHttpClient>().Object, new ApiSettings());
             service.ValidateExtension($"testfile{extension}", "error").Should().BeNull();
         }
 
@@ -121,14 +123,14 @@ namespace DC.Web.Ui.Services.Tests
             mockStorageService.Setup(x => x.ContainsAsync(It.IsAny<string>(), default(CancellationToken)))
                 .ReturnsAsync(() => true);
 
-            var service = new IlrFileNameValidationService(mockStorageService.Object, new FeatureFlags { DuplicateFileCheckEnabled = true }, new Mock<IJobService>().Object);
+            var service = new IlrFileNameValidationService(mockStorageService.Object, new FeatureFlags { DuplicateFileCheckEnabled = true }, new Mock<IJobService>().Object, new Mock<IDateTimeProvider>().Object, new Mock<IBespokeHttpClient>().Object, new ApiSettings());
             service.ValidateUniqueFileAsync("ILR-10006341-1819-20180118-023456-02.xml", 1000).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.FileAlreadyExists);
         }
 
         private IlrFileNameValidationService GetService()
         {
-            return new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object);
+            return new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object, new Mock<IDateTimeProvider>().Object, new Mock<IBespokeHttpClient>().Object, new ApiSettings());
         }
     }
 }
