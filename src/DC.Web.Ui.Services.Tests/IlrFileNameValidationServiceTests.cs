@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using DC.Web.Ui.Services.BespokeHttpClient;
@@ -16,7 +17,7 @@ using Xunit;
 
 namespace DC.Web.Ui.Services.Tests
 {
-    public class FileNameValidationServiceTests
+    public class IlrFileNameValidationServiceTests
     {
         [Theory]
         [InlineData(".zip")]
@@ -76,13 +77,26 @@ namespace DC.Web.Ui.Services.Tests
                 .Be(FileNameValidationResult.EmptyFile);
         }
 
-        //[Fact]
-        //public void ValidateFileName_InvalidUkprn()
-        //{
-        //    var service = GetService();
-        //    service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 10, 10000).Result.ValidationResult.Should()
-        //        .Be(FileNameValidationResult.UkprnDifferentToFileName);
-        //}
+        [Fact]
+        public void ValidateFileName_InvalidUkprn()
+        {
+            var httpClientMock = new Mock<IBespokeHttpClient>();
+            httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).Throws<Exception>();
+
+            var service = GetService(httpClientMock.Object);
+            service.ValidateUkprn(10000116).Result.ValidationResult.Should()
+                .Be(FileNameValidationResult.InvalidUkprn);
+        }
+
+        [Fact]
+        public void ValidateFileName_ValidUkprn()
+        {
+            var httpClientMock = new Mock<IBespokeHttpClient>();
+            httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => "true");
+
+            var service = GetService(httpClientMock.Object);
+            service.ValidateUkprn(10000116).Result.Should().Be(null);
+        }
 
         [Fact]
         public void ValidateFileName_InvalidExtension()
@@ -99,14 +113,6 @@ namespace DC.Web.Ui.Services.Tests
             service.ValidateFileNameAsync(null, 10, 10000, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.EmptyFile);
         }
-
-        //[Fact]
-        //public void ValidateFileName_InvalidaFileNameFormat()
-        //{
-        //    var service = GetService();
-        //    service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-2.xml", 10, 10000).Result.ValidationResult.Should()
-        //        .Be(FileNameValidationResult.InvalidFileNameFormat);
-        //}
 
         [Fact]
         public void ValidateFileName_Valid()
@@ -128,9 +134,22 @@ namespace DC.Web.Ui.Services.Tests
                 .Be(FileNameValidationResult.FileAlreadyExists);
         }
 
-        private IlrFileNameValidationService GetService()
+        private IlrFileNameValidationService GetService(IBespokeHttpClient httpClient = null)
         {
-            return new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object, new Mock<IDateTimeProvider>().Object, new Mock<IBespokeHttpClient>().Object, new ApiSettings());
+            var dateTimeProvider = new Mock<IDateTimeProvider>();
+            dateTimeProvider.Setup(x => x.GetNowUtc()).Returns(DateTime.UtcNow.AddDays(30));
+            dateTimeProvider.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(DateTime.UtcNow.AddDays(30));
+
+            var httpClientMock = new Mock<IBespokeHttpClient>();
+            httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => "true");
+
+            return new IlrFileNameValidationService(
+                new Mock<IKeyValuePersistenceService>().Object,
+                new FeatureFlags(),
+                new Mock<IJobService>().Object,
+                dateTimeProvider.Object,
+                httpClient ?? httpClientMock.Object,
+                new ApiSettings());
         }
     }
 }

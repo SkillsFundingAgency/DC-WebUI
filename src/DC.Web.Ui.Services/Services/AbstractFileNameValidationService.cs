@@ -169,6 +169,23 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
+        public async Task<FileNameValidationResultViewModel> ValidateUkprn(long ukprn)
+        {
+            var result = await IsProviderValidForSubmission("org", ukprn.ToString());
+
+            if (!result)
+            {
+                return new FileNameValidationResultViewModel()
+                {
+                    ValidationResult = FileNameValidationResult.InvalidUkprn,
+                    FieldError = "UKPRN must exist on Organisation directory database",
+                    SummaryError = "UKPRN must exist on Organisation directory database"
+                };
+            }
+
+            return null;
+        }
+
         public async Task<bool> IsProviderValidForSubmission(params string[] parameters)
         {
             var parametersString = string.Join("/", parameters);

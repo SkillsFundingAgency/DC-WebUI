@@ -14,6 +14,7 @@ namespace ESFA.DC.Web.Ui.ViewModels.Enums
         InvalidSerialNumber = 70,
         LaterFileAlreadySubmitted = 80,
         EarlierThanTodayFileSubmitted = 90,
-        InvalidContractRefNumber = 100
+        InvalidContractRefNumber = 100,
+        InvalidUkprn = 110
     }
 }
