@@ -3,33 +3,36 @@ using System.Threading.Tasks;
 using Autofac.Features.Indexed;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
+using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Areas.EAS.Controllers
+namespace DC.Web.Ui.Areas.ESF.Controllers
 {
-    [Area(AreaNames.Eas)]
-    [Route(AreaNames.Eas + "/submission")]
-    public class SubmissionController : AbstractSubmissionController
+    [Area(AreaNames.Esf)]
+    [Route(AreaNames.Esf + "/submission")]
+    public class SubmissionAuthorisedController : AbstractSubmissionAuthorisedController
     {
         private readonly IFileNameValidationService _fileNameValidationService;
 
-        public SubmissionController(
+        public SubmissionAuthorisedController(
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
             IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
             IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
             IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.EasSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            : base(JobType.EsfSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationServices[JobType.EasSubmission];
+            _fileNameValidationService = fileNameValidationServices[JobType.EsfSubmission];
         }
 
         [HttpGet]
@@ -45,23 +48,24 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
             if (!(await IsValidCollection(collectionName)))
             {
                 Logger.LogWarning($"collection {collectionName} for ukprn : {Ukprn} is not open/available");
-                return RedirectToAction("Index", "ReturnWindowClosed");
+                return RedirectToAction("Index", "ReturnWindowClosedAuthorised");
             }
 
             if (await GetCurrentPeriodAsync(collectionName) == null)
             {
                 Logger.LogWarning($"No active period for collection : {collectionName}");
-                return RedirectToAction("Index", "ReturnWindowClosed", new { area = AreaNames.Esf, collectionName });
+                return RedirectToAction("Index", "ReturnWindowClosedAuthorised", new { area = AreaNames.Esf, collectionName });
             }
 
-            return View();
+            var lastSubmission = await GetLastSubmission(collectionName);
+            return View(lastSubmission);
         }
 
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
         [AutoValidateAntiforgeryToken]
         [Route("{collectionName}")]
-        public async Task<IActionResult> Index(string collectionName, IFormFile file, bool confirm)
+        public async Task<IActionResult> Index(string collectionName, IFormFile file)
         {
             var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
@@ -69,18 +73,12 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
-                return View();
-            }
-
-            if (!confirm)
-            {
-                AddError(ErrorMessageKeys.Submission_CheckboxFieldKey, "You must agree to this statement before you can upload a file");
-                AddError(ErrorMessageKeys.ErrorSummaryKey, "Check confirmation box");
-                return View();
+                var lastSubmission = await GetLastSubmission(collectionName);
+                return View(lastSubmission);
             }
 
             var jobId = await SubmitJob(collectionName, file);
-            return RedirectToAction("Index", "InProgress", new { area = AreaNames.Esf, jobId });
+            return RedirectToAction("Index", "InProgressAuthorised", new { area = AreaNames.Esf, jobId });
         }
     }
 }

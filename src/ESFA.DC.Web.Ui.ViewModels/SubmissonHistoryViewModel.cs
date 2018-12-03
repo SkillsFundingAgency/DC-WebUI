@@ -18,5 +18,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public JobStatusType Status { get; set; }
 
         public string ReportsFileName { get; set; }
+
+        public string SubmittedBy { get; set; }
     }
 }

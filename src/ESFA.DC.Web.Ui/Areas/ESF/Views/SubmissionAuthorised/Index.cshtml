@@ -1,0 +1,69 @@
+﻿@using DC.Web.Authorization
+@using DC.Web.Authorization.Data.Constants
+@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@model ESFA.DC.Web.Ui.ViewModels.FileUploadConfirmationViewModel
+
+
+@{
+    ViewData["Title"] = "Choose file to upload";
+    ViewData["secondaryHeading"] = "ILR Submission";
+    var collection = ViewContext.RouteData.Values["collectionName"];
+    ViewData["BackUrl"] = "/submission-options";
+
+}
+
+@section RelatedContent
+    {
+    <h2 class="govuk-heading-m" id="subsection-title">
+        Related content
+    </h2>
+    <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="govuk-list govuk-!-font-size-16">
+            <li>
+                <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/728764/ProviderSupportManual_18_19_v1.pdf" target="_blank">
+                    Provider support manual for 2018 to 2019
+                </a>
+            </li>
+            <li>
+                <a href="https://www.gov.uk/government/publications/sfa-supplementary-data-collection">
+                    ESFA: supplementary data collection guidance
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@Html.Partial("_LastSubmission", Model)
+
+<form asp-controller="SubmissionAuthorised" asp-action="Index" method="post" enctype="multipart/form-data" id="ilrform">
+
+    @Html.AntiForgeryToken()
+
+    <h1 class="govuk-heading-xl">
+        Choose file to upload
+        <span class="govuk-caption-xl" collection="@collection"></span>
+    </h1>
+    <p>Before uploading your file you should make sure that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>it’s in a CSV format</li>
+        <li>it’s using the <a href="https://www.gov.uk/government/publications/sfa-supplementary-data-collection" target="_blank">ESF non-ILR data return template</a></li>
+        <li>the data it contains is as complete as possible</li>
+        <li>the data it contains is as accurate as possible</li>
+    </ul>
+    <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.Submission_FileFieldKey)" id="controls">
+        <label class="govuk-label govuk-!-font-weight-bold"  for="file">
+            Upload a file
+        </label>
+        <div error-field-name="@ErrorMessageKeys.Submission_FileFieldKey"></div>
+        <input class="govuk-file-upload" name="file" id="file" type="file" accept=".csv">
+    </div>
+
+    <button class="govuk-button">
+        Upload file
+    </button>
+</form>
+
+
+

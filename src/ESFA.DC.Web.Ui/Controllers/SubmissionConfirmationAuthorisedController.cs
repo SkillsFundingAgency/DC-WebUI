@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Controllers
 {
     [Route("submission-confirmation")]
-    public class SubmissionConfirmationController : BaseController
+    public class SubmissionConfirmationAuthorisedController : BaseAuthorisedController
     {
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IJobService _jobService;
 
-        public SubmissionConfirmationController(
+        public SubmissionConfirmationAuthorisedController(
             ICollectionManagementService collectionManagementService,
             IJobService jobService,
             ILogger logger)

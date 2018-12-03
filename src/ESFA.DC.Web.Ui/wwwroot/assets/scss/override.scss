@@ -16,8 +16,11 @@ a:active, .govuk-list a:active {
     color: $govuk-link-hover-colour;
 }
 
+.govuk-list.govuk-error-summary__list a:link,
 .govuk-list.govuk-error-summary__list a:visited,
-.govuk-list.govuk-error-summary__list a:active {
+.govuk-list.govuk-error-summary__list a:hover,
+.govuk-list.govuk-error-summary__list a:active,
+.govuk-list.govuk-error-summary__list a:focus {
     color: $govuk-error-colour;
 }
 

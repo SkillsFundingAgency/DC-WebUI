@@ -141,13 +141,24 @@ namespace DC.Web.Ui.Services.Services
         public async Task<FileUploadConfirmationViewModel> GetConfirmation(long ukprn, long jobId)
         {
             var job = await GetJob(ukprn, jobId);
+            return ConvertToViewModel(job);
+        }
+
+        public FileUploadConfirmationViewModel ConvertToViewModel(FileUploadJob job)
+        {
+            if (job?.JobId == 0)
+            {
+                return null;
+            }
+
             var localTime = _dateTimeProvider.ConvertUtcToUk(job.DateTimeSubmittedUtc);
             return new FileUploadConfirmationViewModel()
             {
                 FileName = job.FileName.FileNameWithoutUkprn(),
-                JobId = jobId,
+                JobId = job.JobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
-                SubmittedAt = string.Concat(localTime.ToString("hh:mmtt").ToLower(), " on ", localTime.ToString("dddd dd MMMM yyyy")),
+                SubmittedAtDate = localTime.ToString("dddd dd MMMM yyyy"),
+                SubmittedAtDateTime = string.Concat(localTime.ToString("hh:mmtt").ToLower(), " on ", localTime.ToString("dddd dd MMMM yyyy")),
                 SubmittedBy = job.SubmittedBy,
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType,
@@ -164,7 +175,7 @@ namespace DC.Web.Ui.Services.Services
                 case JobType.EsfSubmission:
                     return string.Concat("R", period.ToString("00"), " supplementary data file submitted");
                 case JobType.EasSubmission:
-                    return string.Concat("R", period.ToString("00"), " EAS data file submitted");
+                    return "EAS statement updated";
             }
 
             return string.Empty;

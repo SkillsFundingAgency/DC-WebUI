@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Tests.Controllers
         [Fact]
         public void ConfirmationControllerTests_Index_ValidData()
         {
-            var controller = new SubmissionConfirmationController(
+            var controller = new SubmissionConfirmationAuthorisedController(
                 new Mock<ICollectionManagementService>().Object,
                 new Mock<IJobService>().Object,
                 new Mock<ILogger>().Object);
@@ -47,7 +47,7 @@ namespace DC.Web.Ui.Tests.Controllers
             submissionServiceMock.Setup(x => x.GetConfirmation(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(() => null);
 
-            var controller = new SubmissionConfirmationController(
+            var controller = new SubmissionConfirmationAuthorisedController(
                collectionManagementServiceMock.Object,
                submissionServiceMock.Object,
                 new Mock<ILogger>().Object);

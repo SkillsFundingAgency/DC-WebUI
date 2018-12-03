@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.ILR.Controllers
 {
-    public class ReturnWindowClosedController : BaseController
+    public class ReturnWindowClosedAuthorisedController : BaseAuthorisedController
     {
-        public ReturnWindowClosedController(ILogger logger)
+        public ReturnWindowClosedAuthorisedController(ILogger logger)
             : base(logger)
         {
         }
