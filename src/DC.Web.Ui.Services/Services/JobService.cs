@@ -128,6 +128,17 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<FileUploadJob>(data);
         }
 
+        public async Task<FileUploadJob> GetLatestJob(long ukprn, string contractReference, string collectionName)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{contractReference}/{collectionName}/latest");
+            if (data == null)
+            {
+                return null;
+            }
+
+            return _serializationService.Deserialize<FileUploadJob>(data);
+        }
+
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
             var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()

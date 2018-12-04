@@ -141,9 +141,9 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public virtual FileNameValidationResultViewModel LaterFileExists(long ukprn, string fileName, string collectionName)
+        public virtual async Task<FileNameValidationResultViewModel> LaterFileExists(long ukprn, string fileName, string collectionName)
         {
-            var job = _jobService.GetLatestJob(ukprn, collectionName).Result;
+            var job = await _jobService.GetLatestJob(ukprn, collectionName);
             if (job == null || job.JobId == 0)
             {
                 return null;
