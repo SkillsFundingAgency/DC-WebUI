@@ -64,11 +64,11 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = LaterFileExists(ukprn, fileName, collectionName);
-            if (result != null)
-            {
-                return result;
-            }
+            //result = LaterFileExists(ukprn, fileName, collectionName);
+            //if (result != null)
+            //{
+            //    return result;
+            //}
 
             result = IsFileAfterCurrentDateTime(ukprn, fileName, collectionName);
             if (result != null)

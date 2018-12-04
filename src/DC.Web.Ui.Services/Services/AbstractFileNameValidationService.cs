@@ -141,7 +141,7 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public FileNameValidationResultViewModel LaterFileExists(long ukprn, string fileName, string collectionName)
+        public virtual FileNameValidationResultViewModel LaterFileExists(long ukprn, string fileName, string collectionName)
         {
             var job = _jobService.GetLatestJob(ukprn, collectionName).Result;
             if (job == null || job.JobId == 0)
