@@ -64,7 +64,7 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = LaterFileExists(ukprn, fileName, collectionName);
+            result = await LaterFileExists(ukprn, fileName, collectionName);
             if (result != null)
             {
                 return result;
