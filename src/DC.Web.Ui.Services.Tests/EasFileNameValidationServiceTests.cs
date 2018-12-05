@@ -41,14 +41,14 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidUkprn_True()
         {
             var service = GetService();
-            service.ValidateUkprn("EASDATA-10000116-20180909-090916.csv", 10000116).Should().BeNull();
+            service.ValidateLoggedInUserUkprn("EASDATA-10000116-20180909-090916.csv", 10000116).Should().BeNull();
         }
 
         [Fact]
         public void IsValidUkprn_False()
         {
             var service = GetService();
-            service.ValidateUkprn("EASDATA-10000116-20180909-090916.csv", 99999999).Should().NotBeNull();
+            service.ValidateLoggedInUserUkprn("EASDATA-10000116-20180909-090916.csv", 99999999).Should().NotBeNull();
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace DC.Web.Ui.Services.Tests
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).Throws<Exception>();
 
             var service = GetService(httpClientMock.Object);
-            service.ValidateUkprn(10000116).Result.ValidationResult.Should()
+            service.ValidateOrganisation(10000116).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.InvalidUkprn);
         }
 
@@ -114,7 +114,7 @@ namespace DC.Web.Ui.Services.Tests
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => "true");
 
             var service = GetService(httpClientMock.Object);
-            service.ValidateUkprn(10000116).Result.Should().Be(null);
+            service.ValidateOrganisation(10000116).Result.Should().Be(null);
         }
 
         [Fact]

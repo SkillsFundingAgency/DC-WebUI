@@ -79,7 +79,7 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public FileNameValidationResultViewModel ValidateUkprn(string fileName, long ukprn)
+        public FileNameValidationResultViewModel ValidateLoggedInUserUkprn(string fileName, long ukprn)
         {
             var matches = FileNameRegex.Match(fileName);
             long fileUkprn = 0;
@@ -169,7 +169,7 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public async Task<FileNameValidationResultViewModel> ValidateUkprn(long ukprn)
+        public async Task<FileNameValidationResultViewModel> ValidateOrganisation(long ukprn)
         {
             var result = await IsProviderValidForSubmission("org", ukprn.ToString());
 

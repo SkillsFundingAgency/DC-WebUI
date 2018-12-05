@@ -45,14 +45,14 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidUkprn_True()
         {
             var service = GetService();
-            service.ValidateUkprn("ILR-10006341-1819-20180118-023456-02.xml", 10006341).Should().BeNull();
+            service.ValidateLoggedInUserUkprn("ILR-10006341-1819-20180118-023456-02.xml", 10006341).Should().BeNull();
         }
 
         [Fact]
         public void IsValidUkprn_False()
         {
             var service = GetService();
-            service.ValidateUkprn("ILR-10006341-1819-20180118-023456-02.xml", 99999999).Should().NotBeNull();
+            service.ValidateLoggedInUserUkprn("ILR-10006341-1819-20180118-023456-02.xml", 99999999).Should().NotBeNull();
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace DC.Web.Ui.Services.Tests
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).Throws<Exception>();
 
             var service = GetService(httpClientMock.Object);
-            service.ValidateUkprn(10000116).Result.ValidationResult.Should()
+            service.ValidateOrganisation(10000116).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.InvalidUkprn);
         }
 
@@ -95,7 +95,7 @@ namespace DC.Web.Ui.Services.Tests
             httpClientMock.Setup(x => x.GetDataAsync(It.IsAny<string>())).ReturnsAsync(() => "true");
 
             var service = GetService(httpClientMock.Object);
-            service.ValidateUkprn(10000116).Result.Should().Be(null);
+            service.ValidateOrganisation(10000116).Result.Should().Be(null);
         }
 
         [Fact]
