@@ -188,17 +188,18 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<bool> IsProviderValidForSubmission(params string[] parameters)
         {
-            var parametersString = string.Join("/", parameters);
+            return true;
+            //var parametersString = string.Join("/", parameters);
 
-            try
-            {
-                await _httpClient.GetDataAsync($"{_apiBaseUrl}/file-validation/{parametersString}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            //try
+            //{
+            //    await _httpClient.GetDataAsync($"{_apiBaseUrl}/file-validation/{parametersString}");
+            //    return true;
+            //}
+            //catch (Exception e)
+            //{
+            //    return false;
+            //}
         }
 
         public FileNameValidationResultViewModel IsFileAfterCurrentDateTime(long ukprn, string fileName, string collectionName)
