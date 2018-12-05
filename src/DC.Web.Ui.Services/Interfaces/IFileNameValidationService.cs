@@ -13,7 +13,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         FileNameValidationResultViewModel ValidateExtension(string fileName, string errorMessage);
 
-        FileNameValidationResultViewModel ValidateUkprn(string fileName, long ukprn);
+        FileNameValidationResultViewModel ValidateLoggedInUserUkprn(string fileName, long ukprn);
 
         Task<FileNameValidationResultViewModel> ValidateUniqueFileAsync(string fileName, long ukprn);
     }

@@ -73,7 +73,7 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = ValidateUkprn(fileName, ukprn);
+            result = ValidateLoggedInUserUkprn(fileName, ukprn);
             if (result != null)
             {
                 return result;
@@ -97,11 +97,11 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            //result = await ValidateUkprn(ukprn);
-            //if (result != null)
-            //{
-            //    return result;
-            //}
+            result = await ValidateOrganisation(ukprn);
+            if (result != null)
+            {
+                return result;
+            }
 
             return new FileNameValidationResultViewModel()
             {
