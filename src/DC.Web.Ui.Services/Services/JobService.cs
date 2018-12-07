@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
@@ -35,19 +36,22 @@ namespace DC.Web.Ui.Services.Services
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
+        private readonly ICollectionManagementService _collectionManagementService;
 
         public JobService(
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
-            ILogger logger)
+            ILogger logger,
+            ICollectionManagementService collectionManagementService)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
+            _collectionManagementService = collectionManagementService;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -108,7 +112,26 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
         {
-            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-60).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            var collecion = (await _collectionManagementService.GetAvailableCollectionsAsync(ukprn, "ILR")).FirstOrDefault();
+            if (collecion == null)
+            {
+                return new List<FileUploadJob>();
+            }
+
+            var currentPeriod = await _collectionManagementService.GetPeriodAsync(collecion.CollectionName, _dateTimeProvider.GetNowUtc());
+            var previousPeriod = await _collectionManagementService.GetPeriodAsync(collecion.CollectionName, currentPeriod.StartDateTimeUtc.AddDays(-1));
+
+            string startDatetTimeString;
+            if (previousPeriod == null)
+            {
+                startDatetTimeString = currentPeriod.StartDateTimeUtc.AddDays(-30).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            }
+            else
+            {
+                startDatetTimeString = previousPeriod.StartDateTimeUtc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            }
+
             var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
             var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}";

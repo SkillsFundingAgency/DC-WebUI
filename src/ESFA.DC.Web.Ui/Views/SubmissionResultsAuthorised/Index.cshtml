@@ -7,14 +7,159 @@
 }
 
 <h1 class="govuk-heading-xl">Reports</h1>
-
-
   
     <p>If you need to correct the data you've submitted, <a href="/submission-options">submit another file</a>.</p>
 
-    @if (Model.SubmissonHistoryViewModels.Any())
-    {
-        @await Html.PartialAsync("_submissionHistory", Model.SubmissonHistoryViewModels)
-    }
+    <div class="govuk-tabs" data-module="tabs">
+        <h2 class="govuk-tabs__title">
+            Submission and reports history
+        </h2>
+
+        <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#past-day" id="tab_past-day" role="tab" aria-controls="past-day" tabindex="0" aria-selected="true">
+                    Submission history
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#past-week" id="tab_past-week" role="tab" aria-controls="past-week" tabindex="-1" aria-selected="false">
+                    Reports history
+                </a>
+            </li>
+
+        </ul>
+
+        <section class="govuk-tabs__panel" id="past-day" role="tabpanel" aria-labelledby="tab_past-day">
+            <h2 class="govuk-heading-l" id="submission">Submission history  <span class="govuk-caption-l">RO2</span></h2>
+            <p>Each time you submit a new file your reports will be updated. To view your latest reports you should download the reports for your most recent submission.</p>
+
+            <h3 class="govuk-heading-m">Submissions for 2018 to 2019</h3>
+
+            @await Html.PartialAsync("_submissionHistory", Model.SubmissonHistoryViewModels)
 
 
+        </section>
+        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="past-week" role="tabpanel" aria-labelledby="tab_past-week">
+            <h2 class="govuk-heading-l" id="reports">Reports history</h2>
+            <p>The reports download includes the last validation report and submission files. You can <a href="#">view period end reports</a> in the Hub.</p>
+            <h3 class="govuk-heading-m">Academic year 2018 to 2019</h3>
+
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Return period and download</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Return period</th>
+                        <th class="govuk-table__header" scope="col">Final reports at period end</th>
+
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R01</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.3MB)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="govuk-heading-m">Academic year 2017 to 2018</h3>
+
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Return period and download</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Return period</th>
+                        <th class="govuk-table__header" scope="col">Download</th>
+
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R14</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a> (Zip, 1.3MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R13</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.2MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R12</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.8MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R11</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.1MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R10</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.2MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R09</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.9MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R08</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.7MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R07</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.7MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R06</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.3MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R05</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a> (Zip, 1.3MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R04</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.3MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R03</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.5MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R02</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.7MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R01</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.7MB)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 class="govuk-heading-m">Academic year 2016 to 2017</h3>
+
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Return period and download</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Return period</th>
+                        <th class="govuk-table__header" scope="col">Download</th>
+
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R14</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.3MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R13</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.2MB)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">R12</th>
+                        <td class="govuk-table__cell"><a href="#" title="Download REPORTS-0312210-091400.zip">Download REPORTS-0312210-091400.zip</a>  (Zip, 1.8MB)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+        </section>
+
+    </div>

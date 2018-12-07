@@ -69,6 +69,26 @@ namespace DC.Web.Ui.Services.Services
             }
         }
 
+        public async Task<ReturnPeriod> GetPeriodAsync(string collectionName, DateTime dateTime)
+        {
+            try
+            {
+                var dateTimeString = dateTime.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/{dateTimeString}");
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    return _serializationService.Deserialize<ReturnPeriod>(data);
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public async Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName)
         {
             try

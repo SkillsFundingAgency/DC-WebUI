@@ -19,5 +19,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<ReturnPeriodViewModel> GetNextPeriodAsync(string collectionName);
 
         Task<Collection> GetCollectionAsync(long ukprn, string collectionName);
+
+        Task<ReturnPeriod> GetPeriodAsync(string collectionName, DateTime dateTime);
     }
 }

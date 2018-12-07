@@ -23,13 +23,20 @@ namespace DC.Web.Ui.Controllers
         private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICollectionManagementService _collectionManagementService;
 
-        public SubmissionResultsAuthorisedController(IJobService jobService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
+        public SubmissionResultsAuthorisedController(
+            IJobService jobService,
+            ILogger logger,
+            IStorageService reportService,
+            IDateTimeProvider dateTimeProvider,
+            ICollectionManagementService collectionManagementService)
             : base(logger)
         {
             _jobService = jobService;
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
+            _collectionManagementService = collectionManagementService;
         }
 
         public async Task<IActionResult> Index()
@@ -83,7 +90,10 @@ namespace DC.Web.Ui.Controllers
 
         private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory()
         {
-            var jobsList = await _jobService.GetAllJobsForHistory(Ukprn);
+            if (await _collectionManagementService.GetCurrentPeriodAsync(collectionName) == null)
+            {
+
+                var jobsList = await _jobService.GetAllJobsForPeriod(Ukprn);
             var jobsViewList = new List<SubmissonHistoryViewModel>();
             jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
                 .ToList()
