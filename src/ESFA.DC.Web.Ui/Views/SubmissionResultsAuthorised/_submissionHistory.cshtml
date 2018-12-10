@@ -34,7 +34,7 @@
             <td class="govuk-table__cell">
                 @if (historyViewModel.Status == JobStatusType.Completed)
                 {
-                    @Html.ActionLink(@historyViewModel.ReportsFileName, "DownloadReport", "SubmissionResultsAuthorised", new { JobId = @historyViewModel.JobId })
+                    @Html.ActionLink("Download reports", "DownloadReport", "SubmissionResultsAuthorised", new { JobId = @historyViewModel.JobId })
                 }
                 else if (historyViewModel.Status == JobStatusType.Failed || historyViewModel.Status == JobStatusType.FailedRetry)
                 {

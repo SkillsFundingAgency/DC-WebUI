@@ -48,6 +48,19 @@ namespace DC.Web.Ui.Services.Services
             return result;
         }
 
+        public async Task<Collection> GetCollectionFromTypeAsync(string collectionType)
+        {
+            var result = new List<SubmissionOptionViewModel>();
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/collections/{collectionType}");
+
+            if (!string.IsNullOrEmpty(data))
+            {
+                return _serializationService.Deserialize<Collection>(data);
+            }
+
+            return null;
+        }
+
         public async Task<ReturnPeriodViewModel> GetCurrentPeriodAsync(string collectionName)
         {
             try
@@ -71,10 +84,21 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<ReturnPeriod> GetPeriodAsync(string collectionName, DateTime dateTime)
         {
+            var dateTimeString = dateTime.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            return await GetPeriodFromUrlAsync($"{_baseUrl}/returns-calendar/{collectionName}/{dateTimeString}");
+        }
+
+        public async Task<ReturnPeriod> GetPreviousPeriodAsync(string collectionName, DateTime dateTimeUtc)
+        {
+            var dateTimeString = dateTimeUtc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            return await GetPeriodFromUrlAsync($"{_baseUrl}/returns-calendar/{collectionName}/previous/{dateTimeString}");
+        }
+
+        public async Task<ReturnPeriod> GetPeriodFromUrlAsync(string url)
+        {
             try
             {
-                var dateTimeString = dateTime.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-                var data = await _httpClient.GetDataAsync($"{_baseUrl}/returns-calendar/{collectionName}/{dateTimeString}");
+                var data = await _httpClient.GetDataAsync(url);
 
                 if (!string.IsNullOrEmpty(data))
                 {

@@ -30,13 +30,15 @@
         </ul>
 
         <section class="govuk-tabs__panel" id="past-day" role="tabpanel" aria-labelledby="tab_past-day">
-            <h2 class="govuk-heading-l" id="submission">Submission history  <span class="govuk-caption-l">RO2</span></h2>
+            <h2 class="govuk-heading-l" id="submission">Submission history  <span class="govuk-caption-l">@Model.PeriodName</span></h2>
             <p>Each time you submit a new file your reports will be updated. To view your latest reports you should download the reports for your most recent submission.</p>
 
-            <h3 class="govuk-heading-m">Submissions for 2018 to 2019</h3>
+            <h3 class="govuk-heading-m">Submissions for @Model.CollectionYearStart to @Model.CollectionYearEnd</h3>
 
-            @await Html.PartialAsync("_submissionHistory", Model.SubmissonHistoryViewModels)
+            @await Html.PartialAsync("_submissionHistory", Model.CurrentPeriodSubmissions)
 
+            <h3 class="govuk-heading-m">Older submissions</h3>
+            @await Html.PartialAsync("_submissionHistory", Model.PreviousPeriodSubmissions)
 
         </section>
         <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="past-week" role="tabpanel" aria-labelledby="tab_past-week">
