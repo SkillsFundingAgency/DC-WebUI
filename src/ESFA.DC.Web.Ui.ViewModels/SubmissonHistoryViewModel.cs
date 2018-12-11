@@ -20,5 +20,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string ReportsFileName { get; set; }
 
         public string SubmittedBy { get; set; }
+
+        public DateTime DateTimeSubmittedUtc { get; set; }
     }
 }

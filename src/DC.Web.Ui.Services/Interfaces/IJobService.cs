@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.JobStatus.Interface;
@@ -23,7 +24,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
 
-        Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn);
+        Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc);
 
         Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName);
 

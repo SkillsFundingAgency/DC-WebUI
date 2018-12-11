@@ -8,6 +8,7 @@ using DC.Web.Ui.Constants;
 using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
+using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Interface;
@@ -23,23 +24,48 @@ namespace DC.Web.Ui.Controllers
         private readonly IJobService _jobService;
         private readonly IStorageService _reportService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICollectionManagementService _collectionManagementService;
 
-        public SubmissionResultsAuthorisedController(IJobService jobService, ILogger logger, IStorageService reportService, IDateTimeProvider dateTimeProvider)
+        public SubmissionResultsAuthorisedController(
+            IJobService jobService,
+            ILogger logger,
+            IStorageService reportService,
+            IDateTimeProvider dateTimeProvider,
+            ICollectionManagementService collectionManagementService)
             : base(logger)
         {
             _jobService = jobService;
             _reportService = reportService;
             _dateTimeProvider = dateTimeProvider;
+            _collectionManagementService = collectionManagementService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var result = new SubmissionResultViewModel()
-            {
-                SubmissonHistoryViewModels = await GetSubmissionHistory()
-            };
+            var collection = await _collectionManagementService.GetCollectionFromTypeAsync("ILR");
 
-            return View(result);
+            if (collection != null)
+            {
+                var currentPeriod = await _collectionManagementService.GetPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
+                if (currentPeriod == null)
+                {
+                    currentPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
+                }
+
+                var submissions = (await _jobService.GetAllJobsForHistory(Ukprn, collection.CollectionTitle, currentPeriod.StartDateTimeUtc)).ToList();
+
+                var result = new SubmissionResultViewModel()
+                {
+                    CurrentPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc >= currentPeriod.StartDateTimeUtc).ToList(),
+                    PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
+                    PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
+                    CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
+                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}"
+                };
+                return View(result);
+            }
+
+            return View();
         }
 
         [Route("DownloadReport/{jobId}")]
@@ -78,41 +104,6 @@ namespace DC.Web.Ui.Controllers
             {
                 Logger.LogError($"Download source file failed for job id : {jobId}", e);
                 throw;
-            }
-        }
-
-        private async Task<List<SubmissonHistoryViewModel>> GetSubmissionHistory()
-        {
-            var jobsList = await _jobService.GetAllJobsForHistory(Ukprn);
-            var jobsViewList = new List<SubmissonHistoryViewModel>();
-            jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
-                .ToList()
-                .ForEach(x => jobsViewList.Add(new SubmissonHistoryViewModel()
-            {
-                JobId = x.JobId,
-                FileName = x.FileName.FileNameWithoutUkprn(),
-                JobType = MapJobType(x.JobType),
-                ReportsFileName = $"{x.JobId}_Reports.zip",
-                Status = x.Status,
-                DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateDisplayFormat(),
-                SubmittedBy = x.SubmittedBy
-            }));
-
-            return jobsViewList;
-        }
-
-        private string MapJobType(JobType jobType)
-        {
-            switch (jobType)
-            {
-                case JobType.IlrSubmission:
-                    return "ILR";
-                case JobType.EsfSubmission:
-                    return "ESF";
-                case JobType.EasSubmission:
-                    return "EAS";
-                default:
-                    throw new Exception("invalid job type");
             }
         }
     }
