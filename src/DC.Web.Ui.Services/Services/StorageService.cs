@@ -96,19 +96,17 @@ namespace DC.Web.Ui.Services.Services
 
             await Task.WhenAll(tasks);
 
-            using (var writer = new MemoryStream())
+            var writer = new MemoryStream();
+            using (var outArchive = new ZipArchive(writer, ZipArchiveMode.Create, true))
             {
-                using (var outArchive = new ZipArchive(writer, ZipArchiveMode.Create, true))
+                foreach (var inTask in tasks)
                 {
-                    foreach (var inTask in tasks)
-                    {
-                        await WriteEntry(inTask.Result, outArchive, "reports");
-                    }
+                    await WriteEntry(inTask.Result, outArchive);
                 }
-
-                writer.Seek(0, SeekOrigin.Begin);
-                return writer;
             }
+
+            writer.Seek(0, SeekOrigin.Begin);
+            return writer;
         }
 
         public CloudBlockBlob GetBlob(string fileName, JobType jobType)
@@ -120,13 +118,18 @@ namespace DC.Web.Ui.Services.Services
             return cloudBlobContainer.GetBlockBlobReference(fileName);
         }
 
-        private async Task WriteEntry(Stream inputStream, ZipArchive outArchive, string directory)
+        private async Task WriteEntry(Stream inputStream, ZipArchive outArchive)
         {
+            if (inputStream == null)
+            {
+                return;
+            }
+
             using (var ilrReader = new ZipArchive(inputStream, ZipArchiveMode.Read, false))
             {
                 foreach (var entry in ilrReader.Entries)
                 {
-                    ZipArchiveEntry newEntry = outArchive.CreateEntry($"{directory}\\{entry.Name}");
+                    ZipArchiveEntry newEntry = outArchive.CreateEntry(entry.Name);
                     using (Stream streamOut = newEntry.Open())
                     {
                         using (var streamIn = entry.Open())
