@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
 using Autofac.Features.Indexed;
@@ -54,7 +56,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<decimal> GetReportFileSizeAsync(FileUploadJob job)
         {
-            var fileName = GetReportsZipFileName(job.Ukprn, job.JobId, job.CrossLoadingStatus);
+            var fileName = GetReportsZipFileName(job.Ukprn, job.JobId);
             return await GetReportFileSizeAsync(fileName, job.JobType);
         }
 
@@ -78,9 +80,35 @@ namespace DC.Web.Ui.Services.Services
             return 0;
         }
 
-        public string GetReportsZipFileName(long ukprn, long jobId, JobStatusType? crossLoadingStatus)
+        public string GetReportsZipFileName(long ukprn, long jobId)
         {
             return $"{ukprn}/{jobId}/Reports.zip";
+        }
+
+        public async Task<Stream> GetMergedReportFile(long ukprn, Dictionary<JobType, long> jobsList)
+        {
+            var tasks = new List<Task<Stream>>();
+            foreach (var job in jobsList)
+            {
+                var fileName = GetReportsZipFileName(ukprn, job.Value);
+                tasks.Add(GetBlobFileStreamAsync(fileName, job.Key));
+            }
+
+            await Task.WhenAll(tasks);
+
+            using (var writer = new MemoryStream())
+            {
+                using (var outArchive = new ZipArchive(writer, ZipArchiveMode.Create, true))
+                {
+                    foreach (var inTask in tasks)
+                    {
+                        await WriteEntry(inTask.Result, outArchive, "reports");
+                    }
+                }
+
+                writer.Seek(0, SeekOrigin.Begin);
+                return writer;
+            }
         }
 
         public CloudBlockBlob GetBlob(string fileName, JobType jobType)
@@ -90,6 +118,24 @@ namespace DC.Web.Ui.Services.Services
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(cloudStorageSettings.ContainerName);
             return cloudBlobContainer.GetBlockBlobReference(fileName);
+        }
+
+        private async Task WriteEntry(Stream inputStream, ZipArchive outArchive, string directory)
+        {
+            using (var ilrReader = new ZipArchive(inputStream, ZipArchiveMode.Read, false))
+            {
+                foreach (var entry in ilrReader.Entries)
+                {
+                    ZipArchiveEntry newEntry = outArchive.CreateEntry($"{directory}\\{entry.Name}");
+                    using (Stream streamOut = newEntry.Open())
+                    {
+                        using (var streamIn = entry.Open())
+                        {
+                            await streamIn.CopyToAsync(streamOut);
+                        }
+                    }
+                }
+            }
         }
     }
 }

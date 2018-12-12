@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Autofac.Features.Indexed;
@@ -38,6 +39,7 @@ namespace DC.Web.Ui.Services.Services
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
         private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IStorageService _storageService;
 
         public JobService(
             IBespokeHttpClient httpClient,
@@ -45,7 +47,8 @@ namespace DC.Web.Ui.Services.Services
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
             ILogger logger,
-            ICollectionManagementService collectionManagementService)
+            ICollectionManagementService collectionManagementService,
+            IStorageService storageService)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
@@ -53,6 +56,7 @@ namespace DC.Web.Ui.Services.Services
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
             _collectionManagementService = collectionManagementService;
+            _storageService = storageService;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -134,6 +138,49 @@ namespace DC.Web.Ui.Services.Services
             var submissionData = _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
 
             return ConvertSubmissions(submissionData);
+        }
+
+        public async Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn)
+        {
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddMonths(-18).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}/latest-for-period";
+            _logger.LogInfo($"getting reports history for url : {url}");
+
+            var data = await _httpClient.GetDataAsync(url);
+            var jobsList = _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+
+            var result = new List<ReportHistoryViewModel>();
+            foreach (var job in jobsList)
+            {
+                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.CollectionYear == job.CollectionYear);
+
+                if (item == null)
+                {
+                    item = new ReportHistoryViewModel()
+                    {
+                        PeriodNumber = job.PeriodNumber,
+                        CollectionYear = job.CollectionYear,
+                        DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}"
+                    };
+
+                    result.Add(item);
+                }
+
+                var reportSize = await _storageService.GetReportFileSizeAsync(job);
+                item.CombinedFileSize += reportSize / 1024;
+                item.RelatedJobs.Add(job.JobType, job.JobId);
+            }
+
+            //calculate the overall filesize and put it on the model
+            foreach (var model in result)
+            {
+                var fileNames = string.Join(", ", model.RelatedJobs.Select(kvp => (short)kvp.Key + "-" + kvp.Value));
+                model.ReportFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileNames));
+            }
+
+            return result.OrderByDescending(x => x.CollectionYear);
         }
 
         public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)

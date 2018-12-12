@@ -171,7 +171,13 @@
     <Content Update="Areas\ILR\Views\_ViewImports.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\SubmissionResultsAuthorised\_reportsHistory.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\javascripts\all.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -188,7 +194,6 @@
     <Folder Include="Areas\ILR\Views\SubmissionAuthorised\" />
     <Folder Include="Areas\ILR\Views\ValidationResultsAuthorised\" />
     <Folder Include="wwwroot\assets\minified\" />
-    <Folder Include="wwwroot\assets\stylesheets\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -298,7 +303,9 @@
     <None Include="node_modules\govuk-frontend\components\table\_table.scss" />
     <None Include="node_modules\govuk-frontend\components\tabs\macro.njk" />
     <None Include="node_modules\govuk-frontend\components\tabs\README.md" />
-    <None Include="node_modules\govuk-frontend\components\tabs\tabs.js" />
+    <None Include="node_modules\govuk-frontend\components\tabs\tabs.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="node_modules\govuk-frontend\components\tabs\template.njk" />
     <None Include="node_modules\govuk-frontend\components\tabs\_tabs.scss" />
     <None Include="node_modules\govuk-frontend\components\tag\macro.njk" />
@@ -390,7 +397,7 @@
 
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy $(ProjectDir)node_modules\govuk-frontend\assets\*  $(ProjectDir)wwwroot\assets\ /R /Y /S&#xD;&#xA;" />
+    <Exec Command="xcopy $(ProjectDir)node_modules\govuk-frontend\assets\*  $(ProjectDir)wwwroot\assets\ /R /Y /S&#xD;&#xA;&#xD;&#xA;xcopy $(ProjectDir)node_modules\govuk-frontend\all.js  $(ProjectDir)wwwroot\assets\javascripts\  /Y /S&#xD;&#xA;" />
   </Target>
 
 </Project>
