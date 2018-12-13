@@ -21,7 +21,7 @@
                 <th class="govuk-table__header" scope="row">@report.PeriodNumber.ToPeriodName()</th>
                 <td class="govuk-table__cell">
                     @Html.ActionLink("Download Reports", "DownloadReport", "SubmissionResultsAuthorised", new {period = @report.PeriodNumber, fileName = @report.ReportFileName })
-                    (Zip, @(report.CombinedFileSize.ToString("N1"))MB)
+                    (Zip, @(report.CombinedFileSize.ToString("N2"))MB)
                 </td>
             </tr>
         }
