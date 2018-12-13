@@ -60,7 +60,8 @@ namespace DC.Web.Ui.Controllers
                     PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
                     PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
                     CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
-                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}"
+                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}",
+                    ReportHistoryItems = (await _jobService.GetReportsHistory(Ukprn)).ToList()
                 };
                 return View(result);
             }
@@ -73,7 +74,13 @@ namespace DC.Web.Ui.Controllers
         {
             var job = await _jobService.GetJob(Ukprn, jobId);
 
-            var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId, job.CrossLoadingStatus);
+            if (job == null)
+            {
+                Logger.LogError($"Job not found for provider,  job id : {jobId}");
+                throw new Exception("invalid job id");
+            }
+
+            var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId);
             Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
 
             try
@@ -84,6 +91,30 @@ namespace DC.Web.Ui.Controllers
             catch (Exception e)
             {
                 Logger.LogError($"Download zip failed for job id : {jobId}", e);
+                throw;
+            }
+        }
+
+        [Route("DownloadReport/{period}/{fileName}")]
+        public async Task<FileResult> DownloadReport(int period, string fileName)
+        {
+            Logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
+
+            //TODO: Download reports check if they belong to ukprn or not
+            try
+            {
+                var base64EncodedBytes = Convert.FromBase64String(fileName);
+                var decodedFileName = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+
+                string[] splitStrings = decodedFileName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Dictionary<JobType, long> dict = splitStrings.ToDictionary(s => (JobType)short.Parse(s.Split('-')[0]), s => long.Parse(s.Split('-')[1]));
+
+                var blobStream = await _reportService.GetMergedReportFile(Ukprn, dict);
+                return File(blobStream, "application/zip", $"Reports_{period.ToPeriodName()}.zip");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download zip failed for report name : {fileName}", e);
                 throw;
             }
         }

@@ -31,5 +31,7 @@ namespace DC.Web.Ui.Services.Interfaces
         FileUploadConfirmationViewModel ConvertToViewModel(FileUploadJob job);
 
         Task<FileUploadJob> GetLatestJob(long ukprn, string contractReference, string collectionName);
+
+        Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn);
     }
 }

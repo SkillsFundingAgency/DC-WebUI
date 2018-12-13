@@ -180,7 +180,8 @@ namespace DC.Web.Ui.Services.Tests
                 serializationService ?? jsonSerialisationMock.Object,
                 dateTimeprovider.Object,
                 new Mock<ILogger>().Object,
-                new Mock<ICollectionManagementService>().Object);
+                new Mock<ICollectionManagementService>().Object,
+                new Mock<IStorageService>().Object);
         }
     }
 }

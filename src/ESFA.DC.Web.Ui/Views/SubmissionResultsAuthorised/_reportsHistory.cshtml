@@ -1,0 +1,30 @@
+﻿@using DC.Web.Ui.Services.Extensions
+@using ESFA.DC.JobStatus.Interface
+@model IEnumerable<ESFA.DC.Web.Ui.ViewModels.ReportHistoryViewModel>
+
+    <h3 class="govuk-heading-m">Academic year @Model.First().DisplayCollectionYear</h3>
+    
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Return period and download</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Return period</th>
+            <th class="govuk-table__header" scope="col">Final reports at period end</th>
+
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        @foreach (var report in Model)
+        {
+
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">@report.PeriodNumber.ToPeriodName()</th>
+                <td class="govuk-table__cell">
+                    @Html.ActionLink("Download Reports", "DownloadReport", "SubmissionResultsAuthorised", new {period = @report.PeriodNumber, fileName = @report.ReportFileName })
+                    (Zip, @(report.CombinedFileSize.ToString("N1"))MB)
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+

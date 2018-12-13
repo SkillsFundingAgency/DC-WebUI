@@ -29,14 +29,14 @@
 
     <!-- Google Tag Manager -->
     <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KRD8CKK');</script>
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KRD8CKK');</script>
     <!-- End Google Tag Manager -->
     <!--[if lt IE 9]><script src="~/assets/javascripts/ie.js"></script><![endif]-->
     <link rel="shortcut icon" href="~/assets/images/favicon.ico" type="image/x-icon" />
@@ -79,7 +79,8 @@
 
     <script>
         document.body.className =
-            ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+            ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
 
     <div id="skiplink-container">
         <div>
@@ -189,13 +190,15 @@
             </div>
         </div>
     </footer>
-    <div id="global-app-error" class="app-error hidden"></div>
-    <script src="~/js/govuk-template.js"></script>
+<div id="global-app-error" class="app-error hidden"></div>
+<script src="~/assets/javascripts/govuk-template.js" asp-append-version="true" ></script>
+<script src="~/assets/javascripts/govuk.min.js" asp-append-version="true" ></script>
+
 
     <input type="hidden" id="version" value="@Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion" />
     <script>
-        if (
-            typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
+    if (
+        typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
 </body>
 </html>
 
