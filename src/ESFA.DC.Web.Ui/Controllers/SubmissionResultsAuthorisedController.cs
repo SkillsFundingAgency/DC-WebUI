@@ -69,6 +69,32 @@ namespace DC.Web.Ui.Controllers
             return View();
         }
 
+        [Route("DownloadReport/{jobId}")]
+        public async Task<FileResult> DownloadReport(long jobId)
+        {
+            var job = await _jobService.GetJob(Ukprn, jobId);
+
+            if (job == null)
+            {
+                Logger.LogError($"Job not found for provider,  job id : {jobId}");
+                throw new Exception("invalid job id");
+            }
+
+            var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId);
+            Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
+
+            try
+            {
+                var blobStream = await _reportService.GetBlobFileStreamAsync(reportFileName, job.JobType);
+                return File(blobStream, "application/zip", $"{jobId}_Reports.zip");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download zip failed for job id : {jobId}", e);
+                throw;
+            }
+        }
+
         [Route("DownloadReport/{period}/{fileName}")]
         public async Task<FileResult> DownloadReport(int period, string fileName)
         {
