@@ -181,7 +181,7 @@ namespace DC.Web.Ui.Services.Tests
                 dateTimeprovider.Object,
                 new Mock<ILogger>().Object,
                 new Mock<ICollectionManagementService>().Object,
-                new Mock<StorageService>().Object);
+                new Mock<IStorageService>().Object);
         }
     }
 }
