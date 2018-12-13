@@ -7,7 +7,7 @@
 
 
 @{
-    ViewData["Title"] = "Choose file to upload";
+    ViewData["Title"] = "Choose EAS file to upload";
     ViewData["secondaryHeading"] = "EAS Submission";
     var collection = ViewContext.RouteData.Values["collectionName"];
     ViewData["BackUrl"] = "/submission-options";
@@ -23,13 +23,13 @@
         <nav role="navigation" aria-labelledby="subsection-title">
             <ul class="govuk-list govuk-!-font-size-16">
                 <li>
-                    <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018" target="_blank">
-                        Provider support manual for 2016 to 2017
+                    <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/715492/ILRSpecification2018-2019v3.pdf" target="_blank">
+                        Provider support manual for 2018 to 2019  
                     </a>
                 </li>
                 <li>
-                    <a href="https://www.gov.uk/government/publications/sfa-supplementary-data-collection" target="_blank">
-                        ESFA: supplementary data collection guidance
+                    <a href="https://www.gov.uk/government/publications/earnings-adjustment-statement-eas-2018-to-2019" target="_blank">
+                        EAS guidance including sample file 
                     </a>
                 </li>
             </ul>
@@ -45,13 +45,12 @@
     @Html.AntiForgeryToken()
 
     <h1 class="govuk-heading-xl">
-        Choose file to upload
+        Choose EAS file to upload
         <span class="govuk-caption-xl" collection="@collection"></span>
     </h1>
     <p>Before uploading your file you should make sure that:</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>it’s in a CSV format</li>
-        <li>it’s using the <a href="https://www.gov.uk/government/publications/earnings-adjustment-statement-eas-2018-to-2019" target="_blank">EAS data return template</a></li>
         <li>the data it contains is as complete as possible</li>
         <li>the data it contains is as accurate as possible</li>
     </ul>

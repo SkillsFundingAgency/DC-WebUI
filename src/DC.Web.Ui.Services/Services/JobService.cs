@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Autofac.Features.Indexed;
@@ -11,6 +13,7 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.CrossLoad;
 using ESFA.DC.CrossLoad.Dto;
 using ESFA.DC.CrossLoad.Message;
@@ -35,19 +38,25 @@ namespace DC.Web.Ui.Services.Services
         private readonly IJsonSerializationService _serializationService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
+        private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IStorageService _storageService;
 
         public JobService(
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
             IDateTimeProvider dateTimeProvider,
-            ILogger logger)
+            ILogger logger,
+            ICollectionManagementService collectionManagementService,
+            IStorageService storageService)
         {
             _httpClient = httpClient;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/job";
             _serializationService = serializationService;
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
+            _collectionManagementService = collectionManagementService;
+            _storageService = storageService;
         }
 
         public async Task<long> SubmitJob(SubmissionMessageViewModel submissionMessage)
@@ -106,20 +115,88 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
-        public async Task<IEnumerable<FileUploadJob>> GetAllJobsForHistory(long ukprn)
+        public async Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc)
         {
-            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-60).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            var previousPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collectionName, currentPeriodStartDateTimeUtc);
+
+            string startDatetTimeString;
+            if (previousPeriod == null)
+            {
+                startDatetTimeString = currentPeriodStartDateTimeUtc.AddDays(-30).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            }
+            else
+            {
+                startDatetTimeString = previousPeriod.StartDateTimeUtc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            }
+
             var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
             var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}";
             _logger.LogInfo($"getting history url : {url}");
+
             var data = await _httpClient.GetDataAsync(url);
-            return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+            var submissionData = _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+
+            return ConvertSubmissions(submissionData);
+        }
+
+        public async Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn)
+        {
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddMonths(-18).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}/latest-for-period";
+            _logger.LogInfo($"getting reports history for url : {url}");
+
+            var data = await _httpClient.GetDataAsync(url);
+            var jobsList = _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
+
+            var result = new List<ReportHistoryViewModel>();
+            foreach (var job in jobsList)
+            {
+                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.CollectionYear == job.CollectionYear);
+
+                if (item == null)
+                {
+                    item = new ReportHistoryViewModel()
+                    {
+                        PeriodNumber = job.PeriodNumber,
+                        CollectionYear = job.CollectionYear,
+                        DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}"
+                    };
+
+                    result.Add(item);
+                }
+
+                var reportSize = await _storageService.GetReportFileSizeAsync(job);
+                item.CombinedFileSize += reportSize / 1024;
+                item.RelatedJobs.Add(job.JobType, job.JobId);
+            }
+
+            //calculate the overall filesize and put it on the model
+            foreach (var model in result)
+            {
+                var fileNames = string.Join(", ", model.RelatedJobs.Select(kvp => (short)kvp.Key + "-" + kvp.Value));
+                model.ReportFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileNames));
+            }
+
+            return result.OrderByDescending(x => x.CollectionYear);
         }
 
         public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)
         {
             var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{collectionName}/latest");
+            if (data == null)
+            {
+                return null;
+            }
+
+            return _serializationService.Deserialize<FileUploadJob>(data);
+        }
+
+        public async Task<FileUploadJob> GetLatestJob(long ukprn, string contractReference, string collectionName)
+        {
+            var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}/{contractReference}/{collectionName}/latest");
             if (data == null)
             {
                 return null;
@@ -179,6 +256,41 @@ namespace DC.Web.Ui.Services.Services
             }
 
             return string.Empty;
+        }
+
+        private List<SubmissonHistoryViewModel> ConvertSubmissions(IEnumerable<FileUploadJob> jobsList)
+        {
+            var jobsViewList = new List<SubmissonHistoryViewModel>();
+            jobsList.OrderByDescending(x => x.DateTimeSubmittedUtc)
+                .ToList()
+                .ForEach(x => jobsViewList.Add(new SubmissonHistoryViewModel()
+                {
+                    JobId = x.JobId,
+                    FileName = x.FileName.FileNameWithoutUkprn(),
+                    JobType = MapJobType(x.JobType),
+                    ReportsFileName = $"{x.JobId}_Reports.zip",
+                    Status = x.Status,
+                    DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateTimeDisplayFormat(),
+                    SubmittedBy = x.SubmittedBy,
+                    DateTimeSubmittedUtc = x.DateTimeSubmittedUtc
+                }));
+
+            return jobsViewList;
+        }
+
+        private string MapJobType(JobType jobType)
+        {
+            switch (jobType)
+            {
+                case JobType.IlrSubmission:
+                    return "ILR";
+                case JobType.EsfSubmission:
+                    return "ESF";
+                case JobType.EasSubmission:
+                    return "EAS";
+                default:
+                    throw new Exception("invalid job type");
+            }
         }
     }
 }

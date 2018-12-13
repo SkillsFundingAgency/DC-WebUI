@@ -4,17 +4,60 @@
 
 @{
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
+    var processedYears = new List<int>();
 }
 
 <h1 class="govuk-heading-xl">Reports</h1>
 
-
-  
-    <p>If you need to correct the data you've submitted, <a href="/submission-options">submit another file</a>.</p>
-
-    @if (Model.SubmissonHistoryViewModels.Any())
-    {
-        @await Html.PartialAsync("_submissionHistory", Model.SubmissonHistoryViewModels)
-    }
+<p>If you need to correct the data you've submitted, <a href="/submission-options">submit another file</a>.</p>
 
 
+<div class="govuk-tabs" data-module="tabs">
+    <h2 class="govuk-tabs__title">
+        Submission and reports history
+    </h2>
+
+    <ul class="govuk-tabs__list" role="tablist">
+        <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="0" aria-selected="true">
+                Submission history
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="1" aria-selected="false">
+                Reports history
+            </a>
+        </li>
+
+    </ul>
+
+    <section class="govuk-tabs__panel" id="submissions" role="tabpanel" aria-labelledby="tab_submissions">
+        <h2 class="govuk-heading-l" id="submission">Submission history  <span class="govuk-caption-l">@Model.PeriodName</span></h2>
+        <p>Each time you submit a new file your reports will be updated. To view your latest reports you should download the reports for your most recent submission.</p>
+
+        <h3 class="govuk-heading-m">Submissions for @Model.CollectionYearStart to @Model.CollectionYearEnd</h3>
+
+        @await Html.PartialAsync("_submissionHistory", Model.CurrentPeriodSubmissions)
+
+        <h3 class="govuk-heading-m">Older submissions</h3>
+        @await Html.PartialAsync("_submissionHistory", Model.PreviousPeriodSubmissions)
+
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
+        <h2 class="govuk-heading-l" id="reports">Reports history</h2>
+        <p>The reports download includes the last validation report and submission files. You can <a href="https://hub.fasst.org.uk/Pages/default.aspx" target="_blank">view period end reports</a> in the Hub.</p>
+
+
+        @foreach (var report in Model.ReportHistoryItems)
+        {
+            if (!processedYears.Contains(report.CollectionYear))
+            {
+                var items = Model.ReportHistoryItems.Where(x => x.CollectionYear == report.CollectionYear);
+                @await Html.PartialAsync("_reportsHistory", items)
+                processedYears.Add(report.CollectionYear);
+            }
+        }
+
+    </section>
+
+</div>

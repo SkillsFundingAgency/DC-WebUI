@@ -17,6 +17,8 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<decimal> GetReportFileSizeAsync(string fileName, JobType jobType);
 
-        string GetReportsZipFileName(long ukprn, long jobId, JobStatusType? crossLoadingStatus);
+        string GetReportsZipFileName(long ukprn, long jobId);
+
+        Task<Stream> GetMergedReportFile(long ukprn, Dictionary<JobType, long> jobsList);
     }
 }

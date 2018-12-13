@@ -4,8 +4,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
+using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Web.Ui.ViewModels;
@@ -15,8 +17,14 @@ namespace DC.Web.Ui.Services.Services
 {
     public class EasFileNameValidationService : AbstractFileNameValidationService
     {
-        public EasFileNameValidationService([KeyFilter(JobType.EasSubmission)]IKeyValuePersistenceService persistenceService, FeatureFlags featureFlags)
-            : base(persistenceService, featureFlags)
+        public EasFileNameValidationService(
+            [KeyFilter(JobType.EasSubmission)]IKeyValuePersistenceService persistenceService,
+            FeatureFlags featureFlags,
+            IJobService jobService,
+            IDateTimeProvider dateTimeProvider,
+            IBespokeHttpClient httpClient,
+            ApiSettings apiSettings)
+            : base(persistenceService, featureFlags, jobService, dateTimeProvider, httpClient, apiSettings)
         {
         }
 
@@ -44,7 +52,7 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = ValidateUkprn(fileName, ukprn);
+            result = ValidateLoggedInUserUkprn(fileName, ukprn);
             if (result != null)
             {
                 return result;
@@ -56,10 +64,38 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
+            result = await LaterFileExists(ukprn, fileName, collectionName);
+            if (result != null)
+            {
+                return result;
+            }
+
+            result = IsFileAfterCurrentDateTime(ukprn, fileName, collectionName);
+            if (result != null)
+            {
+                return result;
+            }
+
+            result = await ValidateOrganisation(ukprn);
+            if (result != null)
+            {
+                return result;
+            }
+
             return new FileNameValidationResultViewModel()
             {
                 ValidationResult = FileNameValidationResult.Valid
             };
+        }
+
+        public override DateTime GetFileDateTime(string fileName)
+        {
+            var matches = FileNameRegex.Match(fileName);
+
+            return DateTime.ParseExact(
+                $"{matches.Groups[3].Value}-{matches.Groups[7].Value}",
+                "yyyyMMdd-HHmmss",
+                System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

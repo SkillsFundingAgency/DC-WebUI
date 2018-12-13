@@ -6,7 +6,7 @@
 @model ESFA.DC.Web.Ui.ViewModels.FileUploadConfirmationViewModel
 
 @{
-    ViewData["Title"] = "Choose file to upload";
+    ViewData["Title"] = "Choose ILR file to upload";
     ViewData["secondaryHeading"] = "ILR Submission";
     var collection = ViewContext.RouteData.Values["collectionName"];
     ViewData["BackUrl"] = "/submission-options";
@@ -21,17 +21,17 @@
     <nav role="navigation" aria-labelledby="subsection-title">
         <ul class="govuk-list govuk-!-font-size-16">
             <li>
-                <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018">
+                <a href="https://www.gov.uk/government/publications/ilr-guides-and-templates-for-2017-to-2018" target="_blank">
                     ILR provider support manual - guide to making ILR returns
                 </a>
             </li>
             <li>
-                <a href="https://www.gov.uk/education/data-collection-for-further-education-providers">
+                <a href="https://www.gov.uk/education/data-collection-for-further-education-providers" target="_blank">
                     ILR specification, validation and funding rules
                 </a>
             </li>
             <li>
-                <a href="https://www.gov.uk/government/publications/ilr-data-check-that-it-meets-standards-and-quality-requirements">
+                <a href="https://www.gov.uk/government/publications/ilr-data-check-that-it-meets-standards-and-quality-requirements" target="_blank">
                     ILR data: check that it meets standards and quality requirements
                 </a>
             </li>
@@ -57,7 +57,7 @@
     @Html.AntiForgeryToken()
 
     <h1 class="govuk-heading-xl">
-        Choose file to upload
+        Choose ILR file to upload
         <span class="govuk-caption-xl" collection="@collection"></span>
     </h1>
     <p>Before uploading your file you should make sure that:</p>

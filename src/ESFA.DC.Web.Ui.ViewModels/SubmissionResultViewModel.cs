@@ -7,18 +7,19 @@ namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class SubmissionResultViewModel
     {
-        public long JobId { get; set; }
-
         public int PeriodNumber { get; set; }
 
         public string PeriodName { get; set; }
 
-        public string FileSize { get; set; }
+        public List<SubmissonHistoryViewModel> CurrentPeriodSubmissions { get; set; }
 
-        public JobStatusType Status { get; set; }
+        public List<SubmissonHistoryViewModel> PreviousPeriodSubmissions { get; set; }
 
-        public JobType JobType { get; set; }
+        public List<ReportHistoryViewModel> ReportHistoryItems { get; set; }
 
-        public List<SubmissonHistoryViewModel> SubmissonHistoryViewModels { get; set; }
+        public string CollectionYearStart { get; set; }
+
+        public string CollectionYearEnd { get; set; }
+
     }
 }

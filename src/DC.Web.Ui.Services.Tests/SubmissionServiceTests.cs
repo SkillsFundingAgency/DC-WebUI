@@ -156,9 +156,7 @@ namespace DC.Web.Ui.Services.Tests
 
         private IJobService GetService(
             IBespokeHttpClient httpClient = null,
-            IJsonSerializationService serializationService = null,
-            IQueuePublishService<MessageCrossLoadDctToDcftDto> queuePublishService = null,
-            IStorageService reportService = null)
+            IJsonSerializationService serializationService = null)
         {
             var dateTimeprovider = new Mock<IDateTimeProvider>();
             dateTimeprovider.Setup(x => x.GetNowUtc()).Returns(DateTime.Now);
@@ -181,7 +179,9 @@ namespace DC.Web.Ui.Services.Tests
                 new ApiSettings(),
                 serializationService ?? jsonSerialisationMock.Object,
                 dateTimeprovider.Object,
-                new Mock<ILogger>().Object);
+                new Mock<ILogger>().Object,
+                new Mock<ICollectionManagementService>().Object,
+                new Mock<IStorageService>().Object);
         }
     }
 }
