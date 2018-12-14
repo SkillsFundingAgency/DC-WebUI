@@ -6,7 +6,6 @@ using Autofac.Features.AttributeFilters;
 using DC.Web.Authorization.Base;
 using DC.Web.Authorization.Data.Repository;
 using DC.Web.Authorization.FileSubmissionPolicy;
-using DC.Web.Authorization.Query;
 using DC.Web.Ui.Services;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -40,7 +39,6 @@ namespace DC.Web.Ui.Ioc
         {
             builder.RegisterType<JobService>().As<IJobService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizationPolicyService>().As<IAuthorizationPolicyService>().InstancePerLifetimeScope();
-            builder.RegisterType<PermissionsQueryService>().As<IPermissionsQueryService>().InstancePerLifetimeScope();
             builder.RegisterType<AuthorizeRepository>().As<IAuthorizeRepository>().InstancePerLifetimeScope();
             builder.RegisterType<BespokeHttpClient>().As<IBespokeHttpClient>().InstancePerLifetimeScope();
             builder.RegisterType<ValidationResultsService>().As<IValidationResultsService>().InstancePerLifetimeScope();

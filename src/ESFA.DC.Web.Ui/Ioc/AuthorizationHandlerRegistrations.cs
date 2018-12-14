@@ -11,14 +11,14 @@ namespace DC.Web.Ui.Ioc
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(context =>
-                {
-                    var authenticationSettings = context.Resolve<AuthenticationSettings>();
-                    var policy = context.Resolve<IAuthorizationPolicyService>();
-                    return new AuthorizationAuthorizationPolicyHandler(policy, authenticationSettings);
-                })
-                .As<IAuthorizationHandler>()
-                .SingleInstance();
+            //builder.Register(context =>
+            //    {
+            //        var authenticationSettings = context.Resolve<AuthenticationSettings>();
+            //        var policy = context.Resolve<IAuthorizationPolicyService>();
+            //        return new FileSubmissionPolicyHandler(policy, authenticationSettings);
+            //    })
+            //    .As<IAuthorizationHandler>()
+            //    .SingleInstance();
         }
     }
 }

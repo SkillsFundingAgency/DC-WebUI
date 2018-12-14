@@ -59,6 +59,7 @@ namespace DC.Web.Ui
             // Custom services
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthentication(authSettings);
+            services.AddAndConfigureAuthorisation();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return ConfigureAutofac(services);
         }

@@ -2,7 +2,6 @@
 using System.Linq;
 using DC.Web.Authorization.Base;
 using DC.Web.Authorization.Idams;
-using DC.Web.Authorization.Query;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DC.Web.Authorization.FileSubmissionPolicy

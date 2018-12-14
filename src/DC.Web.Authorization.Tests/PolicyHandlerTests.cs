@@ -18,7 +18,7 @@ namespace DC.Web.Authorization.Tests
         [Fact]
         public void NullClaims_Fail()
         {
-            var requirementMock = new Mock<IAuthorizationRequirement>();
+            var requirementMock = new Mock<FileSubmissionPolicyRequirement>();
             var policyServiceMock = new Mock<IAuthorizationPolicyService>();
             var policyhandlerBaseMock = new AuthorizationAuthorizationPolicyHandlerMock(policyServiceMock.Object, It.IsAny<AuthenticationSettings>());
             var authorizationHandlerContext = new AuthorizationHandlerContext(new[] { requirementMock.Object }, null, null);
@@ -36,7 +36,7 @@ namespace DC.Web.Authorization.Tests
         [Fact]
         public void EmptyClaims_Fail()
         {
-            var requirementMock = new Mock<IAuthorizationRequirement>();
+            var requirementMock = new Mock<FileSubmissionPolicyRequirement>();
             var policyServiceMock = new Mock<IAuthorizationPolicyService>();
             var policyhandlerBaseMock =
                 new AuthorizationAuthorizationPolicyHandlerMock(policyServiceMock.Object, It.IsAny<AuthenticationSettings>());
@@ -57,7 +57,7 @@ namespace DC.Web.Authorization.Tests
         [Fact]
         public void InValidClaims_Fail()
         {
-            var requirementMock = new Mock<IAuthorizationRequirement>();
+            var requirementMock = new Mock<FileSubmissionPolicyRequirement>();
             var policyServiceMock = new Mock<IAuthorizationPolicyService>();
 
             policyServiceMock.Setup(x => x.IsRequirementMet(It.IsAny<IEnumerable<IdamsClaim>>(), requirementMock.Object)).Returns(false);
@@ -84,7 +84,7 @@ namespace DC.Web.Authorization.Tests
         [InlineData("DCS")]
         public void ValidClaims_Success(string role)
         {
-            var requirementMock = new Mock<IAuthorizationRequirement>();
+            var requirementMock = new Mock<FileSubmissionPolicyRequirement>();
             var policyServiceMock = new Mock<IAuthorizationPolicyService>();
 
             policyServiceMock.Setup(x => x.IsRequirementMet(It.IsAny<IEnumerable<IdamsClaim>>(), requirementMock.Object)).Returns(true);
