@@ -37,11 +37,11 @@
 
 @if (@Model.TotalErrors > 0 || @Model.TotalWarnings > 0)
 {
-    <p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners</p>
+    <p id="error"><span class="govuk-!-font-weight-bold">Total learners in file</span>: @Model.TotalLearners.ToString("N0")</p>
 
-    <p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors (affecting @Model.TotalErrorLearners learners)</p>
+    <p><span class="govuk-!-font-weight-bold">Total errors</span>: @Model.TotalErrors.ToString("N0") (affecting @Model.TotalErrorLearners.ToString("N0") learner@(Model.TotalErrorLearners > 1 ? "s" : String.Empty))</p>
 
-    <p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings (affecting @Model.TotalWarningLearners learners)</p>
+    <p><span class="govuk-!-font-weight-bold">Total warnings</span>: @Model.TotalWarnings.ToString("N0") (affecting @Model.TotalWarningLearners.ToString("N0") learner@(Model.TotalWarningLearners > 1 ? "s" : String.Empty))</p>
 
     <p>
         @Html.ActionLink($"Download detailed report", "Download", "ValidationResultsAuthorised", new { reportType = "DetailedErrors" }) <span>(CSV,  @(Model.ReportFileSize)KB) showing all errors and warnings</span>

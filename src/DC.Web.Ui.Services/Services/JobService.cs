@@ -235,7 +235,7 @@ namespace DC.Web.Ui.Services.Services
                 JobId = job.JobId,
                 PeriodName = string.Concat("R", job.PeriodNumber.ToString("00")),
                 SubmittedAtDate = localTime.ToString("dddd dd MMMM yyyy"),
-                SubmittedAtDateTime = string.Concat(localTime.ToString("hh:mmtt").ToLower(), " on ", localTime.ToString("dddd dd MMMM yyyy")),
+                SubmittedAtDateTime = string.Concat(localTime.ToString("h:mmtt").ToLower(), " on ", localTime.ToString("dddd dd MMMM yyyy")),
                 SubmittedBy = job.SubmittedBy,
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType,
