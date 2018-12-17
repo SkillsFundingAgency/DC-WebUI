@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 
-namespace DC.Web.Authorization.FileSubmissionPolicy
+namespace DC.Web.Authorization.Policies
 {
-    public class AdminAccessPolicyRequirement : IAuthorizationRequirement
+    public class FileSubmissionPolicyRequirement : IAuthorizationRequirement
     {
     }
 }

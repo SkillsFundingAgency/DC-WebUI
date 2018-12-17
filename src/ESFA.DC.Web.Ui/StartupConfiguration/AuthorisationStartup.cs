@@ -1,6 +1,6 @@
 ﻿using DC.Web.Authorization;
 using DC.Web.Authorization.AuthorizationHandlers;
-using DC.Web.Authorization.FileSubmissionPolicy;
+using DC.Web.Authorization.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,8 +16,7 @@ namespace DC.Web.Ui.StartupConfiguration
                 options.AddPolicy(PolicyTypes.AdminAccess, policy => policy.Requirements.Add(new AdminAccessPolicyRequirement()));
             });
 
-            services.AddSingleton<IAuthorizationHandler, FileSubmissionPolicyHandler>();
-            services.AddSingleton<IAuthorizationHandler, AdminAccessPolicyHandler>();
+            services.AddSingleton<IAuthorizationHandler, AuthorizationPolicyHandler>();
         }
     }
 }

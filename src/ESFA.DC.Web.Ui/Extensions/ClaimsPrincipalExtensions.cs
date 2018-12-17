@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DC.Web.Authorization;
 using DC.Web.Authorization.Idams;
 
 namespace DC.Web.Ui.Extensions
@@ -39,6 +40,17 @@ namespace DC.Web.Ui.Extensions
         public static string Email(this ClaimsPrincipal claimsPrincipal)
         {
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Email);
+        }
+
+        public static bool IsAdminUser(this ClaimsPrincipal claimsPrincipal)
+        {
+            var claimValue = GetClaimValue(claimsPrincipal, IdamsClaimTypes.UserType);
+            if (string.IsNullOrEmpty(claimValue))
+            {
+                return false;
+            }
+
+            return ClaimAccessConstants.AdminUserTypes.Contains(claimValue.ToUpper());
         }
 
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)

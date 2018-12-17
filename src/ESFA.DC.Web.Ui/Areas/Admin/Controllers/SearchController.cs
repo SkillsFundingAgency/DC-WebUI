@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Areas.Admin.Controllers
 {
     [Area(AreaNames.Admin)]
-    [Authorize(Policy = PolicyTypes.AdminAccess)]
-    public class SearchController : Controller
+    [Route(AreaNames.Admin + "/")]
+    public class SearchController : BaseAdminController
     {
         public IActionResult Index()
         {

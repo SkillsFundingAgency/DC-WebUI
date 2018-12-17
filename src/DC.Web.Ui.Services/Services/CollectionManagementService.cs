@@ -32,17 +32,24 @@ namespace DC.Web.Ui.Services.Services
             var result = new List<SubmissionOptionViewModel>();
             var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}");
 
-            if (data != null)
+            try
             {
-                var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
-                foreach (var x in options)
+                if (data != null)
                 {
-                    result.Add(new SubmissionOptionViewModel
+                    var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
+                    foreach (var x in options)
                     {
-                        Name = x.Type,
-                        Title = x.Description
-                    });
+                        result.Add(new SubmissionOptionViewModel
+                        {
+                            Name = x.Type,
+                            Title = x.Description
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                return result;
             }
 
             return result;
