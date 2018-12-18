@@ -140,7 +140,9 @@
                 </div>
 
                 <div class="govuk-grid-column-one-third">
-                    @RenderSection("RelatedContent", required: false)
+                    
+                    @await Component.InvokeAsync("ReturnWindow")
+
                     <aside role="complementary">
                         <h2 class="govuk-heading-m" id="subsection-title">
                             Related content
