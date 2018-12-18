@@ -13,6 +13,6 @@ namespace DC.Web.Ui.Constants
 
         public const string Eas = "eas";
 
-        public const string Admin = "admin";
+        public const string HelpDesk = "helpdesk";
     }
 }

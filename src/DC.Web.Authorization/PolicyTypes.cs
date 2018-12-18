@@ -3,6 +3,6 @@
     public class PolicyTypes
     {
         public const string FileSubmission = "FileSubmissionAllowed";
-        public const string AdminAccess = "AdminAccess";
+        public const string HelpDeskAccess = "HelpDeskAccess";
     }
 }

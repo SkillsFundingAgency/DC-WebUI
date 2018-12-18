@@ -13,7 +13,7 @@ namespace DC.Web.Ui.StartupConfiguration
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(PolicyTypes.FileSubmission, policy => policy.Requirements.Add(new FileSubmissionPolicyRequirement()));
-                options.AddPolicy(PolicyTypes.AdminAccess, policy => policy.Requirements.Add(new AdminAccessPolicyRequirement()));
+                options.AddPolicy(PolicyTypes.HelpDeskAccess, policy => policy.Requirements.Add(new HelpDeskAccessPolicyRequirement()));
             });
 
             services.AddSingleton<IAuthorizationHandler, AuthorizationPolicyHandler>();

@@ -23,7 +23,7 @@ namespace DC.Web.Authorization.Tests
                 new List<IAuthorizationRequirement>
                 {
                     new FileSubmissionPolicyRequirement(),
-                    new AdminAccessPolicyRequirement(),
+                    new HelpDeskAccessPolicyRequirement(),
                 },
                 null,
                 null);
@@ -45,7 +45,7 @@ namespace DC.Web.Authorization.Tests
                 new List<IAuthorizationRequirement>
                 {
                     new FileSubmissionPolicyRequirement(),
-                    new AdminAccessPolicyRequirement(),
+                    new HelpDeskAccessPolicyRequirement(),
                 },
                 claimsPrincipal,
                 null);
@@ -111,6 +111,57 @@ namespace DC.Web.Authorization.Tests
             result.IsCompleted.Should().BeTrue();
         }
 
+        [Theory]
+        [InlineData("DAA")]
+        [InlineData("DCS")]
+        public void ValidClaims_Fail_AdminArea(string role)
+        {
+            var policyhandler = new AuthorizationPolicyHandler();
+
+            var claims = new List<Claim>()
+            {
+                new Claim(IdamsClaimTypes.DisplayName, "test"),
+                new Claim(IdamsClaimTypes.Service, role),
+            };
+            var identity = new ClaimsIdentity(claims, "Idams");
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var authorizationHandlerContext = new AuthorizationHandlerContext(
+                new List<IAuthorizationRequirement>
+                {
+                    new HelpDeskAccessPolicyRequirement(),
+                },
+                claimsPrincipal,
+                null);
+
+            var result = policyhandler.HandleAsync(authorizationHandlerContext);
+            authorizationHandlerContext.HasSucceeded.Should().BeFalse();
+            result.IsCompleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task ValidClaims_Fail_FileSubmission()
+        {
+            var policyhandler = new AuthorizationPolicyHandler();
+
+            var claims = new List<Claim>()
+            {
+                new Claim(IdamsClaimTypes.DisplayName, "test"),
+                new Claim(IdamsClaimTypes.UserType, "LSC"),
+            };
+            var identity = new ClaimsIdentity(claims, "Idams");
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var authorizationHandlerContext = new AuthorizationHandlerContext(
+                new List<IAuthorizationRequirement>
+                {
+                    new FileSubmissionPolicyRequirement(),
+                },
+                claimsPrincipal,
+                new object());
+
+            await policyhandler.HandleAsync(authorizationHandlerContext);
+            authorizationHandlerContext.HasSucceeded.Should().BeFalse();
+        }
+
         [Fact]
         public async Task ValidClaims_Success_Admin()
         {
@@ -126,7 +177,7 @@ namespace DC.Web.Authorization.Tests
             var authorizationHandlerContext = new AuthorizationHandlerContext(
                 new List<IAuthorizationRequirement>
                 {
-                    new AdminAccessPolicyRequirement(),
+                    new HelpDeskAccessPolicyRequirement(),
                 },
                 claimsPrincipal,
                 new object());

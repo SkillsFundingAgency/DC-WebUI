@@ -144,10 +144,10 @@
     <Content Update="appsettings.salman.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Areas\Admin\Views\_Layout.cshtml">
+    <Content Update="Areas\Helpdesk\Views\_Layout.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Areas\Admin\Views\_ViewStart.cshtml">
+    <Content Update="Areas\Helpdesk\Views\_ViewStart.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\EAS\Views\InProgressAuthorised\Index.cshtml">

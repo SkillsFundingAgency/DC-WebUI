@@ -50,7 +50,7 @@ namespace DC.Web.Ui.Extensions
                 return false;
             }
 
-            return ClaimAccessConstants.AdminUserTypes.Contains(claimValue.ToUpper());
+            return ClaimAccessConstants.HelpDeskUserTypes.Contains(claimValue.ToUpper());
         }
 
         private static string GetClaimValue(ClaimsPrincipal claimsPrincipal, string claimType)

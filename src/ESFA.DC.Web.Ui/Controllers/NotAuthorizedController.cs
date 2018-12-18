@@ -14,7 +14,7 @@ namespace DC.Web.Ui.Controllers
         {
             if (User.IsAdminUser())
             {
-                return RedirectToAction("Index", "Search", new { area = AreaNames.Admin });
+                return RedirectToAction("Index", "Search", new { area = AreaNames.HelpDesk });
             }
 
             return View();

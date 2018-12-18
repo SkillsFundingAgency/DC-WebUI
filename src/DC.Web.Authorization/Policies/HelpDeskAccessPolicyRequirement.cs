@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DC.Web.Authorization.Policies
 {
-    public class AdminAccessPolicyRequirement : IAuthorizationRequirement
+    public class HelpDeskAccessPolicyRequirement : IAuthorizationRequirement
     {
     }
 }

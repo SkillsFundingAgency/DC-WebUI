@@ -35,9 +35,9 @@ namespace DC.Web.Authorization.AuthorizationHandlers
                     }
                 }
 
-                if (requirement is AdminAccessPolicyRequirement)
+                if (requirement is HelpDeskAccessPolicyRequirement)
                 {
-                    if (IsAdminAreaAllowed(idamsClaims))
+                    if (IsHelpDeskAreaAllowed(idamsClaims))
                     {
                         context.Succeed(requirement);
                     }
@@ -52,9 +52,9 @@ namespace DC.Web.Authorization.AuthorizationHandlers
             return claims.Any(x => x.Type == IdamsClaimTypes.Service && ClaimAccessConstants.FileSubmissionRoles.Contains(x.Value.ToUpper()));
         }
 
-        private bool IsAdminAreaAllowed(IEnumerable<IdamsClaim> claims)
+        private bool IsHelpDeskAreaAllowed(IEnumerable<IdamsClaim> claims)
         {
-            return claims.Any(x => x.Type == IdamsClaimTypes.UserType && ClaimAccessConstants.AdminUserTypes.Contains(x.Value.ToUpper()));
+            return claims.Any(x => x.Type == IdamsClaimTypes.UserType && ClaimAccessConstants.HelpDeskUserTypes.Contains(x.Value.ToUpper()));
         }
     }
 }
