@@ -120,7 +120,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="2.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
@@ -143,6 +143,15 @@
     </Content>
     <Content Update="appsettings.salman.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_Layout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\EAS\Views\InProgressAuthorised\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>

@@ -59,6 +59,7 @@ namespace DC.Web.Ui
             // Custom services
             services.AddAndConfigureDataAccess(_config);
             services.AddAndConfigureAuthentication(authSettings);
+            services.AddAndConfigureAuthorisation();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return ConfigureAutofac(services);
         }
@@ -108,7 +109,6 @@ namespace DC.Web.Ui
             containerBuilder.SetupConfigurations(_config);
 
             containerBuilder.RegisterModule<ServiceRegistrations>();
-            containerBuilder.RegisterModule<AuthorizationHandlerRegistrations>();
             containerBuilder.RegisterModule<LoggerRegistrations>();
 
             containerBuilder.Populate(services);

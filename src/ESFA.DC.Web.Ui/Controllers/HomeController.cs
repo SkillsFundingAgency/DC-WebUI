@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DC.Web.Authorization.Idams;
+using DC.Web.Ui.Constants;
+using DC.Web.Ui.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
@@ -8,6 +12,11 @@ namespace DC.Web.Ui.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
+                if (User.IsAdminUser())
+                {
+                    return RedirectToAction("Index", "Search", new { area = AreaNames.HelpDesk });
+                }
+
                 return RedirectToAction("Index", "SubmissionOptionsAuthorised");
             }
 

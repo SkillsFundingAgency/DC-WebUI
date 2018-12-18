@@ -12,5 +12,7 @@ namespace DC.Web.Ui.Constants
         public const string Esf = "esf";
 
         public const string Eas = "eas";
+
+        public const string HelpDesk = "helpdesk";
     }
 }
