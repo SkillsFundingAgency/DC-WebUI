@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DC.Web.Ui.Constants;
+using DC.Web.Ui.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Areas.Helpdesk.Controllers
@@ -8,6 +9,13 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
     [Route(AreaNames.HelpDesk + "/")]
     public class ProviderSearch : BaseAdminController
     {
+        private readonly IProviderService _providerService;
+
+        public ProviderSearch(IProviderService providerService)
+        {
+            _providerService = providerService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -24,7 +32,9 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
                 return View("Index");
             }
 
-            return View("Results");
+            var result = await _providerService.GetSearchResults(searchTerm);
+
+            return View("Results", result);
         }
     }
 }

@@ -1,5 +1,8 @@
-﻿@model ESFA.DC.Web.Ui.ViewModels.ProviderSearchResultViewModel
+﻿@using ESFA.DC.Web.Ui.ViewModels.HelpDesk
+@model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderSearchResultViewModel
 
+@if (Model != null)
+{
     <h1 class="govuk-heading-xl">
         <label for="provider-search">
             Search
@@ -7,20 +10,27 @@
         </label>
     </h1>
     <div class="govuk-form-group">
-        <input class="govuk-input govuk-!-width-two-thirds" id="provider-search" name="search-provider" type="search" value="Manchester" aria-describedby="provider-search"> <a href="search-results.html" type="submit" class="govuk-button">
-            Search
-        </a>
+        <form asp-controller="ProviderSearch" asp-action="GetResults" method="post" id="form">
+            <input class="govuk-input govuk-!-width-two-thirds" id="searchTerm" name="searchTerm" type="search" value="@Model.SearchTerm" aria-describedby="provider-search">
+            <button class="govuk-button" type="submit">
+                Search
+            </button>
+        </form>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
         <p>@Model.ProvidersList.Count() results found.</p>
-        
+
         @foreach (var provider in Model.ProvidersList)
         {
             <h3 class="govuk-heading-m"><a href="provider-record.html">@provider.Name</a></h3>
             <ul class="govuk-list">
                 <li><span class="govuk-!-font-weight-bold">UKPRN:</span> @provider.Ukprn</li>
-                <li><span class="govuk-!-font-weight-bold">Last submission by:</span> @provider.LastSubmittedBy (@(provider.LastSubmittedByEmail) on @provider.LastSubmittedDate</li>
+                @if (!string.IsNullOrEmpty(provider.LastSubmittedBy))
+                {
+                    <li><span class="govuk-!-font-weight-bold">Last submission by:</span> @provider.LastSubmittedBy (@(provider.LastSubmittedByEmail) on @provider.LastSubmittedDate</li>
+                }
             </ul>
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         }
     </div>
+}

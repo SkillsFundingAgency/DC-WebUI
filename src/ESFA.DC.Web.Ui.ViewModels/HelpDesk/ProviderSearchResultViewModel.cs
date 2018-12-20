@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ESFA.DC.Web.Ui.ViewModels.HelpDesk;
+﻿using System.Collections.Generic;
 
-namespace ESFA.DC.Web.Ui.ViewModels
+namespace ESFA.DC.Web.Ui.ViewModels.HelpDesk
 {
     public class ProviderSearchResultViewModel
     {
+        public ProviderSearchResultViewModel()
+        {
+            ProvidersList = new List<ProviderDetailViewModel>(); 
+        }
+
         public string SearchTerm { get; set; }
 
-        public IEnumerable<ProviderDetailViewModel> ProvidersList { get; set; }
+        public List<ProviderDetailViewModel> ProvidersList { get; set; }
     }
 }

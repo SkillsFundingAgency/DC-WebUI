@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="ESFA.DC.Api.Models" Version="0.1.28-beta0001" />
     <PackageReference Include="ESFA.DC.CollectionsManagement.Models" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.CrossLoad" Version="0.1.4-beta0001" />
     <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
