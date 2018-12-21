@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DC.Web.Ui.Areas.Helpdesk.Controllers
 {
     [Authorize(Policy = PolicyTypes.HelpDeskAccess)]
-    public class BaseAdminController : Controller
+    public class BaseHelpDeskController : Controller
     {
     }
 }

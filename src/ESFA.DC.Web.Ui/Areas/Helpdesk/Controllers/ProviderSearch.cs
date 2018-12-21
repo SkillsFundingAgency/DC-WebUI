@@ -7,7 +7,7 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
 {
     [Area(AreaNames.HelpDesk)]
     [Route(AreaNames.HelpDesk + "/")]
-    public class ProviderSearch : BaseAdminController
+    public class ProviderSearch : BaseHelpDeskController
     {
         private readonly IProviderService _providerService;
 
@@ -27,8 +27,8 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
         {
             if (string.IsNullOrEmpty(searchTerm))
             {
-                ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, "There is a problem");
-                ModelState.AddModelError(ErrorMessageKeys.HelpDesk_SearchProvider, "Please enter a search term");
+                ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, "You haven't entered any provider details. Please enter the provider name or UKPRN");
+                ModelState.AddModelError(ErrorMessageKeys.HelpDesk_SearchProvider, "You haven't entered any provider details. Please enter the provider name or UKPRN");
                 return View("Index");
             }
 

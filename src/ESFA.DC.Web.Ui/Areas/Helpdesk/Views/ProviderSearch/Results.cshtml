@@ -27,7 +27,7 @@
                 <li><span class="govuk-!-font-weight-bold">UKPRN:</span> @provider.Ukprn</li>
                 @if (!string.IsNullOrEmpty(provider.LastSubmittedBy))
                 {
-                    <li><span class="govuk-!-font-weight-bold">Last submission by:</span> @provider.LastSubmittedBy (@(provider.LastSubmittedByEmail) on @provider.LastSubmittedDate</li>
+                    <li><span class="govuk-!-font-weight-bold">Last submission by:</span> @provider.LastSubmittedBy (@(provider.LastSubmittedByEmail)) on @provider.LastSubmittedDate</li>
                 }
             </ul>
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
