@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DC.Web.Authorization.Data.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.Web.Ui.ViewModels", "ESFA.DC.Web.Ui.ViewModels\ESFA.DC.Web.Ui.ViewModels.csproj", "{BB834BC1-36B9-4C9C-BBD2-BB0B3B86A8E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AcceptanceTests", "AcceptanceTests", "{43CC1591-A459-477B-B635-4FD37F4E9B28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DC.Web.Ui.AcceptanceTests", "DC.Web.Ui.AcceptanceTests\DC.Web.Ui.AcceptanceTests.csproj", "{E60B23B7-C9B0-4301-8831-A23332567837}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,10 @@ Global
 		{BB834BC1-36B9-4C9C-BBD2-BB0B3B86A8E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB834BC1-36B9-4C9C-BBD2-BB0B3B86A8E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB834BC1-36B9-4C9C-BBD2-BB0B3B86A8E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E60B23B7-C9B0-4301-8831-A23332567837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E60B23B7-C9B0-4301-8831-A23332567837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E60B23B7-C9B0-4301-8831-A23332567837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E60B23B7-C9B0-4301-8831-A23332567837}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +88,7 @@ Global
 		{2CE02D63-694F-4A89-A979-C91D357E4210} = {3F79B509-9627-4AA9-823A-53810E1C616A}
 		{1EED1190-3C44-4268-8833-69EFFB925F0D} = {3F79B509-9627-4AA9-823A-53810E1C616A}
 		{CDC32DCA-7DD9-43B9-8847-B6F900EE4F41} = {3F79B509-9627-4AA9-823A-53810E1C616A}
+		{E60B23B7-C9B0-4301-8831-A23332567837} = {43CC1591-A459-477B-B635-4FD37F4E9B28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E224BC0-6DEA-4892-9583-6CD5C07A0849}
