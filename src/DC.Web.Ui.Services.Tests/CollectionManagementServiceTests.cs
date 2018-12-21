@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Services.Tests
                 }
             };
 
-            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/collection-types/org/10000")).ReturnsAsync(() => serialisationService.Serialize(items));
+            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/org/collection-types/10000")).ReturnsAsync(() => serialisationService.Serialize(items));
 
             var pollyRegistryMock = new Mock<IReadOnlyPolicyRegistry<string>>();
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
