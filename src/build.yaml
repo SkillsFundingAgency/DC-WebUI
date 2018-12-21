@@ -1,0 +1,50 @@
+queue:
+  name: DCT
+  demands: 
+  - IsBuildServer
+  - msbuild
+  - visualstudio
+
+#Task group has not been exported, task groups are not supported yet
+
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.3.0'
+
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+
+
+- task: DeleteFiles@1
+  displayName: 'Delete files from '
+
+
+- task: DotNetCoreInstaller@0
+  displayName: 'Use .NET Core sdk 1.0.4'
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+
+    projects: '**/*.csproj'
+
+    vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
+
+
+- task: VSBuild@1
+  displayName: 'Build solution **\*.sln'
+
+
+- task: VisualStudioTestPlatformInstaller@1
+  displayName: 'Visual Studio Test Platform Installer'
+
+
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
