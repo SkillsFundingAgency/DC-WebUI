@@ -46,6 +46,7 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<StorageService>().As<IStorageService>().WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<QueuePublishService<MessageCrossLoadDctToDcftDto>>().As<IQueuePublishService<MessageCrossLoadDctToDcftDto>>().InstancePerLifetimeScope();
             builder.RegisterType<CrossLoadMessageMapper>().InstancePerLifetimeScope();
+            builder.RegisterType<ProviderService>().As<IProviderService>().InstancePerLifetimeScope();
 
             builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();

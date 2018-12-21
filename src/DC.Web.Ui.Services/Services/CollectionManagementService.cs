@@ -30,7 +30,7 @@ namespace DC.Web.Ui.Services.Services
         public async Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptionsAsync(long ukprn)
         {
             var result = new List<SubmissionOptionViewModel>();
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/collection-types/{ukprn}");
 
             try
             {
@@ -173,7 +173,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<Collection> GetCollectionAsync(long ukprn, string collectionName)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}/{collectionName}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/collections/{ukprn}/{collectionName}");
 
             if (!string.IsNullOrEmpty(data))
             {

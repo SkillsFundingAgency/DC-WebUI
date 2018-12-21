@@ -1,0 +1,23 @@
+﻿@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
+<h1 class="govuk-heading-xl">
+    Search for a provider
+</h1>
+<form asp-controller="ProviderSearch" asp-action="GetResults" method="post" id="form">
+    @Html.AntiForgeryToken()
+
+    <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.HelpDesk_SearchProvider)" id="controls">
+        <label class="govuk-label govuk-!-width-two-thirds" for="search-provider">
+            Provider name or UKPRN
+        </label>
+
+        <div error-field-name="@ErrorMessageKeys.HelpDesk_SearchProvider"></div>
+
+        <input class="govuk-input govuk-!-width-two-thirds" id="searchTerm" name="searchTerm" type="text" aria-describedby="search-provider-hint">
+    </div>
+    <button class="govuk-button" type="submit">
+        Search
+    </button>
+</form>
+
+
