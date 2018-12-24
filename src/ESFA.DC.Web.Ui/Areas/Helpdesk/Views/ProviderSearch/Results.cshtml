@@ -22,7 +22,9 @@
 
         @foreach (var provider in Model.ProvidersList)
         {
-            <h3 class="govuk-heading-m"><a href="provider-record.html">@provider.Name</a></h3>
+            <h3 class="govuk-heading-m">
+                @Html.ActionLink(provider.Name, "Index", "ProviderDetails", new { ukprn = provider.Ukprn})
+            </h3>
             <ul class="govuk-list">
                 <li><span class="govuk-!-font-weight-bold">UKPRN:</span> @provider.Ukprn</li>
                 @if (!string.IsNullOrEmpty(provider.LastSubmittedBy))

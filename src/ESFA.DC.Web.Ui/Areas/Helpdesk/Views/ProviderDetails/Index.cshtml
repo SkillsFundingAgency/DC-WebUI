@@ -1,0 +1,67 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Settings.Models
+@model  IEnumerable<ESFA.DC.Web.Ui.ViewModels.CollectionViewModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    @Html.Partial("~/Views/Shared/_Head.cshtml")
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body class="govuk-template__body ">
+
+    @Html.Partial("~/Views/Shared/_Header.cshtml")
+
+
+    <div class="govuk-width-container">
+
+        @Html.Partial("~/Views/Shared/_Banner.cshtml")
+        
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <a href="search-results.html" class="govuk-back-link">Back to search results</a>
+            </div> 
+            <div class="govuk-grid-column-one-third">
+         
+                <label class="govuk-label govuk-!-width-two-thirds govuk-visually-hidden" for="search-provider">
+                    Search for a provider
+                </label>
+                <div class="mt15">
+                    <input class="govuk-input govuk-!-width-two-thirds" id="provider-search" name="search-provider" type="search" value="" aria-describedby="provider-search"> <a href="search-results.html" type="submit" class="govuk-button">
+                        Search
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <main class="govuk-main-wrapper" id="content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h1 class="govuk-heading-xl">Manchester provider 1 <span class="govuk-caption-l">UKPRN: 12345</span>
+                    
+                        @if (Model.Any(x => x.CollectionName.Equals("ESF", StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">ESF (6 contracts)</strong>
+                        }
+                        <strong class="govuk-tag ml5" id="eligibility-completed">EAS</strong> 
+                        <strong class="govuk-tag ml5" id="eligibility-completed">ILR</strong>
+                    </h1>
+               </div>
+            </div>
+        </main>
+    </div>
+
+    @Html.Partial("~/Views/Shared/_Footer.cshtml")
+
+</body>
+</html>
+
+
