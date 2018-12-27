@@ -13,21 +13,20 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
     [Route(AreaNames.HelpDesk + "/provider")]
     public class ProviderDetailsController : BaseHelpDeskController
     {
-        private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IProviderService _providerService;
 
-        public ProviderDetailsController(ICollectionManagementService collectionManagementService)
+        public ProviderDetailsController(IProviderService providerService)
         {
-            _collectionManagementService = collectionManagementService;
+            _providerService = providerService;
         }
 
         [HttpGet]
-        [Route("{ukprn}")]
-        public async Task<IActionResult> Index(long ukprn)
+        [Route("{ukprn}/{searchTerm}")]
+        public async Task<IActionResult> Index(long ukprn, string searchTerm)
         {
-            var collectionTypes = await _collectionManagementService.GetSubmssionOptionsAsync(ukprn);
-            var esfContracts = await _collectionManagementService.GetNumberOfEsfContracts(ukprn);
+            var providerResult = await _providerService.GetProviderDetails(ukprn);
 
-            return View();
+            return View(providerResult);
         }
     }
 }

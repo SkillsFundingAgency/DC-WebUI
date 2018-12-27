@@ -1,10 +1,12 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Constants
 @using DC.Web.Ui.Extensions
 @using DC.Web.Ui.Settings.Models
-@model  IEnumerable<ESFA.DC.Web.Ui.ViewModels.CollectionViewModel>
+@model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderCollectionsViewModel
 
 @{
     Layout = null;
+    var searchTerm = ViewContext.RouteData.Values["searchTerm"];
 }
 
 <!DOCTYPE html>
@@ -24,37 +26,50 @@
     <div class="govuk-width-container">
 
         @Html.Partial("~/Views/Shared/_Banner.cshtml")
-        
+
         <div class="govuk-grid-row">
+
             <div class="govuk-grid-column-two-thirds">
-                <a href="search-results.html" class="govuk-back-link">Back to search results</a>
-            </div> 
-            <div class="govuk-grid-column-one-third">
-         
-                <label class="govuk-label govuk-!-width-two-thirds govuk-visually-hidden" for="search-provider">
-                    Search for a provider
-                </label>
-                <div class="mt15">
-                    <input class="govuk-input govuk-!-width-two-thirds" id="provider-search" name="search-provider" type="search" value="" aria-describedby="provider-search"> <a href="search-results.html" type="submit" class="govuk-button">
-                        Search
-                    </a>
-                </div>
+                @Html.ActionLink("Back to search results", "Index", "ProviderSearch", new { searchTerm } , new {@class = "govuk-back-link"})
             </div>
+
+            <form asp-controller="ProviderSearch" asp-action="GetResults" method="post" id="form">
+
+                <div class="govuk-grid-column-one-third">
+
+                    <label class="govuk-label govuk-!-width-two-thirds govuk-visually-hidden" for="searchTerm">
+                        Search for a provider
+                    </label>
+                    <div class="mt15">
+                        <input class="govuk-input govuk-!-width-two-thirds" id="searchTerm" name="searchTerm" type="search" value="" aria-describedby="provider-search">
+                        <button type="submit" class="govuk-button">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <main class="govuk-main-wrapper" id="content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-xl">Manchester provider 1 <span class="govuk-caption-l">UKPRN: 12345</span>
-                    
-                        @if (Model.Any(x => x.CollectionName.Equals("ESF", StringComparison.InvariantCultureIgnoreCase)))
+                    <h1 class="govuk-heading-xl">
+                        @Model.Name <span class="govuk-caption-l">UKPRN: @Model.Ukprn</span>
+
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.ESF, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            <strong class="govuk-tag ml5" id="eligibility-completed">ESF (6 contracts)</strong>
+                            <strong class="govuk-tag ml5" id="eligibility-completed">ESF (@Model.NumberOfContracts contract@(Model.NumberOfContracts > 1 ? "s" : ""))</strong>
                         }
-                        <strong class="govuk-tag ml5" id="eligibility-completed">EAS</strong> 
-                        <strong class="govuk-tag ml5" id="eligibility-completed">ILR</strong>
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.EAS, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">EAS</strong>
+                        }
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.ILR, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">ILR</strong>
+                        }
                     </h1>
-               </div>
+                </div>
             </div>
         </main>
     </div>
