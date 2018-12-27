@@ -2,11 +2,12 @@
 @using DC.Web.Ui.Constants
 @using DC.Web.Ui.Extensions
 @using DC.Web.Ui.Settings.Models
+@using ESFA.DC.Web.Ui.ViewModels
 @model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderCollectionsViewModel
 
 @{
     Layout = null;
-    var searchTerm = ViewContext.RouteData.Values["searchTerm"];
+    var searchTerm = ViewContext.RouteData?.Values?["searchTerm"];
 }
 
 <!DOCTYPE html>
@@ -70,6 +71,9 @@
                         }
                     </h1>
                 </div>
+            </div>
+            <div class="govuk-grid-row">
+                @await Component.InvokeAsync("History", new {ukprn = @Model.Ukprn})
             </div>
         </main>
     </div>

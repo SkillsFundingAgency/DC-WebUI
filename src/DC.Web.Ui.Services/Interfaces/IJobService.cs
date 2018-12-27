@@ -33,5 +33,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<FileUploadJob> GetLatestJob(long ukprn, string contractReference, string collectionName);
 
         Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn);
+
+        Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn);
     }
 }

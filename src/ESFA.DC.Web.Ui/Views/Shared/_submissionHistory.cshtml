@@ -1,4 +1,5 @@
-﻿@using ESFA.DC.JobStatus.Interface
+﻿@using System.Collections.Generic
+@using ESFA.DC.JobStatus.Interface
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissonHistoryViewModel>
 
 @*
@@ -26,7 +27,7 @@
             <td class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</td>
             <td class="govuk-table__cell" scope="row">@historyViewModel.JobType</td>
             <td class="govuk-table__cell">
-                @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "SubmissionResultsAuthorised",new {JobId =  @historyViewModel.JobId})
+                @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", "Download",new {ukprn = @historyViewModel.Ukprn, JobId =  @historyViewModel.JobId})
             </td>
             <td class="govuk-table__cell" scope="row">@historyViewModel.SubmittedBy</td>
             <td class="govuk-table__cell" scope="row">@historyViewModel.JobId</td>
@@ -34,15 +35,15 @@
             <td class="govuk-table__cell">
                 @if (historyViewModel.Status == JobStatusType.Completed)
                 {
-                    @Html.ActionLink("Download reports", "DownloadReport", "SubmissionResultsAuthorised", new { JobId = @historyViewModel.JobId })
+                @Html.ActionLink("Download reports", "DownloadReport", "Download", new {ukprn = @historyViewModel.Ukprn, JobId = @historyViewModel.JobId })
                 }
                 else if (historyViewModel.Status == JobStatusType.Failed || historyViewModel.Status == JobStatusType.FailedRetry)
                 {
-                    @Html.Raw("Failed")
+                @Html.Raw("Failed")
                 }
                 else
                 {
-                    @Html.Raw("Processing")
+                @Html.Raw("Processing")
                 }
             </td>
         </tr>

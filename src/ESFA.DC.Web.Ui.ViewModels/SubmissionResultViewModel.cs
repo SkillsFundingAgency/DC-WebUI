@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.JobStatus.Interface;
 
@@ -20,6 +21,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string CollectionYearStart { get; set; }
 
         public string CollectionYearEnd { get; set; }
+
 
     }
 }

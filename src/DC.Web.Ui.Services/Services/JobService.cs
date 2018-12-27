@@ -162,7 +162,8 @@ namespace DC.Web.Ui.Services.Services
                     {
                         PeriodNumber = job.PeriodNumber,
                         CollectionYear = job.CollectionYear,
-                        DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}"
+                        DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}",
+                        Ukprn = ukprn
                     };
 
                     result.Add(item);
@@ -258,6 +259,36 @@ namespace DC.Web.Ui.Services.Services
             return string.Empty;
         }
 
+        public async Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn)
+        {
+            var collection = await _collectionManagementService.GetCollectionFromTypeAsync("ILR");
+
+            if (collection != null)
+            {
+                var currentPeriod = await _collectionManagementService.GetPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
+                if (currentPeriod == null)
+                {
+                    currentPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
+                }
+
+                var submissions = (await GetAllJobsForHistory(ukprn, collection.CollectionTitle, currentPeriod.StartDateTimeUtc)).ToList();
+
+                var result = new SubmissionResultViewModel()
+                {
+                    CurrentPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc >= currentPeriod.StartDateTimeUtc).ToList(),
+                    PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
+                    PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
+                    CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
+                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}",
+                    ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
+                };
+
+                return result;
+            }
+
+            return null;
+        }
+
         private List<SubmissonHistoryViewModel> ConvertSubmissions(IEnumerable<FileUploadJob> jobsList)
         {
             var jobsViewList = new List<SubmissonHistoryViewModel>();
@@ -272,7 +303,8 @@ namespace DC.Web.Ui.Services.Services
                     Status = x.Status,
                     DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateTimeDisplayFormat(),
                     SubmittedBy = x.SubmittedBy,
-                    DateTimeSubmittedUtc = x.DateTimeSubmittedUtc
+                    DateTimeSubmittedUtc = x.DateTimeSubmittedUtc,
+                    Ukprn = x.Ukprn
                 }));
 
             return jobsViewList;

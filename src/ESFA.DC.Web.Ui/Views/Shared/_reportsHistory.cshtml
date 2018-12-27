@@ -1,4 +1,5 @@
-﻿@using DC.Web.Ui.Services.Extensions
+﻿@using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Services.Extensions
 @using ESFA.DC.JobStatus.Interface
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.ReportHistoryViewModel>
 
@@ -20,7 +21,9 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="row">@report.PeriodNumber.ToPeriodName()</th>
                 <td class="govuk-table__cell">
-                    @Html.ActionLink("Download Reports", "DownloadReport", "SubmissionResultsAuthorised", new {period = @report.PeriodNumber, fileName = @report.ReportFileName })
+                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { area = "", ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName})
+                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName }, new { area="" })
+                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName }, null)
                     (Zip, @(report.CombinedFileSize.ToString("N2"))MB)
                 </td>
             </tr>
