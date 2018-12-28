@@ -22,28 +22,102 @@ namespace DC.Web.Ui.Controllers
     public class SubmissionResultsAuthorisedController : BaseAuthorisedController
     {
         private readonly IJobService _jobService;
-        private readonly IStorageService _reportService;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IStorageService _storageService;
 
         public SubmissionResultsAuthorisedController(
             IJobService jobService,
             ILogger logger,
-            IStorageService reportService,
-            IDateTimeProvider dateTimeProvider,
-            ICollectionManagementService collectionManagementService)
+            IStorageService storageService)
             : base(logger)
         {
             _jobService = jobService;
-            _reportService = reportService;
-            _dateTimeProvider = dateTimeProvider;
-            _collectionManagementService = collectionManagementService;
+            _storageService = storageService;
         }
 
         public async Task<IActionResult> Index()
         {
             var result = await _jobService.GetSubmissionHistory(Ukprn);
             return View(result);
+        }
+
+        [Route("DownloadReport/{ukprn}/{jobId}")]
+        public async Task<FileResult> DownloadReport(long ukprn, long jobId)
+        {
+            var job = await _jobService.GetJob(ukprn, jobId);
+
+            if (job == null)
+            {
+                Logger.LogError($"Job not found for provider,  job id : {jobId}");
+                throw new Exception("invalid job id");
+            }
+
+            var reportFileName = _storageService.GetReportsZipFileName(ukprn, jobId);
+            Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
+
+            try
+            {
+                var blobStream = await _storageService.GetBlobFileStreamAsync(reportFileName, job.JobType);
+                return new FileStreamResult(blobStream, "application/zip")
+                {
+                    FileDownloadName = $"{jobId}_Reports.zip"
+                };
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download zip failed for job id : {jobId}", e);
+                throw;
+            }
+        }
+
+        [Route("DownloadReport/{ukprn}/{period}/{fileName}")]
+        public async Task<FileResult> DownloadReport(long ukprn, int period, string fileName)
+        {
+            Logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
+
+            //TODO: Download reports check if they belong to ukprn or not
+            try
+            {
+                var base64EncodedBytes = Convert.FromBase64String(fileName);
+                var decodedFileName = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+
+                string[] splitStrings = decodedFileName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Dictionary<JobType, long> dict = splitStrings.ToDictionary(
+                    s => (JobType)short.Parse(s.Split('-')[0]),
+                    s => long.Parse(s.Split('-')[1]));
+
+                var blobStream = await _storageService.GetMergedReportFile(ukprn, dict);
+                return new FileStreamResult(blobStream, "application/zip")
+                {
+                    FileDownloadName = $"Reports_{period.ToPeriodName()}.zip"
+                };
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download zip failed for report name : {fileName}", e);
+                throw;
+            }
+        }
+
+        [Route("DownloadFile/{ukprn}/{jobId}")]
+        public async Task<FileResult> DownloadFile(long ukprn, long jobId)
+        {
+            var job = await _jobService.GetJob(ukprn, jobId);
+
+            Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
+
+            try
+            {
+                var blobStream = await _storageService.GetBlobFileStreamAsync(job.FileName, job.JobType);
+                return new FileStreamResult(blobStream, $"application/{job.FileName.FileExtension()}")
+                {
+                    FileDownloadName = $"{job.FileName.FileNameWithoutUkprn()}"
+                };
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Download source file failed for job id : {jobId}", e);
+                throw;
+            }
         }
     }
 }

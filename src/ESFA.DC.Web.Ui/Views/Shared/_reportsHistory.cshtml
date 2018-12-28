@@ -3,8 +3,10 @@
 @using ESFA.DC.JobStatus.Interface
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.ReportHistoryViewModel>
 
+@if (Model.Any())
+{
     <h3 class="govuk-heading-m">Academic year @Model.First().DisplayCollectionYear</h3>
-    
+
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Return period and download</caption>
         <thead class="govuk-table__head">
@@ -21,9 +23,7 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="row">@report.PeriodNumber.ToPeriodName()</th>
                 <td class="govuk-table__cell">
-                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { area = "", ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName})
-                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName }, new { area="" })
-                    @Html.ActionLink("Download Reports", "DownloadReport", "Download", new { ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName }, null)
+                    @Html.ActionLink("Download Reports", "DownloadReport", new {ukprn = @report.Ukprn, period = @report.PeriodNumber, fileName = @report.ReportFileName})
                     (Zip, @(report.CombinedFileSize.ToString("N2"))MB)
                 </td>
             </tr>
@@ -31,3 +31,4 @@
         </tbody>
     </table>
 
+}
