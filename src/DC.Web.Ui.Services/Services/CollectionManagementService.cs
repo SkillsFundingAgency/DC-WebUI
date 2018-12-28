@@ -182,5 +182,19 @@ namespace DC.Web.Ui.Services.Services
 
             return null;
         }
+
+        public async Task<int> GetNumberOfEsfContracts(long ukprn)
+        {
+            try
+            {
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/esf/contracts/{ukprn}");
+                int.TryParse(data, out var result);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
     }
 }

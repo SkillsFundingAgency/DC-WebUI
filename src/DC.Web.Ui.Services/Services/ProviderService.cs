@@ -20,6 +20,7 @@ namespace DC.Web.Ui.Services.Services
         private readonly IBespokeHttpClient _httpClient;
         private readonly string _apiBaseUrl;
         private readonly IJsonSerializationService _serializationService;
+        private readonly ICollectionManagementService _collectionManagementService;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
 
@@ -27,11 +28,13 @@ namespace DC.Web.Ui.Services.Services
             IBespokeHttpClient httpClient,
             ApiSettings apiSettings,
             IJsonSerializationService serializationService,
+            ICollectionManagementService collectionManagementService,
             IDateTimeProvider dateTimeProvider,
             ILogger logger)
         {
             _httpClient = httpClient;
             _serializationService = serializationService;
+            _collectionManagementService = collectionManagementService;
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
             _apiBaseUrl = $"{apiSettings?.JobManagementApiBaseUrl}/org";
@@ -75,6 +78,42 @@ namespace DC.Web.Ui.Services.Services
             }
 
             return result;
+        }
+
+        public async Task<ProviderCollectionsViewModel> GetProviderDetails(long ukprn)
+        {
+            try
+            {
+                var data = await _httpClient.GetDataAsync($"{_apiBaseUrl}/{ukprn}");
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    var providerItem = _serializationService.Deserialize<ProviderDetail>(data);
+
+                    if (providerItem != null)
+                    {
+                        var result = new ProviderCollectionsViewModel
+                        {
+                            Name = providerItem.Name,
+                            Ukprn = providerItem.Ukprn,
+                            SubmissionOptionViewModels = await _collectionManagementService.GetSubmssionOptionsAsync(ukprn)
+                        };
+
+                        if (result.SubmissionOptionViewModels.Any(x => x.Name.Equals("ESF", StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            result.NumberOfContracts = await _collectionManagementService.GetNumberOfEsfContracts(ukprn);
+                        }
+
+                        return result;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error occured trying to get the provider details for ukprn : {ukprn}", e);
+            }
+
+            return null;
         }
     }
 }

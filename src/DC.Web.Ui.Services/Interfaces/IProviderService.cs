@@ -10,5 +10,7 @@ namespace DC.Web.Ui.Services.Interfaces
     public interface IProviderService
     {
         Task<ProviderSearchResultViewModel> GetSearchResults(string searchTerm);
+
+        Task<ProviderCollectionsViewModel> GetProviderDetails(long ukprn);
     }
 }

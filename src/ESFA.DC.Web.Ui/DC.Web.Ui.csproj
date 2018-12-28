@@ -180,9 +180,6 @@
     <Content Update="Areas\ILR\Views\_ViewImports.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\SubmissionResultsAuthorised\_reportsHistory.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

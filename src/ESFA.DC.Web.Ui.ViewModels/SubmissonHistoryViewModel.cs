@@ -22,5 +22,8 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string SubmittedBy { get; set; }
 
         public DateTime DateTimeSubmittedUtc { get; set; }
+
+        public long Ukprn { get; set; }
+
     }
 }

@@ -1,43 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
-using DC.Web.Ui.Extensions;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
-using ESFA.DC.CollectionsManagement.Models;
-using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
-using ESFA.DC.Web.Ui.ViewModels;
+using ESFA.DC.Web.Ui.ViewModels.HelpDesk;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Web.Ui.Controllers
+namespace DC.Web.Ui.Areas.Helpdesk.Controllers
 {
-    [Route("submission-results")]
-    public class SubmissionResultsAuthorisedController : BaseAuthorisedController
+    [Area(AreaNames.HelpDesk)]
+    [Route(AreaNames.HelpDesk + "/provider")]
+    public class ProviderDetailsController : BaseHelpDeskController
     {
-        private readonly IJobService _jobService;
+        private readonly IProviderService _providerService;
+        private readonly ILogger _logger;
         private readonly IStorageService _storageService;
+        private readonly IJobService _jobService;
 
-        public SubmissionResultsAuthorisedController(
-            IJobService jobService,
+        public ProviderDetailsController(
+            IProviderService providerService,
             ILogger logger,
-            IStorageService storageService)
-            : base(logger)
+            IStorageService storageService,
+            IJobService jobService)
         {
-            _jobService = jobService;
+            _providerService = providerService;
+            _logger = logger;
             _storageService = storageService;
+            _jobService = jobService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [Route("{ukprn}/{searchTerm}")]
+        public async Task<IActionResult> Index(long ukprn, string searchTerm)
         {
-            var result = await _jobService.GetSubmissionHistory(Ukprn);
-            return View(result);
+            var providerResult = await _providerService.GetProviderDetails(ukprn);
+
+            return View(providerResult);
         }
 
         [Route("DownloadReport/{ukprn}/{jobId}")]
@@ -47,12 +49,12 @@ namespace DC.Web.Ui.Controllers
 
             if (job == null)
             {
-                Logger.LogError($"Job not found for provider,  job id : {jobId}");
+                _logger.LogError($"Job not found for provider,  job id : {jobId}");
                 throw new Exception("invalid job id");
             }
 
             var reportFileName = _storageService.GetReportsZipFileName(ukprn, jobId);
-            Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
+            _logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
 
             try
             {
@@ -64,7 +66,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download zip failed for job id : {jobId}", e);
+                _logger.LogError($"Download zip failed for job id : {jobId}", e);
                 throw;
             }
         }
@@ -72,7 +74,7 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadReport/{ukprn}/{period}/{fileName}")]
         public async Task<FileResult> DownloadReport(long ukprn, int period, string fileName)
         {
-            Logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
+            _logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
 
             //TODO: Download reports check if they belong to ukprn or not
             try
@@ -93,7 +95,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download zip failed for report name : {fileName}", e);
+                _logger.LogError($"Download zip failed for report name : {fileName}", e);
                 throw;
             }
         }
@@ -103,7 +105,7 @@ namespace DC.Web.Ui.Controllers
         {
             var job = await _jobService.GetJob(ukprn, jobId);
 
-            Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
+            _logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
 
             try
             {
@@ -115,7 +117,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download source file failed for job id : {jobId}", e);
+                _logger.LogError($"Download source file failed for job id : {jobId}", e);
                 throw;
             }
         }

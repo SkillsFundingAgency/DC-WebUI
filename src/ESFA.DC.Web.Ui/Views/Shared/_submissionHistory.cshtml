@@ -1,0 +1,51 @@
+﻿@using System.Collections.Generic
+@using ESFA.DC.JobStatus.Interface
+@model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissonHistoryViewModel>
+
+@if (Model.Any())
+{
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Dates and file name</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Date</th>
+            <th class="govuk-table__header" scope="col">Type</th>
+            <th class="govuk-table__header" scope="col">File</th>
+            <th class="govuk-table__header" scope="col">Submitted by</th>
+            <th class="govuk-table__header" scope="col">Reference</th>
+            <th class="govuk-table__header" scope="col">Reports</th>
+
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        @foreach (var historyViewModel in Model)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__header" scope="row">@historyViewModel.DateTimeSubmitted</td>
+                <td class="govuk-table__cell" scope="row">@historyViewModel.JobType</td>
+                <td class="govuk-table__cell">
+                    @Html.ActionLink(@historyViewModel.FileName, "DownloadFile", new {ukprn = @historyViewModel.Ukprn, JobId = @historyViewModel.JobId})
+                </td>
+                <td class="govuk-table__cell" scope="row">@historyViewModel.SubmittedBy</td>
+                <td class="govuk-table__cell" scope="row">@historyViewModel.JobId</td>
+
+                <td class="govuk-table__cell">
+                    @if (historyViewModel.Status == JobStatusType.Completed)
+                    {
+                        @Html.ActionLink("Download reports", "DownloadReport", new {ukprn = @historyViewModel.Ukprn, JobId = @historyViewModel.JobId})
+                    }
+                    else if (historyViewModel.Status == JobStatusType.Failed || historyViewModel.Status == JobStatusType.FailedRetry)
+                    {
+                        @Html.Raw("Failed")
+                    }
+                    else
+                    {
+                        @Html.Raw("Processing")
+                    }
+                </td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
+}

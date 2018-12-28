@@ -16,9 +16,14 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
             _providerService = providerService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            return View();
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return View();
+            }
+
+            return await GetResults(searchTerm);
         }
 
         [HttpPost]
