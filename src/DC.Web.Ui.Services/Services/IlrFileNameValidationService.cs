@@ -28,9 +28,9 @@ namespace DC.Web.Ui.Services.Services
         {
         }
 
-        protected override Regex FileNameRegex => new Regex("^(ILR)-([1-9][0-9]{7})-([0-9]{4})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-([0-9]{2}).((XML)|(ZIP)|(xml)|(zip))$", RegexOptions.Compiled);
+        protected override Regex FileNameRegex => new Regex("^(?i)(ILR)-([1-9][0-9]{7})-([0-9]{4})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-([0-9]{2}).((XML)|(ZIP)|(xml)|(zip))$", RegexOptions.Compiled);
 
-        protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".zip", ".xml", ".ZIP", ".XML" };
+        protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".ZIP", ".XML" };
 
         public override async Task<FileNameValidationResultViewModel> ValidateFileNameAsync(string fileName, long? fileSize, long ukprn, string collectionName)
         {

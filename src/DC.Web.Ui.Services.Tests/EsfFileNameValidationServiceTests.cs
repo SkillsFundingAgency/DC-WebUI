@@ -20,6 +20,8 @@ namespace DC.Web.Ui.Services.Tests
     {
         [Theory]
         [InlineData(".csv")]
+        [InlineData(".CsV")]
+        [InlineData(".CSV")]
         public void IsValidExtension_True(string extension)
         {
             var service = GetService();
@@ -41,7 +43,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidUkprn_True()
         {
             var service = GetService();
-            service.ValidateLoggedInUserUkprn("SUPPDATA-10000116-ESF-2270-20180909-090919.csv", 10000116).Should().BeNull();
+            service.ValidateLoggedInUserUkprn("SUPpDAtA-10000116-ESF-2270-20180909-090919.cSv", 10000116).Should().BeNull();
         }
 
         [Fact]
@@ -55,7 +57,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidRegex_True()
         {
             var service = GetService();
-            service.IsValidRegex("SUPPDATA-10000116-ESF-2270-20180909-090919.csv").Should().BeTrue();
+            service.IsValidRegex("SuPPDAta-10000116-ESF-2270-20180909-090919.cSV").Should().BeTrue();
         }
 
         [Fact]
@@ -73,14 +75,6 @@ namespace DC.Web.Ui.Services.Tests
                 .Be(FileNameValidationResult.EmptyFile);
         }
 
-        //[Fact]
-        //public void ValidateFileName_InvalidUkprn()
-        //{
-        //    var service = GetService();
-        //    service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-02.xml", 10, 10000).Result.ValidationResult.Should()
-        //        .Be(FileNameValidationResult.UkprnDifferentToFileName);
-        //}
-
         [Fact]
         public void ValidateFileName_InvalidExtension()
         {
@@ -96,14 +90,6 @@ namespace DC.Web.Ui.Services.Tests
             service.ValidateFileNameAsync(null, 10, 10000, string.Empty).Result.ValidationResult.Should()
                 .Be(FileNameValidationResult.EmptyFile);
         }
-
-        //[Fact]
-        //public void ValidateFileName_InvalidaFileNameFormat()
-        //{
-        //    var service = GetService();
-        //    service.ValidateFileNameAsync("ILR-10006341-1819-20180118-023456-2.xml", 10, 10000).Result.ValidationResult.Should()
-        //        .Be(FileNameValidationResult.InvalidFileNameFormat);
-        //}
 
         [Fact]
         public void ValidateFileName_Valid()
@@ -125,6 +111,7 @@ namespace DC.Web.Ui.Services.Tests
                 .Be(FileNameValidationResult.FileAlreadyExists);
         }
 
+        [Fact]
         public void ValidateFileName_InvalidUkprn()
         {
             var httpClientMock = new Mock<IBespokeHttpClient>();

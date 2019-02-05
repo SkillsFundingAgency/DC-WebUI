@@ -66,7 +66,7 @@ namespace DC.Web.Ui.Services.Services
         public FileNameValidationResultViewModel ValidateExtension(string fileName, string errorMessage)
         {
             var fileExtension = fileName.Substring(Math.Max(0, fileName.Length - 4));
-            if (!FileNameExtensions.Contains(fileExtension))
+            if (!FileNameExtensions.Contains(fileExtension.ToUpperInvariant()))
             {
                 return new FileNameValidationResultViewModel()
                 {

@@ -24,6 +24,8 @@ namespace DC.Web.Ui.Services.Tests
         [InlineData(".xml")]
         [InlineData(".ZIP")]
         [InlineData(".XML")]
+        [InlineData(".ZiP")]
+        [InlineData(".Xml")]
         public void IsValidExtension_True(string extension)
         {
             var service = new IlrFileNameValidationService(new Mock<IKeyValuePersistenceService>().Object, new FeatureFlags(), new Mock<IJobService>().Object, new Mock<IDateTimeProvider>().Object, new Mock<IBespokeHttpClient>().Object, new ApiSettings());
@@ -59,7 +61,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidRegex_True()
         {
             var service = GetService();
-            service.IsValidRegex("ILR-10006341-1819-20180118-023456-02.xml").Should().BeTrue();
+            service.IsValidRegex("Ilr-10006341-1819-20180118-023456-02.xmL").Should().BeTrue();
         }
 
         [Fact]
