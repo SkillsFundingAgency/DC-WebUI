@@ -31,7 +31,7 @@ namespace DC.Web.Ui.Services.Services
             _jobService = jobService;
         }
 
-        protected override Regex FileNameRegex => new Regex("^(?i)(SUPPDATA)-([1-9][0-9]{7})-([0-9a-zA-Z-]{1,20})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])).csv$", RegexOptions.Compiled);
+        protected override Regex FileNameRegex => new Regex(@"^(?i)(SUPPDATA)-([1-9][0-9]{7})-([0-9a-zA-Z-]{1,20})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))\.csv$", RegexOptions.Compiled);
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".CSV" };
 
