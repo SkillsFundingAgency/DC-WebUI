@@ -64,7 +64,7 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
         [Route("{collectionName}")]
         public async Task<IActionResult> Index(string collectionName, IFormFile file, bool confirm)
         {
-            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName.ToUpper(), file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);

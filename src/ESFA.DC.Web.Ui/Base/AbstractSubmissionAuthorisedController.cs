@@ -60,7 +60,7 @@ namespace DC.Web.Ui.Base
 
             try
             {
-                var fileName = $"{Ukprn}/{file.FileName}";
+                var fileName = $"{Ukprn}/{file.FileName}".ToUpper();
 
                 // push file to Storage
                 await _storageService.SaveAsync(fileName, file?.OpenReadStream());
