@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DC.Web.Ui.Services.BespokeHttpClient;
-using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -63,10 +61,9 @@ namespace DC.Web.Ui.Services.Services
             return null;
         }
 
-        public FileNameValidationResultViewModel ValidateExtension(string fileName, string errorMessage)
+        public FileNameValidationResultViewModel ValidateExtension(string extension, string errorMessage)
         {
-            var fileExtension = fileName.Substring(Math.Max(0, fileName.Length - 4));
-            if (!FileNameExtensions.Contains(fileExtension))
+            if (!FileNameExtensions.Contains(extension.ToUpperInvariant()))
             {
                 return new FileNameValidationResultViewModel()
                 {

@@ -20,10 +20,12 @@ namespace DC.Web.Ui.Services.Tests
     {
         [Theory]
         [InlineData(".csv")]
+        [InlineData(".CsV")]
+        [InlineData(".CSV")]
         public void IsValidExtension_True(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().BeNull();
+            service.ValidateExtension(extension, "error").Should().BeNull();
         }
 
         [Theory]
@@ -34,7 +36,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidExtension_False(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().NotBeNull();
+            service.ValidateExtension(extension, "error").Should().NotBeNull();
         }
 
         [Fact]
@@ -55,7 +57,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidRegex_True()
         {
             var service = GetService();
-            service.IsValidRegex("EASDATA-10000116-20180909-090916.csv").Should().BeTrue();
+            service.IsValidRegex("EAsdATa-10000116-20180909-090916.cSv").Should().BeTrue();
         }
 
         [Fact]
@@ -97,6 +99,7 @@ namespace DC.Web.Ui.Services.Tests
                 .Be(FileNameValidationResult.Valid);
         }
 
+        [Fact]
         public void ValidateFileName_InvalidUkprn()
         {
             var httpClientMock = new Mock<IBespokeHttpClient>();
