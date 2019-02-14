@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
@@ -28,7 +28,7 @@ namespace DC.Web.Ui.Services.Services
         {
         }
 
-        protected override Regex FileNameRegex => new Regex(@"^(?i)(EASDATA)-([1-9][0-9]{7})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))\.csv$", RegexOptions.Compiled);
+        protected override Regex FileNameRegex => new Regex(@"^(?i)(EASDATA)-([1-9][0-9]{7})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))(\.csv)$", RegexOptions.Compiled);
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".CSV" };
 
@@ -40,7 +40,8 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = ValidateExtension(fileName, "Your file must be in a CSV format");
+            string ext = Path.GetExtension(fileName);
+            result = ValidateExtension(ext, "Your file must be in a CSV format");
             if (result != null)
             {
                 return result;

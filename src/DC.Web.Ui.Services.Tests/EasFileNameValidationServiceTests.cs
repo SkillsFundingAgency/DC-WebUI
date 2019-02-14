@@ -25,7 +25,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidExtension_True(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().BeNull();
+            service.ValidateExtension(extension, "error").Should().BeNull();
         }
 
         [Theory]
@@ -36,7 +36,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidExtension_False(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().NotBeNull();
+            service.ValidateExtension(extension, "error").Should().NotBeNull();
         }
 
         [Fact]

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac.Features.AttributeFilters;
@@ -28,7 +28,7 @@ namespace DC.Web.Ui.Services.Services
         {
         }
 
-        protected override Regex FileNameRegex => new Regex(@"^(?i)(ILR)-([1-9][0-9]{7})-([0-9]{4})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-([0-9]{2})\.((xml)|(zip))$", RegexOptions.Compiled);
+        protected override Regex FileNameRegex => new Regex(@"^(?i)(ILR)-([1-9][0-9]{7})-([0-9]{4})-((20[0-9]{2})(0[1-9]|1[012])([123]0|[012][1-9]|31))-(([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]))-([0-9]{2})((\.xml)|(\.zip))$", RegexOptions.Compiled);
 
         protected override IEnumerable<string> FileNameExtensions => new List<string>() { ".ZIP", ".XML" };
 
@@ -40,7 +40,8 @@ namespace DC.Web.Ui.Services.Services
                 return result;
             }
 
-            result = ValidateExtension(fileName, "Your file must be in an XML or Zip format");
+            string ext = Path.GetExtension(fileName);
+            result = ValidateExtension(ext, "Your file must be in an XML or Zip format");
             if (result != null)
             {
                 return result;
@@ -66,8 +67,7 @@ namespace DC.Web.Ui.Services.Services
                 };
             }
 
-            var fileExtension = fileName.Substring(fileName.Length - 4);
-            result = ValidateRegex(fileName, $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{fileExtension}");
+            result = ValidateRegex(fileName, $"File name should use the format ILR-LLLLLLLL-YYYY-yyyymmdd-hhmmss-NN{ext}");
             if (result != null)
             {
                 return result;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Interfaces;
@@ -8,7 +6,6 @@ using DC.Web.Ui.Services.Services;
 using DC.Web.Ui.Settings.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.IO.Interfaces;
-using ESFA.DC.Web.Ui.ViewModels;
 using ESFA.DC.Web.Ui.ViewModels.Enums;
 using FluentAssertions;
 using Moq;
@@ -25,7 +22,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidExtension_True(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().BeNull();
+            service.ValidateExtension(extension, "error").Should().BeNull();
         }
 
         [Theory]
@@ -36,7 +33,7 @@ namespace DC.Web.Ui.Services.Tests
         public void IsValidExtension_False(string extension)
         {
             var service = GetService();
-            service.ValidateExtension($"testfile{extension}", "error").Should().NotBeNull();
+            service.ValidateExtension(extension, "error").Should().NotBeNull();
         }
 
         [Fact]
