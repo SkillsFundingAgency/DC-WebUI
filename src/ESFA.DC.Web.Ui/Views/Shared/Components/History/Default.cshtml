@@ -3,7 +3,7 @@
 
 @{
     string referrer = Context.Request.Headers?["Referer"];
-    var isHelpDesk = referrer.ToLowerInvariant().Contains("helpdesk");
+    var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
 }
 
 
@@ -28,7 +28,7 @@
 
     <section class="govuk-tabs__panel" id="submissions" role="tabpanel" aria-labelledby="tab_submissions">
         <h2 class="govuk-heading-l" id="submission">Submission history  <span class="govuk-caption-l">@Model.PeriodName</span></h2>
-        @if (!isHelpDesk)
+        @if (isHelpDesk.GetValueOrDefault() == false)
         {
             <p>Each time you submit a new file your reports will be updated. To view your latest reports you should download the reports for your most recent submission.</p>
         }
