@@ -115,19 +115,9 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
-        public async Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc)
+        public async Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn)
         {
-            var previousPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collectionName, currentPeriodStartDateTimeUtc);
-
-            string startDatetTimeString;
-            if (previousPeriod == null)
-            {
-                startDatetTimeString = currentPeriodStartDateTimeUtc.AddDays(-30).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            }
-            else
-            {
-                startDatetTimeString = previousPeriod.StartDateTimeUtc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            }
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-90).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
             var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
@@ -240,7 +230,7 @@ namespace DC.Web.Ui.Services.Services
                 SubmittedBy = job.SubmittedBy,
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType,
-                CollectionName = job.CollectionName
+                CollectionName = job.CollectionName,
             };
         }
 
@@ -261,32 +251,16 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn)
         {
-            var collection = await _collectionManagementService.GetCollectionFromTypeAsync("ILR");
+            var submissions = (await GetAllJobsForHistory(ukprn)).ToList();
 
-            if (collection != null)
+            var result = new SubmissionResultViewModel()
             {
-                var currentPeriod = await _collectionManagementService.GetPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                if (currentPeriod == null)
-                {
-                    currentPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                }
+                PeriodsList = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
+                SubmissionItems = submissions,
+                ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
+            };
 
-                var submissions = (await GetAllJobsForHistory(ukprn, collection.CollectionTitle, currentPeriod.StartDateTimeUtc)).ToList();
-
-                var result = new SubmissionResultViewModel()
-                {
-                    CurrentPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc >= currentPeriod.StartDateTimeUtc).ToList(),
-                    PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
-                    PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
-                    CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
-                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}",
-                    ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
-                };
-
-                return result;
-            }
-
-            return null;
+            return result;
         }
 
         private List<SubmissonHistoryViewModel> ConvertSubmissions(IEnumerable<FileUploadJob> jobsList)
@@ -304,7 +278,9 @@ namespace DC.Web.Ui.Services.Services
                     DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateTimeDisplayFormat(),
                     SubmittedBy = x.SubmittedBy,
                     DateTimeSubmittedUtc = x.DateTimeSubmittedUtc,
-                    Ukprn = x.Ukprn
+                    Ukprn = x.Ukprn,
+                    PeriodNumber = x.PeriodNumber,
+                    PeriodName = x.PeriodNumber.ToPeriodName()
                 }));
 
             return jobsViewList;

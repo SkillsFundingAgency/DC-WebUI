@@ -25,5 +25,10 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public long Ukprn { get; set; }
 
+        public int PeriodNumber { get; set; }
+
+        public string PeriodName { get; set; }
+
+
     }
 }

@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
 
-        Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc);
+        Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn);
 
         Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName);
 

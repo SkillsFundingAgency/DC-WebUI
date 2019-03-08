@@ -195,7 +195,6 @@
   <ItemGroup>
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
-    <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Areas\ILR\Views\SubmissionAuthorised\" />
     <Folder Include="Areas\ILR\Views\ValidationResultsAuthorised\" />
