@@ -36,6 +36,8 @@ namespace DC.Web.Ui.Controllers
 
         public async Task<IActionResult> Index()
         {
+            IsHelpSectionHidden = true;
+
             var result = await _jobService.GetSubmissionHistory(Ukprn);
             return View(result);
         }

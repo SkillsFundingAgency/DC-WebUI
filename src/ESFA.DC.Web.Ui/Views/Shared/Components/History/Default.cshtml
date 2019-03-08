@@ -36,24 +36,16 @@
                     Filter your submission types
                 </span>
                 <div id="typeFilter" class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="ILR" class="govuk-checkboxes__input" name="waste" type="checkbox" value="ilr">
-                        <label class="govuk-label govuk-checkboxes__label" for="waste-1">
-                            ILR
-                        </label>
-                    </div>
-                    <div class="govuk-checkboxes__item">
-                        <input id="EAS" class="govuk-checkboxes__input" name="waste" type="checkbox" value="eas">
-                        <label class="govuk-label govuk-checkboxes__label" for="waste-2">
-                            EAS
-                        </label>
-                    </div>
-                    <div class="govuk-checkboxes__item">
-                        <input id="ESF" class="govuk-checkboxes__input" name="waste" type="checkbox" value="esf">
-                        <label class="govuk-label govuk-checkboxes__label" for="waste-3">
-                            ESF
-                        </label>
-                    </div>
+                    <form></form>
+                    @foreach (var jobType in Model.CollectionTypes)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            <input id="@jobType" class="govuk-checkboxes__input" name="@jobType" type="checkbox" value="@jobType">
+                            <label class="govuk-label govuk-checkboxes__label" for="@jobType">
+                                @jobType
+                            </label>
+                        </div>
+                    }
                 </div>
             </fieldset>
         </div>

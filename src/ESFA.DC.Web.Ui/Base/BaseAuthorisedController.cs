@@ -16,11 +16,14 @@ namespace DC.Web.Ui.Base
             Logger = logger;
         }
 
+        protected bool IsHelpSectionHidden
+        {
+            set => ViewData[ViewDataConstants.IsHelpSectionHidden] = value;
+        }
+
         protected ILogger Logger { get; set; }
 
         protected long Ukprn => User.Ukprn();
-
-        protected long Upin => User.Upin();
 
         protected void AddError(string key)
         {

@@ -256,6 +256,7 @@ namespace DC.Web.Ui.Services.Services
             var result = new SubmissionResultViewModel()
             {
                 PeriodsList = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
+                CollectionTypes = submissions.GroupBy(x => x.JobType).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 SubmissionItems = submissions,
                 ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
             };

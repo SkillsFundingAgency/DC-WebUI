@@ -13,5 +13,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public List<ReportHistoryViewModel> ReportHistoryItems { get; set; }
 
         public List<int> PeriodsList { get; set; }
+
+        public List<string> CollectionTypes { get; set; }
     }
 }
