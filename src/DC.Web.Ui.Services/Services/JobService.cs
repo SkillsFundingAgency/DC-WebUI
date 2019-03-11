@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,12 +23,11 @@ using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Dto;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
+using JobStatusType = ESFA.DC.Jobs.Model.Enums.JobStatusType;
 
 namespace DC.Web.Ui.Services.Services
 {
@@ -198,7 +198,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
-            var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
+            var job = new JobStatusDto()
             {
                 JobId = jobId,
                 JobStatus = (int)status
@@ -255,7 +255,7 @@ namespace DC.Web.Ui.Services.Services
 
             var result = new SubmissionResultViewModel()
             {
-                PeriodsList = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
+                Periods = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 CollectionTypes = submissions.GroupBy(x => x.JobType).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 SubmissionItems = submissions,
                 ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
@@ -281,7 +281,8 @@ namespace DC.Web.Ui.Services.Services
                     DateTimeSubmittedUtc = x.DateTimeSubmittedUtc,
                     Ukprn = x.Ukprn,
                     PeriodNumber = x.PeriodNumber,
-                    PeriodName = x.PeriodNumber.ToPeriodName()
+                    PeriodName = x.PeriodNumber.ToPeriodName(),
+                    EsfPeriodName = $"ESF:{x.CalendarYear}_{x.CalendarMonth.ToString("00", NumberFormatInfo.InvariantInfo)}_Supp"
                 }));
 
             return jobsViewList;

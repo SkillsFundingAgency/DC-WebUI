@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -12,8 +11,10 @@ namespace ESFA.DC.Web.Ui.ViewModels
         
         public List<ReportHistoryViewModel> ReportHistoryItems { get; set; }
 
-        public List<int> PeriodsList { get; set; }
+        public List<int> Periods { get; set; }
 
         public List<string> CollectionTypes { get; set; }
+
+        public List<string> JobTypeFiltersList { get; set; }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {

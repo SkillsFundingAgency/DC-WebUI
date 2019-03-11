@@ -19,9 +19,7 @@
     <PackageReference Include="ESFA.DC.CrossLoad" Version="0.1.4-beta0001" />
     <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
     <PackageReference Include="ESFA.DC.IO.Interfaces" Version="0.1.15-beta0001" />
-    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.27-beta0001" />
-    <PackageReference Include="ESFA.DC.JobStatus" Version="0.1.12-beta0001" />
-    <PackageReference Include="ESFA.DC.JobStatus.Interface" Version="0.2.4-beta0001" />
+    <PackageReference Include="ESFA.DC.Jobs.Model" Version="0.1.90" />
     <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
     <PackageReference Include="ESFA.DC.Queueing.Interface" Version="0.1.14-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />

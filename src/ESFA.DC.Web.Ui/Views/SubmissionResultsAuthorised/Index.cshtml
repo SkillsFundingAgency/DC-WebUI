@@ -1,16 +1,91 @@
 ﻿@using DC.Web.Ui.Extensions
 @using ESFA.DC.Jobs.Model.Enums
-@using ESFA.DC.JobStatus.Interface
-
+@model ESFA.DC.Web.Ui.ViewModels.SubmissionResultViewModel
 @{
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
+    string referrer = Context.Request.Headers?["Referer"];
+    var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
+
 }
 
 <h1 class="govuk-heading-xl">Reports</h1>
 
 <h3 class="govuk-heading-s">ESFA support desk</h3>
-<p>For help and support call us on 0370 267 0001, Monday to Thursday, 8:30am-5pm,<br> or Fridays, 8.30am-4pm. Or email us at
-    <a href="sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
+<p>
+    For help and support call us on 0370 267 0001, Monday to Thursday, 8:30am-5pm,<br> or Fridays, 8.30am-4pm. Or email us at
+    <a href="sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a>
+</p>
 <p>For new submissions or to correct the data you've already submitted, <a href="/submission-options">submit another file</a>.</p>
 
-@await Component.InvokeAsync("History", new {ukprn = User.Ukprn()})
+<div class="govuk-tabs" data-module="tabs">
+    <h2 class="govuk-tabs__title">
+        Submission and reports history
+    </h2>
+
+    <ul class="govuk-tabs__list" role="tablist">
+        <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="0" aria-selected="true">
+                Last 3 months
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="1" aria-selected="false">
+                History (incl. reports)
+            </a>
+        </li>
+
+    </ul>
+
+    <section class="govuk-tabs__panel" id="submissions" role="tabpanel" aria-labelledby="tab_submissions">
+        <h2 class="govuk-heading-l" id="submission">SubmissionItems</h2>
+
+        @if (isHelpDesk.GetValueOrDefault() == false)
+        {
+            <p>Each time you submit a new file your reports will be updated. To view your latest reports you should download the reports for your most recent submission.</p>
+        }
+
+        <form asp-controller="SubmissionResultsAuthorised" asp-action="FilterSubmissions" method="post" id="filter-form">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+
+                    <span id="waste-hint" class="govuk-hint">
+                        Filter your submission types
+                    </span>
+                    <div id="typeFilter" class="govuk-checkboxes">
+                        @foreach (var jobType in Model.CollectionTypes)
+                        {
+                            <div class="govuk-checkboxes__item">
+
+                                <input id="@jobType" class="govuk-checkboxes__input" name="jobTypeFilter" type="checkbox" value="@jobType" @(Model.JobTypeFiltersList != null && Model.JobTypeFiltersList.Contains(jobType) ? "checked" : "")>
+                                <label class="govuk-label govuk-checkboxes__label" for="@jobType">
+                                    @jobType
+                                </label>
+
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button">
+                Filter
+            </button>
+        </form>
+
+
+        @foreach (var period in Model.Periods)
+        {
+            var items = Model.SubmissionItems.Where(x => x.PeriodNumber == period).OrderByDescending(x => x.DateTimeSubmittedUtc);
+            @await Html.PartialAsync("_submissionHistory", items)
+        }
+
+
+    </section>
+    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
+        <h2 class="govuk-heading-l" id="reports">History (incl. reports)</h2>
+        <p>The reports download includes the last validation report and submission files. You can <a href="https://hub.fasst.org.uk/Pages/default.aspx" target="_blank">view period end reports</a> in the Hub.</p>
+
+        @await Html.PartialAsync("_reportsHistory", Model.ReportHistoryItems)
+
+    </section>
+
+</div>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -28,6 +28,8 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public int PeriodNumber { get; set; }
 
         public string PeriodName { get; set; }
+
+        public string EsfPeriodName { get; set; }
 
 
     }

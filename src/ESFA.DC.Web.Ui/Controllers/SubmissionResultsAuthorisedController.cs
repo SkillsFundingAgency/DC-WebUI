@@ -11,7 +11,6 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +39,19 @@ namespace DC.Web.Ui.Controllers
 
             var result = await _jobService.GetSubmissionHistory(Ukprn);
             return View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterSubmissions(string[] jobTypeFilter)
+        {
+            IsHelpSectionHidden = true;
+            var result = await _jobService.GetSubmissionHistory(Ukprn);
+
+            result.SubmissionItems = result.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
+            result.JobTypeFiltersList = jobTypeFilter.ToList();
+
+            return View("Index", result);
         }
 
         [Route("DownloadReport/{ukprn}/{jobId}")]

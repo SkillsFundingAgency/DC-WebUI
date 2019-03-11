@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
-using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.WindowsAzure.Storage.Blob;
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DC.Web.Ui.Base;
 using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
-using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
