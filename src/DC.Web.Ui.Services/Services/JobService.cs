@@ -132,10 +132,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn)
         {
-            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddMonths(-18).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-
-            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}/latest-for-period";
+            var url = $"{_apiBaseUrl}/{ukprn}/reports-history";
             _logger.LogInfo($"getting reports history for url : {url}");
 
             var data = await _httpClient.GetDataAsync(url);
