@@ -16,5 +16,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public List<string> CollectionTypes { get; set; }
 
         public List<string> JobTypeFiltersList { get; set; }
+
+        public List<int> AcademicYears { get; set; }
+
+        public List<int> AcademicYearFiltersList { get; set; }
     }
 }

@@ -1,10 +1,13 @@
-﻿@using DC.Web.Ui.Extensions
+﻿@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Services.Extensions
 @using ESFA.DC.Jobs.Model.Enums
 @model ESFA.DC.Web.Ui.ViewModels.SubmissionResultViewModel
 @{
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
     string referrer = Context.Request.Headers?["Referer"];
     var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
+    var isReportsSectionSelected = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
 
 }
 
@@ -24,12 +27,12 @@
 
     <ul class="govuk-tabs__list" role="tablist">
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="0" aria-selected="true">
+            <a class="govuk-tabs__tab " href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected= @(!isReportsSectionSelected ? "true" : "false")>
                 Last 3 months
             </a>
         </li>
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="1" aria-selected="false">
+            <a class="govuk-tabs__tab " href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected= @(isReportsSectionSelected ? "true" : "false")>
                 History (incl. reports)
             </a>
         </li>
@@ -66,7 +69,7 @@
                     </div>
                 </fieldset>
             </div>
-            <button class="govuk-button">
+            <button class="govuk-button" id="submissionFilterButton">
                 Filter
             </button>
         </form>
@@ -80,11 +83,45 @@
 
 
     </section>
+
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
         <h2 class="govuk-heading-l" id="reports">History (incl. reports)</h2>
         <p>The reports download includes the last validation report and submission files. You can <a href="https://hub.fasst.org.uk/Pages/default.aspx" target="_blank">view period end reports</a> in the Hub.</p>
+        
+        <form asp-controller="SubmissionResultsAuthorised" asp-action="FilterReports" method="post" id="filter-reports-form">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
 
-        @await Html.PartialAsync("_reportsHistory", Model.ReportHistoryItems)
+                    <span id="waste-hint" class="govuk-hint">
+                        Filter by year
+                    </span>
+                    <div id="yearFilter" class="govuk-checkboxes">
+                        @foreach (var academicYear in Model.AcademicYears)
+                        {
+                            <div class="govuk-checkboxes__item">
+
+                                <input id="@academicYear" class="govuk-checkboxes__input" name="reportsFilter" type="checkbox" value="@academicYear" @(Model.AcademicYearFiltersList != null && Model.AcademicYearFiltersList.Contains(academicYear) ? "checked" : "")>
+                                <label class="govuk-label govuk-checkboxes__label" for="@academicYear">
+                                    @academicYear.ToAcademicYearName()
+                                </label>
+
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button" id="reportsFilterButton">
+                Filter
+            </button>
+        </form>
+
+
+        @foreach (var academicYear in Model.AcademicYears)
+        {
+            var items = Model.ReportHistoryItems.Where(x => x.AcademicYear == academicYear).OrderByDescending(x => x.PeriodNumber);
+            @await Html.PartialAsync("_reportsHistory", items)
+        }
+
 
     </section>
 

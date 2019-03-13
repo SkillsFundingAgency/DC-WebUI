@@ -141,14 +141,14 @@ namespace DC.Web.Ui.Services.Services
             var result = new List<ReportHistoryViewModel>();
             foreach (var job in jobsList)
             {
-                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.CollectionYear == job.CollectionYear);
+                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.AcademicYear == job.CollectionYear);
 
                 if (item == null)
                 {
                     item = new ReportHistoryViewModel()
                     {
                         PeriodNumber = job.PeriodNumber,
-                        CollectionYear = job.CollectionYear,
+                        AcademicYear = job.CollectionYear,
                         DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}",
                         Ukprn = ukprn
                     };
@@ -168,7 +168,7 @@ namespace DC.Web.Ui.Services.Services
                 model.ReportFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileNames));
             }
 
-            return result.OrderByDescending(x => x.CollectionYear);
+            return result.OrderByDescending(x => x.AcademicYear);
         }
 
         public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)
@@ -249,13 +249,15 @@ namespace DC.Web.Ui.Services.Services
         public async Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn)
         {
             var submissions = (await GetAllJobsForHistory(ukprn)).ToList();
+            var reports = (await GetReportsHistory(ukprn)).ToList();
 
             var result = new SubmissionResultViewModel()
             {
                 Periods = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 CollectionTypes = submissions.GroupBy(x => x.JobType).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 SubmissionItems = submissions,
-                ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
+                ReportHistoryItems = reports,
+                AcademicYears = reports.GroupBy(x => x.AcademicYear).OrderByDescending(x => x.Key).Select(x => x.Key).ToList()
             };
 
             return result;

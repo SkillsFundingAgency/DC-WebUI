@@ -19,7 +19,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public int PeriodNumber { get; set; }
 
-        public int CollectionYear { get; set; }
+        public int AcademicYear { get; set; }
         public string DisplayCollectionYear { get; set; }
 
         public long Ukprn { get; set; }

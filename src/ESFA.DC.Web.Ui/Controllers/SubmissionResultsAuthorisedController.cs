@@ -42,6 +42,7 @@ namespace DC.Web.Ui.Controllers
         }
 
         [HttpPost]
+        [Route("FilterSubmissions")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FilterSubmissions(string[] jobTypeFilter)
         {
@@ -50,6 +51,21 @@ namespace DC.Web.Ui.Controllers
 
             result.SubmissionItems = result.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
             result.JobTypeFiltersList = jobTypeFilter.ToList();
+
+            return View("Index", result);
+        }
+
+        [HttpPost]
+        [Route("FilterReports")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterReports(int[] reportsFilter)
+        {
+            IsHelpSectionHidden = true;
+            ViewData[ViewDataConstants.IsReportsSectionSelected] = true;
+            var result = await _jobService.GetSubmissionHistory(Ukprn);
+
+            result.ReportHistoryItems = result.ReportHistoryItems.Where(x => reportsFilter.Contains(x.AcademicYear)).ToList();
+            result.AcademicYearFiltersList = reportsFilter.ToList();
 
             return View("Index", result);
         }
