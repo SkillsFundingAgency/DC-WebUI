@@ -7,7 +7,7 @@
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
     string referrer = Context.Request.Headers?["Referer"];
     var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
-    var + = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
+    var isReportsSectionSelected = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
 
 }
 
