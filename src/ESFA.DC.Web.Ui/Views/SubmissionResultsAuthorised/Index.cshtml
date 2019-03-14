@@ -7,7 +7,7 @@
     ViewData["Title"] = "Individualised Learner Record (ILR) submissions";
     string referrer = Context.Request.Headers?["Referer"];
     var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
-    var isReportsSectionSelected = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
+    var + = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
 
 }
 
@@ -27,12 +27,12 @@
 
     <ul class="govuk-tabs__list" role="tablist">
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab " href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected= @(!isReportsSectionSelected ? "true" : "false")>
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected="true" >
                 Last 3 months
             </a>
         </li>
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab " href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected= @(isReportsSectionSelected ? "true" : "false")>
+            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected="false">
                 History (incl. reports)
             </a>
         </li>
@@ -87,7 +87,7 @@
     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
         <h2 class="govuk-heading-l" id="reports">History (incl. reports)</h2>
         <p>The reports download includes the last validation report and submission files. You can <a href="https://hub.fasst.org.uk/Pages/default.aspx" target="_blank">view period end reports</a> in the Hub.</p>
-        
+
         <form asp-controller="SubmissionResultsAuthorised" asp-action="FilterReports" method="post" id="filter-reports-form">
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
@@ -126,3 +126,14 @@
     </section>
 
 </div>
+
+@if (isReportsSectionSelected)
+{
+    <script language="javascript">
+        document.addEventListener("DOMContentLoaded",
+            function() {
+                window.location = window.location + "#reportsSection";
+            });
+
+    </script>
+}
