@@ -27,12 +27,12 @@
 
     <ul class="govuk-tabs__list" role="tablist">
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected="true" >
+            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected="true">
                 Last 3 months
             </a>
         </li>
         <li class="govuk-tabs__list-item" role="presentation">
-            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected="false">
+            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected="false" )>
                 History (incl. reports)
             </a>
         </li>
@@ -127,13 +127,22 @@
 
 </div>
 
+<environment include="Development">
+    <script src="~/assets/javascripts/app.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/assets/minified/app.min.js" asp-append-version="true"></script>
+</environment>
+
+
+
 @if (isReportsSectionSelected)
 {
     <script language="javascript">
         document.addEventListener("DOMContentLoaded",
-            function() {
+            function () {
                 window.location = window.location + "#reportsSection";
-            });
-
+            }
+        );
     </script>
 }

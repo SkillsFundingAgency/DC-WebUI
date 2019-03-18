@@ -183,7 +183,13 @@
     <Content Update="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\assets\javascripts\govuk.min.js">
+    <Content Update="wwwroot\assets\javascripts\app.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\minified\govuk.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\minified\app.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -198,7 +204,6 @@
     <Folder Include="Views\Home\" />
     <Folder Include="Areas\ILR\Views\SubmissionAuthorised\" />
     <Folder Include="Areas\ILR\Views\ValidationResultsAuthorised\" />
-    <Folder Include="wwwroot\assets\minified\" />
   </ItemGroup>
 
   <ItemGroup>
