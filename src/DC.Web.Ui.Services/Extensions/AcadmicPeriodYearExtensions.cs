@@ -2,7 +2,7 @@
 
 namespace DC.Web.Ui.Services.Extensions
 {
-    public static class PeriodExnensions
+    public static class AcadmicPeriodYearExtensions
     {
         public static string ToPeriodName(this int periodNumber)
         {
@@ -13,6 +13,11 @@ namespace DC.Web.Ui.Services.Extensions
         {
             int.TryParse(periodName.Replace("R", string.Empty), out var result);
             return result;
+        }
+
+        public static string ToAcademicYearName(this int academicYear)
+        {
+            return $"20{academicYear.ToString().Substring(0, 2)} to 20{academicYear.ToString().Substring(2)}";
         }
     }
 }

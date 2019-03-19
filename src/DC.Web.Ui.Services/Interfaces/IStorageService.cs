@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 
 namespace DC.Web.Ui.Services.Interfaces
 {

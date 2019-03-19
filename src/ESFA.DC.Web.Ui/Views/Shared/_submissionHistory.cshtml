@@ -1,9 +1,12 @@
 ﻿@using System.Collections.Generic
-@using ESFA.DC.JobStatus.Interface
+@using ESFA.DC.Jobs.Model.Enums
 @model IEnumerable<ESFA.DC.Web.Ui.ViewModels.SubmissonHistoryViewModel>
 
 @if (Model.Any())
 {
+    <h3 class="govuk-heading-m">Submissions for @Model.FirstOrDefault().PeriodName
+        <span class="govuk-caption-m">@Model.FirstOrDefault().EsfPeriodName</span>
+    </h3>
     <table class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Dates and file name</caption>
         <thead class="govuk-table__head">

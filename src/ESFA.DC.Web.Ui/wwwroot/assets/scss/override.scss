@@ -694,3 +694,14 @@ progress::-moz-progress-bar { background: white; }
     margin-left: 5px;
 }
 
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+#typeFilter.govuk-checkboxes, #yearFilter.govuk-checkboxes {
+    display: flex;
+
+    .govuk-checkboxes__item {
+        margin-right: 20px;
+    }
+    }

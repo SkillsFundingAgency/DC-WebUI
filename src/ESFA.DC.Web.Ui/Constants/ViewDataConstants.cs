@@ -11,5 +11,7 @@ namespace DC.Web.Ui.Constants
         public const string IsCleanFile = "IsCleanFile";
         public const string GoogleTrackingKey = "GoogleTrackingKey";
         public const string NumberOfEsfContracts = "NumberOfEsfContracts";
+        public const string IsHelpSectionHidden = "IsHelpSectionHidden";
+        public const string IsReportsSectionSelected = "IsReportsSectionSelected";
     }
 }

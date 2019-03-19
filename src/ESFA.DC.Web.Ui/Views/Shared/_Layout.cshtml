@@ -1,10 +1,11 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Constants
 @using DC.Web.Ui.Extensions
 @using DC.Web.Ui.Settings.Models
 
 
 @{
-    string referrerUrl = Context.Request.Headers?["Referer"];
+    var isHelpSectionHidden = ViewData.ContainsKey(ViewDataConstants.IsHelpSectionHidden) && Convert.ToBoolean(ViewData[ViewDataConstants.IsHelpSectionHidden]);
 }
 
 <!DOCTYPE html>
@@ -27,30 +28,32 @@
 
         <main class="govuk-main-wrapper" id="content" role="main">
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
+                <!--<div class="govuk-grid-column-fullgovuk-grid-column-two-thirds"> -->
+                <div class= @(isHelpSectionHidden? "govuk-grid-column-full" :"govuk-grid-column-two-thirds")>
+                @Html.Partial("_ErrorSummary")
 
-                    @Html.Partial("_ErrorSummary")
+                @RenderBody()
+            </div>
+                @if (!isHelpSectionHidden)
+                {
+                    <div class="govuk-grid-column-one-third">
+                        <aside class="app-related-items" role="complementary">
+                            <h2 class="govuk-heading-m" id="subsection-title-help">
+                                Help and support
+                            </h2>
+                            <p><span class="govuk-!-font-weight-bold">ESFA support desk</span></p>
+                            <p>
+                            Telephone: 0370 267 0001<br/>
+                            Monday to Thursday, 8:30am to 5:00pm<br/>
+                            Friday, 8:30am to 4:00pm<br/>
+                            <p>Email: <a href="mailto:sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
 
-                    @RenderBody()
-                </div>
 
-                <div class="govuk-grid-column-one-third">
-                    <aside class="app-related-items" role="complementary">
-                        <h2 class="govuk-heading-m" id="subsection-title-help">
-                            Help and support
-                        </h2>
-                        <p><span class="govuk-!-font-weight-bold">ESFA support desk</span></p>
-                        <p>
-                            Telephone: 0370 267 0001<br />
-                            Monday to Thursday, 8:30am to 5:00pm<br />
-                            Friday, 8:30am to 4:00pm<br />
-                        <p>Email: <a href="mailto:sde.servicedesk@education.gov.uk">sde.servicedesk@education.gov.uk</a></p>
+                            @RenderSection("RelatedContent", required: false)
 
-
-                        @RenderSection("RelatedContent", required: false)
-
-                    </aside>
-                </div>
+                        </aside>
+                    </div>
+                }
             </div>
         </main>
     </div>

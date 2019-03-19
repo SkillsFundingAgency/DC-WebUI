@@ -5,7 +5,7 @@ using DC.Web.Ui.Constants;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Services.Services.Enums;
 using ESFA.DC.Jobs.Model;
-using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;

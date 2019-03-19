@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,12 +23,11 @@ using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Dto;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
+using JobStatusType = ESFA.DC.Jobs.Model.Enums.JobStatusType;
 
 namespace DC.Web.Ui.Services.Services
 {
@@ -115,19 +115,9 @@ namespace DC.Web.Ui.Services.Services
             return _serializationService.Deserialize<IEnumerable<FileUploadJob>>(data);
         }
 
-        public async Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc)
+        public async Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn)
         {
-            var previousPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collectionName, currentPeriodStartDateTimeUtc);
-
-            string startDatetTimeString;
-            if (previousPeriod == null)
-            {
-                startDatetTimeString = currentPeriodStartDateTimeUtc.AddDays(-30).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            }
-            else
-            {
-                startDatetTimeString = previousPeriod.StartDateTimeUtc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            }
+            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddDays(-90).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
             var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
 
@@ -142,10 +132,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn)
         {
-            var startDatetTimeString = _dateTimeProvider.GetNowUtc().AddMonths(-18).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-            var endDatetTimeString = _dateTimeProvider.GetNowUtc().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
-
-            var url = $"{_apiBaseUrl}/{ukprn}/{startDatetTimeString}/{endDatetTimeString}/latest-for-period";
+            var url = $"{_apiBaseUrl}/{ukprn}/reports-history";
             _logger.LogInfo($"getting reports history for url : {url}");
 
             var data = await _httpClient.GetDataAsync(url);
@@ -154,14 +141,14 @@ namespace DC.Web.Ui.Services.Services
             var result = new List<ReportHistoryViewModel>();
             foreach (var job in jobsList)
             {
-                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.CollectionYear == job.CollectionYear);
+                var item = result.SingleOrDefault(x => x.PeriodNumber == job.PeriodNumber && x.AcademicYear == job.CollectionYear);
 
                 if (item == null)
                 {
                     item = new ReportHistoryViewModel()
                     {
                         PeriodNumber = job.PeriodNumber,
-                        CollectionYear = job.CollectionYear,
+                        AcademicYear = job.CollectionYear,
                         DisplayCollectionYear = $"20{job.CollectionYear.ToString().Substring(0, 2)} to 20{job.CollectionYear.ToString().Substring(2)}",
                         Ukprn = ukprn
                     };
@@ -181,7 +168,7 @@ namespace DC.Web.Ui.Services.Services
                 model.ReportFileName = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileNames));
             }
 
-            return result.OrderByDescending(x => x.CollectionYear);
+            return result.OrderByDescending(x => x.AcademicYear);
         }
 
         public async Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName)
@@ -208,7 +195,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<string> UpdateJobStatus(long jobId, JobStatusType status)
         {
-            var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
+            var job = new JobStatusDto()
             {
                 JobId = jobId,
                 JobStatus = (int)status
@@ -240,7 +227,7 @@ namespace DC.Web.Ui.Services.Services
                 SubmittedBy = job.SubmittedBy,
                 HeaderMessage = GetHeader(job.JobType, job.PeriodNumber),
                 JobType = job.JobType,
-                CollectionName = job.CollectionName
+                CollectionName = job.CollectionName,
             };
         }
 
@@ -261,32 +248,19 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn)
         {
-            var collection = await _collectionManagementService.GetCollectionFromTypeAsync("ILR");
+            var submissions = (await GetAllJobsForHistory(ukprn)).ToList();
+            var reports = (await GetReportsHistory(ukprn)).ToList();
 
-            if (collection != null)
+            var result = new SubmissionResultViewModel()
             {
-                var currentPeriod = await _collectionManagementService.GetPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                if (currentPeriod == null)
-                {
-                    currentPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                }
+                Periods = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
+                CollectionTypes = submissions.GroupBy(x => x.JobType).Select(x => x.Key).OrderByDescending(x => x).ToList(),
+                SubmissionItems = submissions,
+                ReportHistoryItems = reports,
+                AcademicYears = reports.GroupBy(x => x.AcademicYear).OrderByDescending(x => x.Key).Select(x => x.Key).ToList()
+            };
 
-                var submissions = (await GetAllJobsForHistory(ukprn, collection.CollectionTitle, currentPeriod.StartDateTimeUtc)).ToList();
-
-                var result = new SubmissionResultViewModel()
-                {
-                    CurrentPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc >= currentPeriod.StartDateTimeUtc).ToList(),
-                    PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
-                    PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
-                    CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
-                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}",
-                    ReportHistoryItems = (await GetReportsHistory(ukprn)).ToList()
-                };
-
-                return result;
-            }
-
-            return null;
+            return result;
         }
 
         private List<SubmissonHistoryViewModel> ConvertSubmissions(IEnumerable<FileUploadJob> jobsList)
@@ -304,7 +278,10 @@ namespace DC.Web.Ui.Services.Services
                     DateTimeSubmitted = _dateTimeProvider.ConvertUtcToUk(x.DateTimeSubmittedUtc).ToDateTimeDisplayFormat(),
                     SubmittedBy = x.SubmittedBy,
                     DateTimeSubmittedUtc = x.DateTimeSubmittedUtc,
-                    Ukprn = x.Ukprn
+                    Ukprn = x.Ukprn,
+                    PeriodNumber = x.PeriodNumber,
+                    PeriodName = x.PeriodNumber.ToPeriodName(),
+                    EsfPeriodName = $"ESF:{x.CalendarYear}_{x.CalendarMonth.ToString("00", NumberFormatInfo.InvariantInfo)}_Supp"
                 }));
 
             return jobsViewList;

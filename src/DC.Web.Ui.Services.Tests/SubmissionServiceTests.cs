@@ -11,8 +11,6 @@ using ESFA.DC.CrossLoad.Dto;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Dto;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.Serialization.Interfaces;
@@ -144,7 +142,7 @@ namespace DC.Web.Ui.Services.Tests
         [Fact]
         public async Task UpdateJobStatus_Success()
         {
-            var job = new ESFA.DC.JobStatus.Dto.JobStatusDto()
+            var job = new JobStatusDto()
             {
                 JobId = 10,
                 JobStatus = 4
