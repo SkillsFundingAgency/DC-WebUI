@@ -1,13 +1,21 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 @using DC.Web.Ui.Constants
 @using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Services.Extensions
 @using DC.Web.Ui.Settings.Models
 @using ESFA.DC.Web.Ui.ViewModels
+@using Microsoft.AspNetCore.Mvc.Rendering
 @model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderCollectionsViewModel
 
 @{
     Layout = null;
     var searchTerm = ViewContext.RouteData?.Values?["searchTerm"];
+    string referrer = Context.Request.Headers?["Referer"];
+
+    var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
+    var isReportsSectionSelected = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
+
+    var ukprn= ViewContext.RouteData.Values["ukprn"];
 }
 
 <!DOCTYPE html>
@@ -73,7 +81,131 @@
                 </div>
             </div>
             <div class="govuk-grid-row">
-                @await Component.InvokeAsync("History", new {ukprn = @Model.Ukprn})
+
+                <div class="govuk-tabs" data-module="tabs">
+                    <h2 class="govuk-tabs__title">
+                        Submission and reports history
+                    </h2>
+
+                    <ul class="govuk-tabs__list" role="tablist">
+                        <li class="govuk-tabs__list-item" role="presentation">
+                            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected="true">
+                                Last 3 months
+                            </a>
+                        </li>
+                        <li class="govuk-tabs__list-item" role="presentation">
+                            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected="false" )>
+                                History (incl. reports)
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <section class="govuk-tabs__panel" id="submissions" role="tabpanel" aria-labelledby="tab_submissions">
+                        <h2 class="govuk-heading-l" id="submission">Submission</h2>
+
+
+                        <form asp-controller="ProviderDetails" asp-action="FilterSubmissions" method="post" id="filter-form">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+
+                                    <span id="waste-hint" class="govuk-hint">
+                                        Filter your submission types
+                                    </span>
+                                    <div id="typeFilter" class="govuk-checkboxes">
+                                        @foreach (var jobType in Model.History.CollectionTypes)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+
+                                                <input id="@jobType" class="govuk-checkboxes__input" name="jobTypeFilter" type="checkbox" value="@jobType" @(Model.History?.JobTypeFiltersList != null && Model.History.JobTypeFiltersList.Contains(jobType) ? "checked" : "")>
+                                                <label class="govuk-label govuk-checkboxes__label" for="@jobType">
+                                                    @jobType
+                                                </label>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+                            @*<input type="hidden" value="@ukprn" id="ukprn" name="ukprn"/>*@
+                            <button class="govuk-button" id="submissionFilterButton">
+                                Filter
+                            </button>
+                        </form>
+
+
+                        @foreach (var period in Model.History.Periods)
+                        {
+                            var items = Model.History.SubmissionItems.Where(x => x.PeriodNumber == period).OrderByDescending(x => x.DateTimeSubmittedUtc);
+                            @await Html.PartialAsync("_submissionHistory", items)
+                        }
+
+
+                    </section>
+
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
+                        <h2 class="govuk-heading-l" id="reports">History (incl. reports)</h2>
+                        
+
+                        <form asp-controller="ProviderDetails" asp-action="FilterReports" method="post" id="filter-reports-form">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+
+                                    <span id="waste-hint" class="govuk-hint">
+                                        Filter by year
+                                    </span>
+                                    <div id="yearFilter" class="govuk-checkboxes">
+                                        @foreach (var academicYear in Model.History.AcademicYears)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+
+                                                <input id="@academicYear" class="govuk-checkboxes__input" name="reportsFilter" type="checkbox" value="@academicYear" @(Model.History.AcademicYearFiltersList != null && Model.History.AcademicYearFiltersList.Contains(academicYear) ? "checked" : "")>
+                                                <label class="govuk-label govuk-checkboxes__label" for="@academicYear">
+                                                    @academicYear.ToAcademicYearName()
+                                                </label>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+                           @* <input type="hidden" value="@ukprn" id="ukprn" name="ukprn" />*@
+                            <button class="govuk-button" id="reportsFilterButton">
+                                Filter
+                            </button>
+                        </form>
+
+
+                        @foreach (var academicYear in Model.History.AcademicYears)
+                        {
+                            var items = Model.History.ReportHistoryItems.Where(x => x.AcademicYear == academicYear).OrderByDescending(x => x.PeriodNumber);
+                            @await Html.PartialAsync("_reportsHistory", items)
+                        }
+
+
+                    </section>
+
+                </div>
+
+                <environment include="Development">
+                    <script src="~/assets/javascripts/app.js"></script>
+                </environment>
+                <environment exclude="Development">
+                    <script src="~/assets/minified/app.min.js" asp-append-version="true"></script>
+                </environment>
+
+
+
+                @if (isReportsSectionSelected)
+                {
+                    <script language="javascript">
+        document.addEventListener("DOMContentLoaded",
+            function () {
+                window.location = window.location + "#reportsSection";
+            }
+        );
+                    </script>
+                }
             </div>
         </main>
     </div>

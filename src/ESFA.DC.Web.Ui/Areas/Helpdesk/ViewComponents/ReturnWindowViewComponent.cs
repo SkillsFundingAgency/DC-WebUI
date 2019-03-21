@@ -37,7 +37,7 @@ namespace DC.Web.Ui.Areas.Helpdesk.ViewComponents
                     var returnWindow = new ReturnPeriodViewModel(currentPeriod.PeriodNumber)
                     {
                         DaysToClose = (currentPeriod.EndDateTimeUtc - _dateTimeProvider.GetNowUtc()).Days,
-                        PeriodCloseDate = currentPeriod.EndDateTimeUtc.ToDateTimeDisplayFormat()
+                        PeriodCloseDate = currentPeriod.EndDateTimeUtc.AddMinutes(-5).ToDateTimeDisplayFormat()
                     };
 
                     return View(returnWindow);

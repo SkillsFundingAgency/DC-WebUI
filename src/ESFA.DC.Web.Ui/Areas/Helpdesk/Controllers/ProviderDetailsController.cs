@@ -38,8 +38,44 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
         public async Task<IActionResult> Index(long ukprn, string searchTerm)
         {
             var providerResult = await _providerService.GetProviderDetails(ukprn);
-
+            providerResult.History = await _jobService.GetSubmissionHistory(ukprn);
             return View(providerResult);
+        }
+
+        [HttpPost]
+        [Route("{ukprn}/{searchTerm}/FilterSubmissions")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterSubmissions(long ukprn, string[] jobTypeFilter)
+        {
+            var providerResult = await _providerService.GetProviderDetails(ukprn);
+
+            //IsHelpSectionHidden = true;
+            var history = await _jobService.GetSubmissionHistory(ukprn);
+            history.SubmissionItems = history.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
+            history.JobTypeFiltersList = jobTypeFilter.ToList();
+
+            providerResult.History = history;
+
+            return View("Index", providerResult);
+        }
+
+        [HttpPost]
+        [Route("{ukprn}/{searchTerm}/FilterReports")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterReports(long ukprn, int[] reportsFilter)
+        {
+            //IsHelpSectionHidden = true;
+            var providerResult = await _providerService.GetProviderDetails(ukprn);
+
+            ViewData[ViewDataConstants.IsReportsSectionSelected] = true;
+
+            var history = await _jobService.GetSubmissionHistory(ukprn);
+            history.ReportHistoryItems = history.ReportHistoryItems.Where(x => reportsFilter.Contains(x.AcademicYear)).ToList();
+            history.AcademicYearFiltersList = reportsFilter.ToList();
+
+            providerResult.History = history;
+
+            return View("Index", providerResult);
         }
 
         [Route("DownloadReport/{ukprn}/{jobId}")]
