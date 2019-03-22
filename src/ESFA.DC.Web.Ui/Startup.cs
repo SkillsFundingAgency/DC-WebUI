@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DC.Web.Ui
 {
@@ -54,6 +53,7 @@ namespace DC.Web.Ui
                 x.MultipartBodyLengthLimit = 524_288_000;
                 x.MultipartBoundaryLengthLimit = 524_288_000;
             });
+
             services.AddMvc()
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
             // Custom services
@@ -69,12 +69,15 @@ namespace DC.Web.Ui
         {
             app.UseBrowserLink();
 
+            app.UseXfo(options => options.Deny());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseHsts(hsts => hsts.MaxAge(365).IncludeSubdomains());
                 app.UseExceptionHandler("/error");
             }
 
