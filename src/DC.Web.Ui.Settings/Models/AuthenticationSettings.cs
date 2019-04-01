@@ -9,8 +9,5 @@ namespace DC.Web.Ui.Settings.Models
 
         [JsonRequired]
         public string MetadataAddress { get; set; }
-
-        [JsonRequired]
-        public bool Enabled { get; set; }
     }
 }

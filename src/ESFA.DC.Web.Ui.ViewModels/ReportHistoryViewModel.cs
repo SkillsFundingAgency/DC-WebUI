@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 
 namespace ESFA.DC.Web.Ui.ViewModels
 {
@@ -20,7 +19,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public int PeriodNumber { get; set; }
 
-        public int CollectionYear { get; set; }
+        public int AcademicYear { get; set; }
         public string DisplayCollectionYear { get; set; }
+
+        public long Ukprn { get; set; }
     }
 }

@@ -25,5 +25,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<ReturnPeriod> GetPreviousPeriodAsync(string collectionName, DateTime dateTimeUtc);
 
         Task<Collection> GetCollectionFromTypeAsync(string collectionType);
+
+        Task<int> GetNumberOfEsfContracts(long ukprn);
     }
 }

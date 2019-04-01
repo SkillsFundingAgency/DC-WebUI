@@ -1,0 +1,17 @@
+﻿@model ESFA.DC.Web.Ui.ViewModels.ReturnPeriodViewModel
+
+@{
+
+}
+
+@if (Model != null)
+{
+<div>
+    <aside class="interruption-card">
+        <div class="data">
+            <span class="data-item bold-xlarge">@Model.DaysToClose days</span>
+            <p class="govuk-body-white">@Model.PeriodName() closes @Model.PeriodCloseDate</p>
+        </div>
+    </aside>
+</div>
+}

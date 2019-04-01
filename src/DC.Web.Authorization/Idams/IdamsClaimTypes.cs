@@ -9,5 +9,6 @@
         public const string Email = "http://schemas.portal.com/mail";
         public const string Upin = "http://schemas.portal.com/upin";
         public const string NameIdentifier = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        public const string UserType = "http://schemas.portal.com/usertype";
     }
 }

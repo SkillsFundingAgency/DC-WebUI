@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ESFA.DC.Jobs.Model;
-using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -24,7 +24,7 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<IEnumerable<FileUploadJob>> GetAllJobsForPeriod(long ukprn, int period);
 
-        Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn, string collectionName, DateTime currentPeriodStartDateTimeUtc);
+        Task<IEnumerable<SubmissonHistoryViewModel>> GetAllJobsForHistory(long ukprn);
 
         Task<FileUploadJob> GetLatestJob(long ukprn, string collectionName);
 
@@ -33,5 +33,7 @@ namespace DC.Web.Ui.Services.Interfaces
         Task<FileUploadJob> GetLatestJob(long ukprn, string contractReference, string collectionName);
 
         Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn);
+
+        Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn);
     }
 }

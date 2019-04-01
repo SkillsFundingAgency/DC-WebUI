@@ -11,7 +11,6 @@ using DC.Web.Ui.Services.Interfaces;
 using ESFA.DC.CollectionsManagement.Models;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -22,57 +21,59 @@ namespace DC.Web.Ui.Controllers
     public class SubmissionResultsAuthorisedController : BaseAuthorisedController
     {
         private readonly IJobService _jobService;
-        private readonly IStorageService _reportService;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICollectionManagementService _collectionManagementService;
+        private readonly IStorageService _storageService;
 
         public SubmissionResultsAuthorisedController(
             IJobService jobService,
             ILogger logger,
-            IStorageService reportService,
-            IDateTimeProvider dateTimeProvider,
-            ICollectionManagementService collectionManagementService)
+            IStorageService storageService)
             : base(logger)
         {
             _jobService = jobService;
-            _reportService = reportService;
-            _dateTimeProvider = dateTimeProvider;
-            _collectionManagementService = collectionManagementService;
+            _storageService = storageService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var collection = await _collectionManagementService.GetCollectionFromTypeAsync("ILR");
+            IsHelpSectionHidden = true;
 
-            if (collection != null)
-            {
-                var currentPeriod = await _collectionManagementService.GetPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                if (currentPeriod == null)
-                {
-                    currentPeriod = await _collectionManagementService.GetPreviousPeriodAsync(collection.CollectionTitle, _dateTimeProvider.GetNowUtc());
-                }
-
-                var submissions = (await _jobService.GetAllJobsForHistory(Ukprn, collection.CollectionTitle, currentPeriod.StartDateTimeUtc)).ToList();
-
-                var result = new SubmissionResultViewModel()
-                {
-                    CurrentPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc >= currentPeriod.StartDateTimeUtc).ToList(),
-                    PreviousPeriodSubmissions = submissions.Where(x => x.DateTimeSubmittedUtc < currentPeriod.StartDateTimeUtc).ToList(),
-                    PeriodName = currentPeriod.PeriodNumber.ToPeriodName(),
-                    CollectionYearStart = $"20{collection.CollectionYear.ToString().Substring(0, 2)}",
-                    CollectionYearEnd = $"20{collection.CollectionYear.ToString().Substring(2)}",
-                    ReportHistoryItems = (await _jobService.GetReportsHistory(Ukprn)).ToList()
-                };
-                return View(result);
-            }
-
-            return View();
+            var result = await _jobService.GetSubmissionHistory(Ukprn);
+            return View(result);
         }
 
-        [Route("DownloadReport/{jobId}")]
-        public async Task<FileResult> DownloadReport(long jobId)
+        [HttpPost]
+        [Route("FilterSubmissions")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterSubmissions(string[] jobTypeFilter)
         {
-            var job = await _jobService.GetJob(Ukprn, jobId);
+            IsHelpSectionHidden = true;
+            var result = await _jobService.GetSubmissionHistory(Ukprn);
+
+            result.SubmissionItems = result.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
+            result.JobTypeFiltersList = jobTypeFilter.ToList();
+
+            return View("Index", result);
+        }
+
+        [HttpPost]
+        [Route("FilterReports")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterReports(int[] reportsFilter)
+        {
+            IsHelpSectionHidden = true;
+            ViewData[ViewDataConstants.IsReportsSectionSelected] = true;
+            var result = await _jobService.GetSubmissionHistory(Ukprn);
+
+            result.ReportHistoryItems = result.ReportHistoryItems.Where(x => reportsFilter.Contains(x.AcademicYear)).ToList();
+            result.AcademicYearFiltersList = reportsFilter.ToList();
+
+            return View("Index", result);
+        }
+
+        [Route("DownloadReport/{ukprn}/{jobId}")]
+        public async Task<FileResult> DownloadReport(long ukprn, long jobId)
+        {
+            var job = await _jobService.GetJob(ukprn, jobId);
 
             if (job == null)
             {
@@ -80,13 +81,16 @@ namespace DC.Web.Ui.Controllers
                 throw new Exception("invalid job id");
             }
 
-            var reportFileName = _reportService.GetReportsZipFileName(Ukprn, jobId);
+            var reportFileName = _storageService.GetReportsZipFileName(ukprn, jobId);
             Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
 
             try
             {
-                var blobStream = await _reportService.GetBlobFileStreamAsync(reportFileName, job.JobType);
-                return File(blobStream, "application/zip", $"{jobId}_Reports.zip");
+                var blobStream = await _storageService.GetBlobFileStreamAsync(reportFileName, job.JobType);
+                return new FileStreamResult(blobStream, "application/zip")
+                {
+                    FileDownloadName = $"{jobId}_Reports.zip"
+                };
             }
             catch (Exception e)
             {
@@ -95,8 +99,8 @@ namespace DC.Web.Ui.Controllers
             }
         }
 
-        [Route("DownloadReport/{period}/{fileName}")]
-        public async Task<FileResult> DownloadReport(int period, string fileName)
+        [Route("DownloadReport/{ukprn}/{period}/{fileName}")]
+        public async Task<FileResult> DownloadReport(long ukprn, int period, string fileName)
         {
             Logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
 
@@ -107,10 +111,15 @@ namespace DC.Web.Ui.Controllers
                 var decodedFileName = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
 
                 string[] splitStrings = decodedFileName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                Dictionary<JobType, long> dict = splitStrings.ToDictionary(s => (JobType)short.Parse(s.Split('-')[0]), s => long.Parse(s.Split('-')[1]));
+                Dictionary<JobType, long> dict = splitStrings.ToDictionary(
+                    s => (JobType)short.Parse(s.Split('-')[0]),
+                    s => long.Parse(s.Split('-')[1]));
 
-                var blobStream = await _reportService.GetMergedReportFile(Ukprn, dict);
-                return File(blobStream, "application/zip", $"Reports_{period.ToPeriodName()}.zip");
+                var blobStream = await _storageService.GetMergedReportFile(ukprn, dict);
+                return new FileStreamResult(blobStream, "application/zip")
+                {
+                    FileDownloadName = $"Reports_{period.ToPeriodName()}.zip"
+                };
             }
             catch (Exception e)
             {
@@ -119,17 +128,20 @@ namespace DC.Web.Ui.Controllers
             }
         }
 
-        [Route("DownloadFile/{jobId}")]
-        public async Task<FileResult> DownloadFile(long jobId)
+        [Route("DownloadFile/{ukprn}/{jobId}")]
+        public async Task<FileResult> DownloadFile(long ukprn, long jobId)
         {
-            var job = await _jobService.GetJob(Ukprn, jobId);
+            var job = await _jobService.GetJob(ukprn, jobId);
 
             Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
 
             try
             {
-                var blobStream = await _reportService.GetBlobFileStreamAsync(job.FileName, job.JobType);
-                return File(blobStream, $"application/{job.FileName.FileExtension()}", $"{job.FileName.FileNameWithoutUkprn()}");
+                var blobStream = await _storageService.GetBlobFileStreamAsync(job.FileName, job.JobType);
+                return new FileStreamResult(blobStream, $"application/{job.FileName.FileExtension()}")
+                {
+                    FileDownloadName = $"{job.FileName.FileNameWithoutUkprn()}"
+                };
             }
             catch (Exception e)
             {

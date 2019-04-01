@@ -11,6 +11,16 @@
     "minify": {
       "enabled": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/assets/minified/app.min.js",
+    "inputFiles": [
+      "wwwroot/assets/javascripts/app.js"
+    ],
+    "minify": {
+      "enabled": true
+    },
+    "sourceMap": false
   }
 
 

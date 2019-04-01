@@ -38,7 +38,7 @@ namespace DC.Web.Ui.Services.Tests
                 }
             };
 
-            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/org/10000")).ReturnsAsync(() => serialisationService.Serialize(items));
+            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/org/collection-types/10000")).ReturnsAsync(() => serialisationService.Serialize(items));
 
             var pollyRegistryMock = new Mock<IReadOnlyPolicyRegistry<string>>();
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);
@@ -58,7 +58,7 @@ namespace DC.Web.Ui.Services.Tests
         public void GetSubmissionOptions_NothingFound()
         {
             var httpClientMock = new Mock<IBespokeHttpClient>();
-            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/org/10000")).ReturnsAsync(() => null);
+            httpClientMock.Setup(x => x.GetDataAsync("testurl/api/org/collection-types/10000")).ReturnsAsync(() => null);
 
             var pollyRegistryMock = new Mock<IReadOnlyPolicyRegistry<string>>();
             pollyRegistryMock.Setup(x => x.Get<IAsyncPolicy>("HttpRetryPolicy")).Returns(Policy.NoOpAsync);

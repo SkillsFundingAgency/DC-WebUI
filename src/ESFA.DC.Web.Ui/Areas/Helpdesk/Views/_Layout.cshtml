@@ -1,0 +1,85 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Settings.Models
+
+
+@{
+    string referrerUrl = Context.Request.Headers?["Referer"];
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    @Html.Partial("~/Views/Shared/_Head.cshtml")
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body class="govuk-template__body ">
+
+@Html.Partial("~/Views/Shared/_Header.cshtml")
+
+
+<div class="govuk-width-container">
+        
+    @Html.Partial("~/Views/Shared/_Banner.cshtml")
+
+    <main class="govuk-main-wrapper" id="content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                @Html.Partial("~/Views/Shared/_ErrorSummary.cshtml")
+
+                @RenderBody()
+            </div>
+
+                <div class="govuk-grid-column-one-third">
+                    
+                    @await Component.InvokeAsync("ReturnWindow")
+
+                    <aside role="complementary">
+                        <h2 class="govuk-heading-m" id="subsection-title">
+                            Related content
+                        </h2>
+                        <nav role="navigation" aria-labelledby="subsection-title">
+                            <ul class="govuk-list govuk-!-font-size-16">
+                                <li>
+                                    <a href="https://www.gov.uk/government/publications/individualised-learner-record-ilr-check-that-data-is-accurate" target="_blank">
+                                        Known service issues
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.gov.uk/education/data-collection-for-further-education-providers" target="_blank">
+                                        ILR specification, validation and funding rules
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://logon.fasst.org.uk/" target="_blank">
+                                        The Hub user administration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://hub.fasst.org.uk/Pages/fis.aspx" target="_blank">
+                                        Funding Information Service (FIS)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://hub.fasst.org.uk/Learning%20Aims/Pages/default.aspx" target="_blank">
+                                        Learning Aims Reference Service (LARS)
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </aside>
+                </div>
+            </div>
+        </main>
+    </div>
+
+@Html.Partial("~/Views/Shared/_Footer.cshtml")
+
+</body>
+</html>
+
+

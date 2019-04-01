@@ -13,7 +13,6 @@ using DC.Web.Ui.Settings.Models;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Jobs.Model.Enums;
-using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using Microsoft.WindowsAzure.Storage;

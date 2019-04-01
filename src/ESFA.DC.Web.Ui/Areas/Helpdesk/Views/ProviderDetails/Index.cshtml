@@ -1,0 +1,218 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using DC.Web.Ui.Constants
+@using DC.Web.Ui.Extensions
+@using DC.Web.Ui.Services.Extensions
+@using DC.Web.Ui.Settings.Models
+@using ESFA.DC.Web.Ui.ViewModels
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderCollectionsViewModel
+
+@{
+    Layout = null;
+    var searchTerm = ViewContext.RouteData?.Values?["searchTerm"];
+    string referrer = Context.Request.Headers?["Referer"];
+
+    var isHelpDesk = referrer?.ToLowerInvariant().Contains("helpdesk");
+    var isReportsSectionSelected = ViewData.ContainsKey(ViewDataConstants.IsReportsSectionSelected);
+
+    var ukprn= ViewContext.RouteData.Values["ukprn"];
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    @Html.Partial("~/Views/Shared/_Head.cshtml")
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body class="govuk-template__body ">
+
+    @Html.Partial("~/Views/Shared/_Header.cshtml")
+
+
+    <div class="govuk-width-container">
+
+        @Html.Partial("~/Views/Shared/_Banner.cshtml")
+
+        <div class="govuk-grid-row">
+
+            <div class="govuk-grid-column-two-thirds">
+                @Html.ActionLink("Back to search results", "Index", "ProviderSearch", new { searchTerm } , new {@class = "govuk-back-link"})
+            </div>
+
+            <form asp-controller="ProviderSearch" asp-action="GetResults" method="post" id="form">
+
+                <div class="govuk-grid-column-one-third">
+
+                    <label class="govuk-label govuk-!-width-two-thirds govuk-visually-hidden" for="searchTerm">
+                        Search for a provider
+                    </label>
+                    <div class="mt15">
+                        <input class="govuk-input govuk-!-width-two-thirds" id="searchTerm" name="searchTerm" type="search" value="" aria-describedby="provider-search">
+                        <button type="submit" class="govuk-button">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <main class="govuk-main-wrapper" id="content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h1 class="govuk-heading-xl">
+                        @Model.Name <span class="govuk-caption-l">UKPRN: @Model.Ukprn</span>
+
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.ESF, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">ESF (@Model.NumberOfContracts contract@(Model.NumberOfContracts > 1 ? "s" : ""))</strong>
+                        }
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.EAS, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">EAS</strong>
+                        }
+                        @if (Model.SubmissionOptionViewModels.Any(x => x.Name.Equals(CollectionTypes.ILR, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            <strong class="govuk-tag ml5" id="eligibility-completed">ILR</strong>
+                        }
+                    </h1>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+
+                <div class="govuk-tabs" data-module="tabs">
+                    <h2 class="govuk-tabs__title">
+                        Submission and reports history
+                    </h2>
+
+                    <ul class="govuk-tabs__list" role="tablist">
+                        <li class="govuk-tabs__list-item" role="presentation">
+                            <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#submissions" id="tab_submissions" role="tab" aria-controls="submissions" tabindex="1" aria-selected="true">
+                                Last 3 months
+                            </a>
+                        </li>
+                        <li class="govuk-tabs__list-item" role="presentation">
+                            <a class="govuk-tabs__tab" href="#reportsSection" id="tab_reports" role="tab" aria-controls="reportsSection" tabindex="0" aria-selected="false" )>
+                                History (incl. reports)
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <section class="govuk-tabs__panel" id="submissions" role="tabpanel" aria-labelledby="tab_submissions">
+                        <h2 class="govuk-heading-l" id="submission">Submission</h2>
+
+
+                        <form asp-controller="ProviderDetails" asp-action="FilterSubmissions" method="post" id="filter-form">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+
+                                    <span id="waste-hint" class="govuk-hint">
+                                        Filter your submission types
+                                    </span>
+                                    <div id="typeFilter" class="govuk-checkboxes">
+                                        @foreach (var jobType in Model.History.CollectionTypes)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+
+                                                <input id="@jobType" class="govuk-checkboxes__input" name="jobTypeFilter" type="checkbox" value="@jobType" @(Model.History?.JobTypeFiltersList != null && Model.History.JobTypeFiltersList.Contains(jobType) ? "checked" : "")>
+                                                <label class="govuk-label govuk-checkboxes__label" for="@jobType">
+                                                    @jobType
+                                                </label>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+                            @*<input type="hidden" value="@ukprn" id="ukprn" name="ukprn"/>*@
+                            <button class="govuk-button" id="submissionFilterButton">
+                                Filter
+                            </button>
+                        </form>
+
+
+                        @foreach (var period in Model.History.Periods)
+                        {
+                            var items = Model.History.SubmissionItems.Where(x => x.PeriodNumber == period).OrderByDescending(x => x.DateTimeSubmittedUtc);
+                            @await Html.PartialAsync("_submissionHistory", items)
+                        }
+
+
+                    </section>
+
+                    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="reportsSection" role="tabpanel" aria-labelledby="reportsSection">
+                        <h2 class="govuk-heading-l" id="reports">History (incl. reports)</h2>
+                        
+
+                        <form asp-controller="ProviderDetails" asp-action="FilterReports" method="post" id="filter-reports-form">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+
+                                    <span id="waste-hint" class="govuk-hint">
+                                        Filter by year
+                                    </span>
+                                    <div id="yearFilter" class="govuk-checkboxes">
+                                        @foreach (var academicYear in Model.History.AcademicYears)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+
+                                                <input id="@academicYear" class="govuk-checkboxes__input" name="reportsFilter" type="checkbox" value="@academicYear" @(Model.History.AcademicYearFiltersList != null && Model.History.AcademicYearFiltersList.Contains(academicYear) ? "checked" : "")>
+                                                <label class="govuk-label govuk-checkboxes__label" for="@academicYear">
+                                                    @academicYear.ToAcademicYearName()
+                                                </label>
+
+                                            </div>
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+                           @* <input type="hidden" value="@ukprn" id="ukprn" name="ukprn" />*@
+                            <button class="govuk-button" id="reportsFilterButton">
+                                Filter
+                            </button>
+                        </form>
+
+
+                        @foreach (var academicYear in Model.History.AcademicYears)
+                        {
+                            var items = Model.History.ReportHistoryItems.Where(x => x.AcademicYear == academicYear).OrderByDescending(x => x.PeriodNumber);
+                            @await Html.PartialAsync("_reportsHistory", items)
+                        }
+
+
+                    </section>
+
+                </div>
+
+                <environment include="Development">
+                    <script src="~/assets/javascripts/app.js"></script>
+                </environment>
+                <environment exclude="Development">
+                    <script src="~/assets/minified/app.min.js" asp-append-version="true"></script>
+                </environment>
+
+
+
+                @if (isReportsSectionSelected)
+                {
+                    <script language="javascript">
+        document.addEventListener("DOMContentLoaded",
+            function () {
+                window.location = window.location + "#reportsSection";
+            }
+        );
+                    </script>
+                }
+            </div>
+        </main>
+    </div>
+
+    @Html.Partial("~/Views/Shared/_Footer.cshtml")
+
+</body>
+</html>
+
+

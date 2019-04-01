@@ -30,19 +30,26 @@ namespace DC.Web.Ui.Services.Services
         public async Task<IEnumerable<SubmissionOptionViewModel>> GetSubmssionOptionsAsync(long ukprn)
         {
             var result = new List<SubmissionOptionViewModel>();
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/collection-types/{ukprn}");
 
-            if (data != null)
+            try
             {
-                var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
-                foreach (var x in options)
+                if (data != null)
                 {
-                    result.Add(new SubmissionOptionViewModel
+                    var options = _serializationService.Deserialize<IEnumerable<CollectionType>>(data);
+                    foreach (var x in options)
                     {
-                        Name = x.Type,
-                        Title = x.Description
-                    });
+                        result.Add(new SubmissionOptionViewModel
+                        {
+                            Name = x.Type,
+                            Title = x.Description
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                return result;
             }
 
             return result;
@@ -166,7 +173,7 @@ namespace DC.Web.Ui.Services.Services
 
         public async Task<Collection> GetCollectionAsync(long ukprn, string collectionName)
         {
-            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/{ukprn}/{collectionName}");
+            var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/collections/{ukprn}/{collectionName}");
 
             if (!string.IsNullOrEmpty(data))
             {
@@ -174,6 +181,20 @@ namespace DC.Web.Ui.Services.Services
             }
 
             return null;
+        }
+
+        public async Task<int> GetNumberOfEsfContracts(long ukprn)
+        {
+            try
+            {
+                var data = await _httpClient.GetDataAsync($"{_baseUrl}/org/esf/contracts/{ukprn}");
+                int.TryParse(data, out var result);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
     }
 }

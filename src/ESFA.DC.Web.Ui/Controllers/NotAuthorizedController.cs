@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DC.Web.Ui.Constants;
+using DC.Web.Ui.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
@@ -10,6 +12,11 @@ namespace DC.Web.Ui.Controllers
     {
         public IActionResult Index()
         {
+            if (User.IsAdminUser())
+            {
+                return RedirectToAction("Index", "ProviderSearch", new { area = AreaNames.HelpDesk });
+            }
+
             return View();
         }
     }

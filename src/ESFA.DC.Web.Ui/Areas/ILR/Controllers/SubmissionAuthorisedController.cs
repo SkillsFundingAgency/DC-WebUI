@@ -70,7 +70,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             await SetupNextPeriod(collectionName);
 
-            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName, file?.Length, Ukprn, collectionName);
+            var validationResult = await _fileNameValidationService.ValidateFileNameAsync(file?.FileName.ToUpper(), file?.Length, Ukprn, collectionName);
             if (validationResult.ValidationResult != FileNameValidationResult.Valid)
             {
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);

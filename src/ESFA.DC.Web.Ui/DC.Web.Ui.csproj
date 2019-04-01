@@ -120,8 +120,9 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="2.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
@@ -143,6 +144,15 @@
     </Content>
     <Content Update="appsettings.salman.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_Layout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Helpdesk\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\EAS\Views\InProgressAuthorised\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
@@ -171,13 +181,16 @@
     <Content Update="Areas\ILR\Views\_ViewImports.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\SubmissionResultsAuthorised\_reportsHistory.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\assets\javascripts\govuk.min.js">
+    <Content Update="wwwroot\assets\javascripts\app.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\minified\govuk.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\assets\minified\app.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -189,11 +202,9 @@
   <ItemGroup>
     <Folder Include="Views\AppLogs\" />
     <Folder Include="Views\Claims\" />
-    <Folder Include="Views\History\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Areas\ILR\Views\SubmissionAuthorised\" />
     <Folder Include="Areas\ILR\Views\ValidationResultsAuthorised\" />
-    <Folder Include="wwwroot\assets\minified\" />
   </ItemGroup>
 
   <ItemGroup>

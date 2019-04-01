@@ -651,3 +651,57 @@ progress::-moz-progress-bar { background: white; }
         margin-bottom: 10px;
     }
 }
+
+
+.interruption-card {
+    background: #005ea5;
+    color: #fff;
+    margin: 30px 0;
+    padding: 20px;
+}
+
+@media (min-width: 769px) {
+    .interruption-card, .report-data-figures {
+        margin-top: 1.25em;
+        padding: 30px;
+    }
+}
+
+.bold-xlarge {
+    font-family: "nta", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: none;
+    font-size: 32px;
+    line-height: 1.09375;
+}
+
+@media (min-width: 641px) {
+    .bold-xlarge {
+        font-size: 48px;
+        line-height: 1.04167;
+    }
+}
+
+.govuk-body-white {
+    color: #fff;
+}
+
+.mt15 {
+    margin-top: 15px;
+}
+
+.ml5 {
+    margin-left: 5px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+#typeFilter.govuk-checkboxes, #yearFilter.govuk-checkboxes {
+    display: flex;
+
+    .govuk-checkboxes__item {
+        margin-right: 20px;
+    }
+    }

@@ -18,5 +18,9 @@ namespace ESFA.DC.Web.Ui.ViewModels
         public string PeriodName() => _periodName;
 
         public string NextOpeningDate { get; set; }
+
+        public int DaysToClose { get; set; }
+
+        public string PeriodCloseDate { get; set; }
     }
 }
