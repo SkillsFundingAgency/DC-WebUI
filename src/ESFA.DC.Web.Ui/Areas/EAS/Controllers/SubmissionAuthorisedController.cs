@@ -24,12 +24,12 @@ namespace DC.Web.Ui.Areas.EAS.Controllers
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
-            IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
-            IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
-            IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.EasSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            IIndex<EnumJobType, IFileNameValidationService> fileNameValidationServices,
+            IIndex<EnumJobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
+            IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
+            : base(EnumJobType.EasSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationServices[JobType.EasSubmission];
+            _fileNameValidationService = fileNameValidationServices[EnumJobType.EasSubmission];
         }
 
         [HttpGet]

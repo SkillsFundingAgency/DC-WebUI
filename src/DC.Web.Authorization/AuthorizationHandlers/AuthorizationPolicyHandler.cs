@@ -29,7 +29,7 @@ namespace DC.Web.Authorization.AuthorizationHandlers
             {
                 if (requirement is FileSubmissionPolicyRequirement)
                 {
-                    if (IsFileSubmissionAllowed(idamsClaims))
+                    if (IsFileSubmissionAllowed(idamsClaims) && !IsHelpDeskAreaAllowed(idamsClaims))
                     {
                         context.Succeed(requirement);
                     }

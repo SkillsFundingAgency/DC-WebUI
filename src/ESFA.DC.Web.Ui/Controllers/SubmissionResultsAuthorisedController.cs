@@ -13,59 +13,83 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.Jobs.Model.Enums;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Web.Ui.Controllers
 {
     [Route("submission-results")]
-    public class SubmissionResultsAuthorisedController : BaseAuthorisedController
+    [Authorize]
+    public class SubmissionResultsAuthorisedController : Controller
     {
         private readonly IJobService _jobService;
+        private readonly ILogger _logger;
         private readonly IStorageService _storageService;
 
         public SubmissionResultsAuthorisedController(
             IJobService jobService,
             ILogger logger,
             IStorageService storageService)
-            : base(logger)
         {
             _jobService = jobService;
+            _logger = logger;
             _storageService = storageService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            IsHelpSectionHidden = true;
+        [HttpGet]
+        [Route("{ukprn?}/{searchTerm?}")]
 
-            var result = await _jobService.GetSubmissionHistory(Ukprn);
+        public async Task<IActionResult> Index(long? ukprn = null, string searchTerm = null)
+        {
+            if (!IsValidRequest(ukprn))
+            {
+                return RedirectToAction("Index", "NotAuthorized");
+            }
+
+            var result = await _jobService.GetSubmissionHistory(ukprn ?? User.Ukprn());
             return View(result);
         }
 
         [HttpPost]
-        [Route("FilterSubmissions")]
+        [Route("FilterSubmissions/{ukprn?}/{searchTerm?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FilterSubmissions(string[] jobTypeFilter)
+        public async Task<IActionResult> FilterSubmissions(long? ukprn = null, string[] jobTypeFilter = null)
         {
-            IsHelpSectionHidden = true;
-            var result = await _jobService.GetSubmissionHistory(Ukprn);
+            if (!IsValidRequest(ukprn))
+            {
+                return RedirectToAction("Index", "NotAuthorized");
+            }
 
-            result.SubmissionItems = result.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
-            result.JobTypeFiltersList = jobTypeFilter.ToList();
+            var result = await _jobService.GetSubmissionHistory(ukprn ?? User.Ukprn());
+
+            if (jobTypeFilter != null && jobTypeFilter.Any())
+            {
+                result.SubmissionItems = result.SubmissionItems.Where(x => jobTypeFilter.Contains(x.JobType)).ToList();
+                result.CollectionTypeFiltersList = jobTypeFilter.ToList();
+            }
 
             return View("Index", result);
         }
 
         [HttpPost]
-        [Route("FilterReports")]
+        [Route("FilterReports/{ukprn?}/{searchTerm?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FilterReports(int[] reportsFilter)
+        public async Task<IActionResult> FilterReports(long? ukprn = null, int[] reportsFilter = null)
         {
-            IsHelpSectionHidden = true;
-            ViewData[ViewDataConstants.IsReportsSectionSelected] = true;
-            var result = await _jobService.GetSubmissionHistory(Ukprn);
+            if (!IsValidRequest(ukprn))
+            {
+                return RedirectToAction("Index", "NotAuthorized");
+            }
 
-            result.ReportHistoryItems = result.ReportHistoryItems.Where(x => reportsFilter.Contains(x.AcademicYear)).ToList();
-            result.AcademicYearFiltersList = reportsFilter.ToList();
+            ViewData[ViewDataConstants.IsReportsSectionSelected] = true;
+            var result = await _jobService.GetSubmissionHistory(ukprn ?? User.Ukprn());
+
+            if (reportsFilter != null && reportsFilter.Any())
+            {
+                result.ReportHistoryItems = result.ReportHistoryItems.Where(x => reportsFilter.Contains(x.AcademicYear))
+                    .ToList();
+                result.AcademicYearFiltersList = reportsFilter.ToList();
+            }
 
             return View("Index", result);
         }
@@ -73,16 +97,21 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadReport/{ukprn}/{jobId}")]
         public async Task<FileResult> DownloadReport(long ukprn, long jobId)
         {
+            if (!IsValidRequest(ukprn))
+            {
+                throw new Exception($"can not download the report for ukprn :{ukprn} , not matching user ukprn");
+            }
+
             var job = await _jobService.GetJob(ukprn, jobId);
 
             if (job == null)
             {
-                Logger.LogError($"Job not found for provider,  job id : {jobId}");
+                _logger.LogError($"Job not found for provider,  job id : {jobId}");
                 throw new Exception("invalid job id");
             }
 
             var reportFileName = _storageService.GetReportsZipFileName(ukprn, jobId);
-            Logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}");
+            _logger.LogInfo($"Downlaod zip request for Job id : {jobId}, Filename : {reportFileName}", jobIdOverride: jobId);
 
             try
             {
@@ -94,7 +123,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download zip failed for job id : {jobId}", e);
+                _logger.LogError($"Download zip failed for job id : {jobId}", e);
                 throw;
             }
         }
@@ -102,17 +131,21 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadReport/{ukprn}/{period}/{fileName}")]
         public async Task<FileResult> DownloadReport(long ukprn, int period, string fileName)
         {
-            Logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
+            _logger.LogInfo($"Downlaod zip request for Filename : {fileName}");
 
-            //TODO: Download reports check if they belong to ukprn or not
+            if (!IsValidRequest(ukprn))
+            {
+                throw new Exception($"can not download the report for ukprn :{ukprn} , not matching user ukprn");
+            }
+
             try
             {
                 var base64EncodedBytes = Convert.FromBase64String(fileName);
                 var decodedFileName = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
 
                 string[] splitStrings = decodedFileName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                Dictionary<JobType, long> dict = splitStrings.ToDictionary(
-                    s => (JobType)short.Parse(s.Split('-')[0]),
+                Dictionary<EnumJobType, long> dict = splitStrings.ToDictionary(
+                    s => (EnumJobType)short.Parse(s.Split('-')[0]),
                     s => long.Parse(s.Split('-')[1]));
 
                 var blobStream = await _storageService.GetMergedReportFile(ukprn, dict);
@@ -123,7 +156,7 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download zip failed for report name : {fileName}", e);
+                _logger.LogError($"Download zip failed for report name : {fileName}", e);
                 throw;
             }
         }
@@ -131,9 +164,14 @@ namespace DC.Web.Ui.Controllers
         [Route("DownloadFile/{ukprn}/{jobId}")]
         public async Task<FileResult> DownloadFile(long ukprn, long jobId)
         {
+            if (!IsValidRequest(ukprn))
+            {
+                throw new Exception($"can not download the report for ukprn :{ukprn} , not matching user ukprn");
+            }
+
             var job = await _jobService.GetJob(ukprn, jobId);
 
-            Logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}");
+            _logger.LogInfo($"Downlaod submitted file request for Job id : {jobId}", jobIdOverride: jobId);
 
             try
             {
@@ -145,9 +183,14 @@ namespace DC.Web.Ui.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Download source file failed for job id : {jobId}", e);
+                _logger.LogError($"Download source file failed for job id : {jobId}", e);
                 throw;
             }
+        }
+
+        private bool IsValidRequest(long? ukprn = null)
+        {
+            return User.IsHelpDeskUser() || !ukprn.HasValue || (ukprn.HasValue && ukprn == User.Ukprn());
         }
     }
 }

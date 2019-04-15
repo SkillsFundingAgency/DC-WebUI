@@ -11,7 +11,7 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IValidationResultsService
     {
-        Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc);
+        Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, EnumJobType jobType, DateTime dateTimeUtc);
 
         string GetStorageFileName(long ukprn, long jobId, DateTime dateTimeUtc, ValidationResultsReportType reportType);
 
@@ -19,6 +19,6 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<FileValidationResult> GetValidationResultsData(long ukprn, long jobId);
 
-        Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc, ValidationResultsReportType reportType);
+        Task<decimal> GetFileSize(long ukprn, long jobId, EnumJobType jobType, DateTime dateTimeUtc, ValidationResultsReportType reportType);
     }
 }

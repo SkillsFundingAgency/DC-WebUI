@@ -6,7 +6,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 {
     public class SubmissionMessageViewModel
     {
-        public SubmissionMessageViewModel(JobType jobType, long ukprn)
+        public SubmissionMessageViewModel(EnumJobType jobType, long ukprn)
         {
             JobType = jobType;
             Ukprn = ukprn;
@@ -26,7 +26,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public string NotifyEmail { get; set; }
 
-        public JobType JobType { get; }
+        public EnumJobType JobType { get; }
 
         public string StorageReference { get; set; }
 

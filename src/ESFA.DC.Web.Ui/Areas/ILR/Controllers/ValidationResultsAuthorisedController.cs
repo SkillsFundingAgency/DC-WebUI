@@ -39,14 +39,14 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(long jobId)
         {
-            Logger.LogInfo($"Loading validation results page for job id : {jobId}");
+            Logger.LogInfo($"Loading validation results page for job id : {jobId}", jobIdOverride: jobId);
 
             var job = await GetJob(jobId);
 
             var valResult = await _validationResultsService.GetValidationResult(Ukprn, jobId, job.JobType, job.DateTimeSubmittedUtc);
             if (valResult == null)
             {
-                Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found");
+                Logger.LogInfo($"Loading validation results page for job id : {jobId}, no data found", jobIdOverride: jobId);
                 return View(new ValidationResultViewModel());
             }
 
@@ -57,7 +57,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             }
 
             valResult.CollectionName = job.CollectionName;
-            Logger.LogInfo($"Returning validation results for job id : {jobId}, total errors : {valResult.TotalErrors}");
+            Logger.LogInfo($"Returning validation results for job id : {jobId}, total errors : {valResult.TotalErrors}", jobIdOverride: jobId);
 
             return View(valResult);
         }
@@ -66,11 +66,11 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [Route("{jobId}")]
         public async Task<IActionResult> SubmitAnyway(long jobId)
         {
-            Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ");
+            Logger.LogInfo($"Validation results Submit to progress for job id : {jobId} ", jobIdOverride: jobId);
             var job = await GetJob(jobId);
 
             await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
-            Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
+            Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}", jobIdOverride: jobId);
             return RedirectToAction("Index", "SubmissionConfirmationAuthorised", new { area = string.Empty, jobId = jobId });
         }
 
@@ -80,8 +80,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         {
             var job = await GetJob(jobId);
 
-            await _jobService.UpdateJobStatus(jobId, JobStatusType.Completed);
-            Logger.LogInfo($"Validation results Updated status to Completed successfully for job id : {jobId}");
+            Logger.LogInfo($"Validation results user clicked on SubmitAnother, will be redirected to options page for job id : {jobId}");
 
             return RedirectToAction("Index", "SubmissionAuthorised", new { area = AreaNames.Ilr, job.CollectionName });
         }
@@ -89,7 +88,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
         [Route("Download/{jobId}")]
         public async Task<FileResult> Download(long jobId, ValidationResultsReportType reportType)
         {
-            Logger.LogInfo($"Download csv request for Job id : {jobId} {reportType}");
+            Logger.LogInfo($"Download csv request for Job id : {jobId} {reportType}", jobIdOverride: jobId);
 
             try
             {

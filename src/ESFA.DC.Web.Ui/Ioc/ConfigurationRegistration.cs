@@ -29,11 +29,11 @@ namespace DC.Web.Ui.Ioc
                 .As<FeatureFlags>().SingleInstance();
 
             builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("EsfCloudStorageSettings"))
-                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission).SingleInstance();
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EsfSubmission).SingleInstance();
             builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("IlrCloudStorageSettings"))
-                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission).SingleInstance();
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.IlrSubmission).SingleInstance();
             builder.Register(c => configuration.GetConfigSection<CloudStorageSettings>("EasCloudStorageSettings"))
-                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission).SingleInstance();
+                .Keyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EasSubmission).SingleInstance();
 
             builder.Register(c => configuration.GetConfigSection<CrossLoadingQueueConfiguration>()).As<IQueueConfiguration>().SingleInstance();
 

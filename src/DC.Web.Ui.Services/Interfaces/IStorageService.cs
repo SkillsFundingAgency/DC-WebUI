@@ -10,14 +10,14 @@ namespace DC.Web.Ui.Services.Interfaces
 {
     public interface IStorageService
     {
-        Task<Stream> GetBlobFileStreamAsync(string fileName, JobType jobType);
+        Task<Stream> GetBlobFileStreamAsync(string fileName, EnumJobType jobType);
 
         Task<decimal> GetReportFileSizeAsync(FileUploadJob job);
 
-        Task<decimal> GetReportFileSizeAsync(string fileName, JobType jobType);
+        Task<decimal> GetReportFileSizeAsync(string fileName, EnumJobType jobType);
 
         string GetReportsZipFileName(long ukprn, long jobId);
 
-        Task<Stream> GetMergedReportFile(long ukprn, Dictionary<JobType, long> jobsList);
+        Task<Stream> GetMergedReportFile(long ukprn, Dictionary<EnumJobType, long> jobsList);
     }
 }

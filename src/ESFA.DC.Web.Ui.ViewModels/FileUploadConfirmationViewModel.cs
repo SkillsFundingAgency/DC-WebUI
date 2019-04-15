@@ -16,7 +16,7 @@ namespace ESFA.DC.Web.Ui.ViewModels
 
         public string HeaderMessage { get; set; }
 
-        public JobType JobType { get; set; }
+        public EnumJobType JobType { get; set; }
 
         public string CollectionName { get; set; }
 

@@ -18,11 +18,22 @@
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body class="govuk-template__body ">
+<style>
+    .govuk-header__container {
+        margin-bottom: 0;
+        padding-top: 10px;
+        border-bottom: 0;
+    }
 
+    .govuk-header {
+        border-bottom: 0;
+    }
+</style>
     @Html.Partial("_Header")
+ 
+    @RenderSection("FeedbackBanner", required: false)
 
-
-    <div class="govuk-width-container">
+<div class="govuk-width-container">
         
         @Html.Partial("_Banner")
 

@@ -12,7 +12,7 @@ namespace DC.Web.Ui.Controllers
     {
         public IActionResult Index()
         {
-            if (User.IsAdminUser())
+            if (User.IsHelpDeskUser())
             {
                 return RedirectToAction("Index", "ProviderSearch", new { area = AreaNames.HelpDesk });
             }

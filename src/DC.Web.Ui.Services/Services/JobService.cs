@@ -81,7 +81,7 @@ namespace DC.Web.Ui.Services.Services
                 PeriodNumber = submissionMessage.Period,
                 NotifyEmail = submissionMessage.NotifyEmail,
                 JobType = submissionMessage.JobType,
-                TermsAccepted = submissionMessage.JobType == JobType.EasSubmission ? true : (bool?)null,
+                TermsAccepted = submissionMessage.JobType == EnumJobType.EasSubmission ? true : (bool?)null,
                 CollectionYear = submissionMessage.CollectionYear
             };
 
@@ -231,27 +231,27 @@ namespace DC.Web.Ui.Services.Services
             };
         }
 
-        public string GetHeader(JobType jobType, int period)
+        public string GetHeader(EnumJobType jobType, int period)
         {
             switch (jobType)
             {
-                case JobType.IlrSubmission:
+                case EnumJobType.IlrSubmission:
                     return string.Concat("R", period.ToString("00"), " ILR file submitted");
-                case JobType.EsfSubmission:
+                case EnumJobType.EsfSubmission:
                     return string.Concat("R", period.ToString("00"), " supplementary data file submitted");
-                case JobType.EasSubmission:
+                case EnumJobType.EasSubmission:
                     return "EAS statement updated";
             }
 
             return string.Empty;
         }
 
-        public async Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn)
+        public async Task<ProviderHistoryViewModel> GetSubmissionHistory(long ukprn)
         {
             var submissions = (await GetAllJobsForHistory(ukprn)).ToList();
             var reports = (await GetReportsHistory(ukprn)).ToList();
 
-            var result = new SubmissionResultViewModel()
+            var result = new ProviderHistoryViewModel()
             {
                 Periods = submissions.GroupBy(x => x.PeriodNumber).Select(x => x.Key).OrderByDescending(x => x).ToList(),
                 CollectionTypes = submissions.GroupBy(x => x.JobType).Select(x => x.Key).OrderByDescending(x => x).ToList(),
@@ -287,15 +287,15 @@ namespace DC.Web.Ui.Services.Services
             return jobsViewList;
         }
 
-        private string MapJobType(JobType jobType)
+        private string MapJobType(EnumJobType jobType)
         {
             switch (jobType)
             {
-                case JobType.IlrSubmission:
+                case EnumJobType.IlrSubmission:
                     return "ILR";
-                case JobType.EsfSubmission:
+                case EnumJobType.EsfSubmission:
                     return "ESF";
-                case JobType.EasSubmission:
+                case EnumJobType.EasSubmission:
                     return "EAS";
                 default:
                     throw new Exception("invalid job type");

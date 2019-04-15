@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Services.Extensions
 
         public static string ToDateWithDayDisplayFormat(this DateTime dateTime)
         {
-            return $"{dateTime.ToString("dd MMMM yyyy")}";
+            return $"{dateTime.ToString("dddd dd MMMM")}";
         }
     }
 }

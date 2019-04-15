@@ -2,13 +2,16 @@
 @using DC.Web.Ui.Extensions
 <h1 class="govuk-heading-xl">
     Search for a provider
+    <span class="govuk-caption-m">View their submission history and reports</span>
 </h1>
+
 <form asp-controller="ProviderSearch" asp-action="GetResults" method="post" id="form">
     @Html.AntiForgeryToken()
 
     <div class="@ViewContext.GetGroupItemStyle(ErrorMessageKeys.HelpDesk_SearchProvider)" id="controls">
         <label class="govuk-label govuk-!-width-two-thirds" for="search-provider">
-            Provider name or UKPRN
+            Enter a provider name, UKPRN or UPIN
+
         </label>
 
         <div error-field-name="@ErrorMessageKeys.HelpDesk_SearchProvider"></div>

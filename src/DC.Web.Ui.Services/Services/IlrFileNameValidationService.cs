@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Services.Services
     public class IlrFileNameValidationService : AbstractFileNameValidationService
     {
         public IlrFileNameValidationService(
-            [KeyFilter(JobType.IlrSubmission)]IKeyValuePersistenceService persistenceService,
+            [KeyFilter(EnumJobType.IlrSubmission)]IKeyValuePersistenceService persistenceService,
             FeatureFlags featureFlags,
             IJobService jobService,
             IDateTimeProvider dateTimeProvider,

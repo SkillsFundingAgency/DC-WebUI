@@ -9,13 +9,13 @@ namespace ESFA.DC.Web.Ui.ViewModels
     {
         public ReportHistoryViewModel()
         {
-            RelatedJobs = new Dictionary<JobType, long>();
+            RelatedJobs = new Dictionary<EnumJobType, long>();
         }
         public string ReportFileName { get; set; }
 
         public decimal CombinedFileSize { get; set; }
 
-        public Dictionary<JobType,long> RelatedJobs { get; set; }
+        public Dictionary<EnumJobType, long> RelatedJobs { get; set; }
 
         public int PeriodNumber { get; set; }
 

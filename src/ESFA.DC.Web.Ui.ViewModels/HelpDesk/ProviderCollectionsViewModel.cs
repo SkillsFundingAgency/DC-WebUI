@@ -8,16 +8,16 @@ namespace ESFA.DC.Web.Ui.ViewModels.HelpDesk
     {
         public ProviderCollectionsViewModel()
         {
-            History = new SubmissionResultViewModel();
+            History = new ProviderHistoryViewModel();
         }
         public long Ukprn { get; set; }
 
+        public int Upin { get; set; }
+
         public string Name { get; set; }
 
-        public int NumberOfContracts{ get; set; }
+        public List<SubmissionOptionViewModel> SubmissionOptionViewModels { get; set; }
 
-        public IEnumerable<SubmissionOptionViewModel> SubmissionOptionViewModels { get; set; }
-
-        public SubmissionResultViewModel History { get; set; }
+        public ProviderHistoryViewModel History { get; set; }
     }
 }

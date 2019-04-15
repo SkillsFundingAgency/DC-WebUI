@@ -64,7 +64,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var service = GetService(httpClientMock.Object);
 
-            var result = service.GetValidationResult(1000, 500, JobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
+            var result = service.GetValidationResult(1000, 500, EnumJobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
             result.Should().BeNull();
         }
 
@@ -77,7 +77,7 @@ namespace DC.Web.Ui.Services.Tests
 
             var service = GetService(httpClientMock.Object);
 
-            var result = service.GetValidationResult(1000, 500, JobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
+            var result = service.GetValidationResult(1000, 500, EnumJobType.IlrSubmission, new DateTime(2018, 10, 10, 20, 30, 40)).Result;
             result.TotalErrors.Should().Be(200);
             result.TotalErrorLearners.Should().Be(30);
             result.TotalLearners.Should().Be(10);

@@ -39,6 +39,19 @@ namespace DC.Web.Ui.Controllers
             return View(data);
         }
 
+        [HttpGet]
+        [Route("{jobId}/hide-feedback")]
+        public async Task<IActionResult> HideFeedback(long jobId)
+        {
+            ViewData[ViewDataConstants.IsFeedbackHidden] = true;
+
+            var data = await _jobService.GetConfirmation(Ukprn, jobId);
+
+            await SetupNextPeriod(data?.CollectionName);
+
+            return View("Index", data);
+        }
+
         private async Task SetupNextPeriod(string collectionName)
         {
             if (string.IsNullOrEmpty(collectionName))

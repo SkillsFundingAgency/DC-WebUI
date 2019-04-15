@@ -20,16 +20,16 @@ namespace DC.Web.Ui.Base
         private readonly IJobService _jobService;
         private readonly ICollectionManagementService _collectionManagementService;
         private readonly IStreamableKeyValuePersistenceService _storageService;
-        private readonly JobType _jobType;
+        private readonly EnumJobType _jobType;
         private readonly IAzureStorageKeyValuePersistenceServiceConfig _storageKeyValueConfig;
 
         protected AbstractSubmissionAuthorisedController(
-            JobType jobType,
+            EnumJobType jobType,
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
-            IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
-            IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
+            IIndex<EnumJobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
+            IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
             : base(logger)
         {
             _jobService = jobService;

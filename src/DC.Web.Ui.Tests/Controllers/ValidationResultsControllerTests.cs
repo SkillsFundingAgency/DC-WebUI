@@ -66,7 +66,7 @@ namespace DC.Web.Ui.Tests.Controllers
                 CollectionName = "ILR1819"
             });
 
-            validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<JobType>(), It.IsAny<DateTime>()))
+            validationErrorsServiceMock.Setup(x => x.GetValidationResult(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<EnumJobType>(), It.IsAny<DateTime>()))
                 .ReturnsAsync(() => new ValidationResultViewModel()
                 {
                     JobId = 1000,
@@ -79,7 +79,7 @@ namespace DC.Web.Ui.Tests.Controllers
                     TotalWarnings = 40
                 });
 
-            reportServiceMock.Setup(x => x.GetBlobFileStreamAsync(It.IsAny<string>(), It.IsAny<JobType>()))
+            reportServiceMock.Setup(x => x.GetBlobFileStreamAsync(It.IsAny<string>(), It.IsAny<EnumJobType>()))
                 .ReturnsAsync(() => new MemoryStream());
 
             var controller = new ValidationResultsAuthorisedController(

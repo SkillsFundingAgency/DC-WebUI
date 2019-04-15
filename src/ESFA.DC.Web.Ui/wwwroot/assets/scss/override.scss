@@ -705,3 +705,64 @@ progress::-moz-progress-bar { background: white; }
         margin-right: 20px;
     }
     }
+
+
+.feedback-wrapper {
+    background-color: $govuk-brand-colour;
+    // height: 50px;
+    // width: 100%;
+    // position: absolute;
+    // left: 0;
+    // display: flex;
+    .feedback-container {
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 12px;
+        padding-right: 12px;
+
+        .govuk-heading-s {
+            color: white;
+            margin-bottom: 0;
+        }
+
+        a {
+            color: white;
+        }
+
+        .no-thank-you {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+        }
+    }
+}
+
+.blue-strip {
+    border-bottom: 10px solid $govuk-brand-colour;
+    // width: 960px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+@media (min-width: 1025px) {
+
+    .feedback-wrapper {
+        .feedback-container {
+            .no-thank-you {
+                display: inline-block;
+                float: right;
+                margin-top: 0;
+            }
+        }
+    }
+
+
+    .blue-strip {
+        width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

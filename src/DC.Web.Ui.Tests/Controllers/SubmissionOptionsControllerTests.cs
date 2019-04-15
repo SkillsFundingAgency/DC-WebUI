@@ -21,7 +21,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void Index_Test()
         {
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
+            mockLogger.Setup(x => x.LogInfo(It.IsAny<string>(), null, It.IsAny<long>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
 
             var items = new List<SubmissionOptionViewModel>()
             {

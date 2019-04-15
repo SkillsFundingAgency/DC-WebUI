@@ -27,12 +27,12 @@ namespace DC.Web.Ui.Areas.ESF.Controllers
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
-            IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
-            IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
-            IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.EsfSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            IIndex<EnumJobType, IFileNameValidationService> fileNameValidationServices,
+            IIndex<EnumJobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
+            IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
+            : base(EnumJobType.EsfSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationServices[JobType.EsfSubmission];
+            _fileNameValidationService = fileNameValidationServices[EnumJobType.EsfSubmission];
         }
 
         [HttpGet]

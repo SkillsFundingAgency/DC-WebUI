@@ -91,7 +91,7 @@ namespace DC.Web.Ui.Tests.Controllers
         public void SubmitIlr_Success()
         {
             var submissionServiceMock = new Mock<IJobService>();
-            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(JobType.IlrSubmission, 10)
+            submissionServiceMock.Setup(x => x.SubmitJob(new SubmissionMessageViewModel(EnumJobType.IlrSubmission, 10)
             {
                 FileName = "test file",
             })).Returns(Task.FromResult((long)1));
@@ -153,14 +153,14 @@ namespace DC.Web.Ui.Tests.Controllers
             var mockStreamableServiceMock = new Mock<IStreamableKeyValuePersistenceService>();
             mockStreamableServiceMock.Setup(x => x.SaveAsync(It.IsAny<string>(), new MemoryStream(), default(CancellationToken))).Returns(Task.CompletedTask);
 
-            var servicesMock = new Mock<IIndex<JobType, IStreamableKeyValuePersistenceService>>();
-            servicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockStreamableServiceMock.Object);
+            var servicesMock = new Mock<IIndex<EnumJobType, IStreamableKeyValuePersistenceService>>();
+            servicesMock.Setup(x => x[EnumJobType.IlrSubmission]).Returns(mockStreamableServiceMock.Object);
 
-            var configs = new Mock<IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
-            configs.Setup(x => x[JobType.IlrSubmission]).Returns(new CloudStorageSettings());
+            var configs = new Mock<IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig>>();
+            configs.Setup(x => x[EnumJobType.IlrSubmission]).Returns(new CloudStorageSettings());
 
-            var filevalidationServicesMock = new Mock<IIndex<JobType, IFileNameValidationService>>();
-            filevalidationServicesMock.Setup(x => x[JobType.IlrSubmission]).Returns(mockFilenameValidationService.Object);
+            var filevalidationServicesMock = new Mock<IIndex<EnumJobType, IFileNameValidationService>>();
+            filevalidationServicesMock.Setup(x => x[EnumJobType.IlrSubmission]).Returns(mockFilenameValidationService.Object);
 
             var controller = new SubmissionAuthorisedController(
                 jobService,

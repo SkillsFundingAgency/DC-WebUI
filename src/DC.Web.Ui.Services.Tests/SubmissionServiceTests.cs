@@ -37,7 +37,7 @@ namespace DC.Web.Ui.Services.Tests
         {
             var service = GetService();
 
-            var job = new SubmissionMessageViewModel(JobType.IlrSubmission, 100)
+            var job = new SubmissionMessageViewModel(EnumJobType.IlrSubmission, 100)
             {
                 SubmittedBy = "test user",
                 FileName = "22222_test1.xml",
@@ -59,7 +59,7 @@ namespace DC.Web.Ui.Services.Tests
             var job = new FileUploadJob()
             {
                 JobId = 10,
-                JobType = JobType.IlrSubmission,
+                JobType = EnumJobType.IlrSubmission,
                 FileName = "test.xml"
             };
 
@@ -71,7 +71,7 @@ namespace DC.Web.Ui.Services.Tests
 
             confirmation.Should().NotBeNull();
             confirmation.FileName.Should().Be("test.xml");
-            confirmation.JobType.Should().Be(JobType.IlrSubmission);
+            confirmation.JobType.Should().Be(EnumJobType.IlrSubmission);
             confirmation.JobId.Should().Be(10);
         }
 
@@ -83,7 +83,7 @@ namespace DC.Web.Ui.Services.Tests
                 new FileUploadJob()
                 {
                     JobId = 10,
-                    JobType = JobType.IlrSubmission,
+                    JobType = EnumJobType.IlrSubmission,
                     FileName = "test.xml"
                 }
             };
@@ -106,7 +106,7 @@ namespace DC.Web.Ui.Services.Tests
             var job = new FileUploadJob()
             {
                 JobId = 10,
-                JobType = JobType.IlrSubmission,
+                JobType = EnumJobType.IlrSubmission,
                 FileName = "test.xml",
                 PeriodNumber = 1,
                 SubmittedBy = "test user",
@@ -168,7 +168,7 @@ namespace DC.Web.Ui.Services.Tests
             jsonSerialisationMock.Setup(x => x.Deserialize<FileUploadJob>(It.IsAny<string>())).Returns(new FileUploadJob()
             {
                 CrossLoadingStatus = null,
-                JobType = JobType.IlrSubmission,
+                JobType = EnumJobType.IlrSubmission,
                 Ukprn = 1000,
                 JobId = 10
             });

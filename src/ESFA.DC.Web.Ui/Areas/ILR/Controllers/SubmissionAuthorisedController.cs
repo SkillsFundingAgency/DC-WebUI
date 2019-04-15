@@ -26,12 +26,12 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             IJobService jobService,
             ILogger logger,
             ICollectionManagementService collectionManagementService,
-            IIndex<JobType, IFileNameValidationService> fileNameValidationServices,
-            IIndex<JobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
-            IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
-            : base(JobType.IlrSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
+            IIndex<EnumJobType, IFileNameValidationService> fileNameValidationServices,
+            IIndex<EnumJobType, IStreamableKeyValuePersistenceService> storagePersistenceServices,
+            IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> storageKeyValueConfigs)
+            : base(EnumJobType.IlrSubmission, jobService, logger, collectionManagementService, storagePersistenceServices, storageKeyValueConfigs)
         {
-            _fileNameValidationService = fileNameValidationServices[JobType.IlrSubmission];
+            _fileNameValidationService = fileNameValidationServices[EnumJobType.IlrSubmission];
         }
 
         [HttpGet]
@@ -76,6 +76,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
                 AddError(ErrorMessageKeys.Submission_FileFieldKey, validationResult.FieldError);
                 AddError(ErrorMessageKeys.ErrorSummaryKey, validationResult.SummaryError);
 
+                Logger.LogWarning($"User uploaded invalid file with name :{file?.FileName}");
                 var lastSubmission = await GetLastSubmission(collectionName);
                 return View(lastSubmission);
             }

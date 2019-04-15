@@ -6,14 +6,36 @@
 @{
     ViewData["Title"] = "ILR file submitted";
     ViewData["BackUrl"] = "/submission-options";
-
+    var jobId = ViewContext.RouteData.Values["jobId"];
 }
+
+@if (!ViewData.ContainsKey(ViewDataConstants.IsFeedbackHidden))
+{
+@section FeedbackBanner
+    {
+    <div id="feedbackBanner">
+        <div class="feedback-wrapper">
+            <div class="feedback-container">
+                <span class="govuk-heading-s">Tell us what you thought</span>
+                <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/dct-beta-feedback/" target="_blank">Take 5 minutes to answer a few questions</a>
+
+
+                @Html.ActionLink("No thank you", "HideFeedback", new {jobId}, new {id = "noThanksLink", @class = "govuk-link no-thank-you"})
+            </div>
+        </div>
+        <div class="blue-strip">
+
+        </div>
+    </div>
+}
+}
+
 <div class="govuk-panel govuk-panel--confirmation">
     <h2 class="govuk-panel__title">
         @Html.DisplayFor(model => model.HeaderMessage)
     </h2>
     <div class="govuk-panel__body">
-       Submission reference: @Html.DisplayFor(model => model.JobId)
+        Submission reference: @Html.DisplayFor(model => model.JobId)
     </div>
 </div>
 <p>File: <span class="govuk-!-font-weight-bold">@Html.DisplayFor(model => model.FileName)</span></p>
@@ -24,17 +46,17 @@
 {
     <p>We didn’t find any errors or warnings for the data in your file.</p>
 }
-    <h3 class="govuk-heading-m">What happens next?</h3>
+<h3 class="govuk-heading-m">What happens next?</h3>
 <p>We’ve sent an email to @User.Email() to confirm we’ve received your file.</p>
 <p>
     We will email you again to let you know when your funding breakdown for
     @Html.DisplayFor(model => model.PeriodName)  and related reports are ready to view.
     @if (ViewData.ContainsKey(ViewDataConstants.NextReturnOpenDate))
-    { 
+    {
         <span>This will be after the next return period opens on @ViewData[ViewDataConstants.NextReturnOpenDate].</span>
     }
     else
-    { 
+    {
         <span>This usually takes about 30 minutes.</span>
     }
 </p>
@@ -49,12 +71,20 @@
         <p>If your email address is wrong, you will need to <a href="https://logon.fasst.org.uk/">update it in your IdAMS account</a>.</p>
         <p>
             If you haven't received an email, it may be in your junkmail folder.
-            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResultsAuthorised", new { jobId = Model.JobId}) as your reports may still have been generated.
+            @Html.ActionLink($"Check the {@Model.PeriodName} reports area", "Index", "SubmissionResultsAuthorised", new { jobId = Model.JobId }) as your reports may still have been generated.
         </p>
     </div>
 </details>
 
 <p>
-    @Html.ActionLink("View reports page", "Index", "SubmissionResultsAuthorised", new { jobId = Model.JobId},new {@class="govuk-button"})
+    @Html.ActionLink("View reports page", "Index", "SubmissionResultsAuthorised", new { jobId = Model.JobId }, new { @class = "govuk-button" })
 </p>
 <p><a href="/submission-options">Submit another data return</a></p>
+
+
+<environment include="Development">
+    <script src="~/assets/javascripts/app.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/assets/minified/app.min.js" asp-append-version="true"></script>
+</environment>

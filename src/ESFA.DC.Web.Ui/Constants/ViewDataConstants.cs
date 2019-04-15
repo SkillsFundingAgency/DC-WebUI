@@ -13,5 +13,6 @@ namespace DC.Web.Ui.Constants
         public const string NumberOfEsfContracts = "NumberOfEsfContracts";
         public const string IsHelpSectionHidden = "IsHelpSectionHidden";
         public const string IsReportsSectionSelected = "IsReportsSectionSelected";
+        public const string IsFeedbackHidden = "IsFeedbackHidden";
     }
 }

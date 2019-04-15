@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ESFA.DC.Jobs.Model;
 
 namespace ESFA.DC.Web.Ui.ViewModels.HelpDesk
 {
@@ -6,11 +7,11 @@ namespace ESFA.DC.Web.Ui.ViewModels.HelpDesk
     {
         public ProviderSearchResultViewModel()
         {
-            ProvidersList = new List<ProviderDetailViewModel>(); 
+            ProvidersList = new List<ProviderDetail>(); 
         }
 
         public string SearchTerm { get; set; }
 
-        public List<ProviderDetailViewModel> ProvidersList { get; set; }
+        public List<ProviderDetail> ProvidersList { get; set; }
     }
 }

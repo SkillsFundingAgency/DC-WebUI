@@ -18,7 +18,7 @@ namespace DC.Web.Ui.Services.Services
     public class EasFileNameValidationService : AbstractFileNameValidationService
     {
         public EasFileNameValidationService(
-            [KeyFilter(JobType.EasSubmission)]IKeyValuePersistenceService persistenceService,
+            [KeyFilter(EnumJobType.EasSubmission)]IKeyValuePersistenceService persistenceService,
             FeatureFlags featureFlags,
             IJobService jobService,
             IDateTimeProvider dateTimeProvider,

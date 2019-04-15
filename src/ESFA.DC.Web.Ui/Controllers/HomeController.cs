@@ -12,7 +12,7 @@ namespace DC.Web.Ui.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsAdminUser())
+                if (User.IsHelpDeskUser())
                 {
                     return RedirectToAction("Index", "ProviderSearch", new { area = AreaNames.HelpDesk });
                 }

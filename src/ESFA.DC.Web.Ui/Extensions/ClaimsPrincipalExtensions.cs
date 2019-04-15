@@ -42,7 +42,7 @@ namespace DC.Web.Ui.Extensions
             return GetClaimValue(claimsPrincipal, IdamsClaimTypes.Email);
         }
 
-        public static bool IsAdminUser(this ClaimsPrincipal claimsPrincipal)
+        public static bool IsHelpDeskUser(this ClaimsPrincipal claimsPrincipal)
         {
             var claimValue = GetClaimValue(claimsPrincipal, IdamsClaimTypes.UserType);
             if (string.IsNullOrEmpty(claimValue))

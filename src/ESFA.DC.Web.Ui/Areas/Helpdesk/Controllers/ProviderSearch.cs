@@ -32,8 +32,8 @@ namespace DC.Web.Ui.Areas.Helpdesk.Controllers
         {
             if (string.IsNullOrEmpty(searchTerm))
             {
-                ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, "You haven't entered any provider details. Please enter the provider name or UKPRN");
-                ModelState.AddModelError(ErrorMessageKeys.HelpDesk_SearchProvider, "You haven't entered any provider details. Please enter the provider name or UKPRN");
+                ModelState.AddModelError(ErrorMessageKeys.ErrorSummaryKey, "You haven’t entered any provider details. Please enter a provider name, UKPRN or UPIN");
+                ModelState.AddModelError(ErrorMessageKeys.HelpDesk_SearchProvider, "You haven’t entered any provider details. Please enter a provider name, UKPRN or UPIN");
                 return View("Index");
             }
 

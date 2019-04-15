@@ -48,45 +48,45 @@ namespace DC.Web.Ui.Ioc
             builder.RegisterType<CrossLoadMessageMapper>().InstancePerLifetimeScope();
             builder.RegisterType<ProviderService>().As<IProviderService>().InstancePerLifetimeScope();
 
-            builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
-            builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
-            builder.RegisterType<EasFileNameValidationService>().Keyed<IFileNameValidationService>(JobType.EasSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<IlrFileNameValidationService>().Keyed<IFileNameValidationService>(EnumJobType.IlrSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<EsfFileNameValidationService>().Keyed<IFileNameValidationService>(EnumJobType.EsfSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<EasFileNameValidationService>().Keyed<IFileNameValidationService>(EnumJobType.EasSubmission).WithAttributeFiltering().InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.IlrSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
+            }).Keyed<IStreamableKeyValuePersistenceService>(EnumJobType.IlrSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EsfSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
+            }).Keyed<IStreamableKeyValuePersistenceService>(EnumJobType.EsfSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EasSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IStreamableKeyValuePersistenceService>(JobType.EasSubmission).InstancePerLifetimeScope();
+            }).Keyed<IStreamableKeyValuePersistenceService>(EnumJobType.EasSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.IlrSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.IlrSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IKeyValuePersistenceService>(JobType.IlrSubmission).InstancePerLifetimeScope();
+            }).Keyed<IKeyValuePersistenceService>(EnumJobType.IlrSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EsfSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EsfSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IKeyValuePersistenceService>(JobType.EsfSubmission).InstancePerLifetimeScope();
+            }).Keyed<IKeyValuePersistenceService>(EnumJobType.EsfSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {
-                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(JobType.EasSubmission);
+                var config = context.ResolveKeyed<IAzureStorageKeyValuePersistenceServiceConfig>(EnumJobType.EasSubmission);
                 return new AzureStorageKeyValuePersistenceService(config);
-            }).Keyed<IKeyValuePersistenceService>(JobType.EasSubmission).InstancePerLifetimeScope();
+            }).Keyed<IKeyValuePersistenceService>(EnumJobType.EasSubmission).InstancePerLifetimeScope();
 
             builder.Register(context =>
             {

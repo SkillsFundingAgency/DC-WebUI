@@ -23,17 +23,17 @@ namespace DC.Web.Ui.Services.Services
     public class StorageService : IStorageService
     {
         private readonly ILogger _logger;
-        private readonly IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> _indexedCloudStorageSettings;
+        private readonly IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> _indexedCloudStorageSettings;
 
         public StorageService(
             ILogger logger,
-            IIndex<JobType, IAzureStorageKeyValuePersistenceServiceConfig> indexedCloudStorageSettings)
+            IIndex<EnumJobType, IAzureStorageKeyValuePersistenceServiceConfig> indexedCloudStorageSettings)
         {
             _logger = logger;
             _indexedCloudStorageSettings = indexedCloudStorageSettings;
         }
 
-        public async Task<Stream> GetBlobFileStreamAsync(string fileName, JobType jobType)
+        public async Task<Stream> GetBlobFileStreamAsync(string fileName, EnumJobType jobType)
         {
             _logger.LogInfo($"Getting report : {fileName}");
             try
@@ -59,7 +59,7 @@ namespace DC.Web.Ui.Services.Services
             return await GetReportFileSizeAsync(fileName, job.JobType);
         }
 
-        public async Task<decimal> GetReportFileSizeAsync(string fileName, JobType jobType)
+        public async Task<decimal> GetReportFileSizeAsync(string fileName, EnumJobType jobType)
         {
             _logger.LogInfo($"Getting report file size : {fileName}");
             try
@@ -84,7 +84,7 @@ namespace DC.Web.Ui.Services.Services
             return $"{ukprn}/{jobId}/Reports.zip";
         }
 
-        public async Task<Stream> GetMergedReportFile(long ukprn, Dictionary<JobType, long> jobsList)
+        public async Task<Stream> GetMergedReportFile(long ukprn, Dictionary<EnumJobType, long> jobsList)
         {
             var tasks = new List<Task<Stream>>();
             foreach (var job in jobsList)
@@ -108,7 +108,7 @@ namespace DC.Web.Ui.Services.Services
             return writer;
         }
 
-        public CloudBlockBlob GetBlob(string fileName, JobType jobType)
+        public CloudBlockBlob GetBlob(string fileName, EnumJobType jobType)
         {
             var cloudStorageSettings = _indexedCloudStorageSettings[jobType];
             var cloudStorageAccount = CloudStorageAccount.Parse(cloudStorageSettings.ConnectionString);

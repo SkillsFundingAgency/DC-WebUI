@@ -60,7 +60,7 @@ namespace DC.Web.Ui.Areas.ILR.Controllers
             if (valResult.TotalErrors == 0 && valResult.TotalWarnings == 0 && valResult.TotalDataMatchErrors == 0)
             {
                 await _jobService.UpdateJobStatus(job.JobId, JobStatusType.Ready);
-                Logger.LogInfo($"Validation results Updated status to Ready successfully for job id : {jobId}");
+                Logger.LogInfo($"No errors or warnings - Validation results Updated status to Ready successfully for job id : {jobId}", jobIdOverride: jobId);
                 return RedirectToAction("Index", "SubmissionConfirmationAuthorised", new { area = string.Empty, jobId = jobId, IsCleanFile = true });
             }
 

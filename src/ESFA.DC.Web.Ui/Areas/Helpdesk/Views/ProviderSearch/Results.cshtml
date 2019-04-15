@@ -1,4 +1,5 @@
-﻿@using ESFA.DC.Web.Ui.ViewModels.HelpDesk
+﻿@using DC.Web.Ui.Services.Extensions
+@using ESFA.DC.Web.Ui.ViewModels.HelpDesk
 @model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderSearchResultViewModel
 
 @if (Model != null)
@@ -23,13 +24,17 @@
         @foreach (var provider in Model.ProvidersList)
         {
             <h3 class="govuk-heading-m">
-                @Html.ActionLink(provider.Name, "Index", "ProviderDetails", new { ukprn = provider.Ukprn, searchTerm = Model.SearchTerm})
+                @Html.ActionLink(provider.Name, "Index", "SubmissionResultsAuthorised", new { ukprn = provider.Ukprn, searchTerm = Model.SearchTerm})
             </h3>
             <ul class="govuk-list">
                 <li><span class="govuk-!-font-weight-bold">UKPRN:</span> @provider.Ukprn</li>
-                @if (!string.IsNullOrEmpty(provider.LastSubmittedBy))
+                @if (provider.ProviderLatestSubmissions != null)
                 {
-                    <li><span class="govuk-!-font-weight-bold">Last submission by:</span> @provider.LastSubmittedBy (@(provider.LastSubmittedByEmail)) on @provider.LastSubmittedDate</li>
+                    foreach (var latestSubmission in provider.ProviderLatestSubmissions)
+                    {
+                <li><span class="govuk-!-font-weight-bold">@latestSubmission.CollectionName - last submitted: </span> @latestSubmission.LastSubmittedDateUtc.ToDateWithDayDisplayFormat() by @latestSubmission.LastSubmittedBy</li>    
+                    }
+                    
                 }
             </ul>
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">

@@ -20,7 +20,7 @@ namespace DC.Web.Ui.Services.Services
         private readonly IJobService _jobService;
 
         public EsfFileNameValidationService(
-            [KeyFilter(JobType.EsfSubmission)]IKeyValuePersistenceService persistenceService,
+            [KeyFilter(EnumJobType.EsfSubmission)]IKeyValuePersistenceService persistenceService,
             FeatureFlags featureFlags,
             IJobService jobService,
             IDateTimeProvider dateTimeProvider,

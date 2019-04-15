@@ -7,8 +7,8 @@ using DC.Web.Ui.Services.BespokeHttpClient;
 using DC.Web.Ui.Services.Extensions;
 using DC.Web.Ui.Services.Interfaces;
 using DC.Web.Ui.Settings.Models;
-using ESFA.DC.Api.Models;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.Jobs.Model;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Web.Ui.ViewModels.HelpDesk;
@@ -59,17 +59,14 @@ namespace DC.Web.Ui.Services.Services
                     {
                         foreach (var item in providerItems)
                         {
-                            result.ProvidersList.Add(new ProviderDetailViewModel()
+                            foreach (var lastSubmission in item.ProviderLatestSubmissions)
                             {
-                                Name = item.Name,
-                                Ukprn = item.Ukprn,
-                                LastSubmittedBy = item.LastSubmittedBy,
-                                LastSubmittedByEmail = item.LastSubmittedByEmail,
-                                LastSubmittedDate = _dateTimeProvider.ConvertUtcToUk(item.LastSubmittedDateUtc)
-                                    .ToDateWithDayDisplayFormat()
-                            });
+                                lastSubmission.LastSubmittedDateUtc = _dateTimeProvider.ConvertUtcToUk(lastSubmission.LastSubmittedDateUtc);
+                            }
                         }
                     }
+
+                    result.ProvidersList = providerItems.ToList();
                 }
             }
             catch (Exception e)
@@ -96,14 +93,9 @@ namespace DC.Web.Ui.Services.Services
                         {
                             Name = providerItem.Name,
                             Ukprn = providerItem.Ukprn,
-                            SubmissionOptionViewModels = await _collectionManagementService.GetSubmssionOptionsAsync(ukprn)
+                            Upin = providerItem.Upin,
+                            SubmissionOptionViewModels = (await _collectionManagementService.GetSubmssionOptionsAsync(ukprn)).ToList()
                         };
-
-                        if (result.SubmissionOptionViewModels.Any(x => x.Name.Equals("ESF", StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            result.NumberOfContracts = await _collectionManagementService.GetNumberOfEsfContracts(ukprn);
-                        }
-
                         return result;
                     }
                 }

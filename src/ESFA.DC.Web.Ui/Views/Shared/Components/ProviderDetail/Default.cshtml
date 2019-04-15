@@ -1,0 +1,20 @@
+﻿
+@model ESFA.DC.Web.Ui.ViewModels.HelpDesk.ProviderCollectionsViewModel
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">
+            @Model.Name <span class="govuk-caption-l">UKPRN: @Model.Ukprn, UPIN: @Model.Upin</span>
+        </h1>
+        <p>
+            <strong>Collection types: </strong>
+            @for (var i = 0; i < Model.SubmissionOptionViewModels.Count(); i++)
+            {
+                <span id="eligibility-completed">
+                    @Model.SubmissionOptionViewModels[i].Name
+                    @(i != Model.SubmissionOptionViewModels.Count - 1 ? "," : "")
+                </span>
+            }
+
+        </p>
+    </div>
+</div>

@@ -34,6 +34,6 @@ namespace DC.Web.Ui.Services.Interfaces
 
         Task<IEnumerable<ReportHistoryViewModel>> GetReportsHistory(long ukprn);
 
-        Task<SubmissionResultViewModel> GetSubmissionHistory(long ukprn);
+        Task<ProviderHistoryViewModel> GetSubmissionHistory(long ukprn);
     }
 }

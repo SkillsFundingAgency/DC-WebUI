@@ -36,7 +36,7 @@ namespace DC.Web.Ui.Services.Services
             _baseUrl = apiSettings?.JobManagementApiBaseUrl;
         }
 
-        public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc)
+        public async Task<ValidationResultViewModel> GetValidationResult(long ukprn, long jobId, EnumJobType jobType, DateTime dateTimeUtc)
         {
             var validationResult = await GetValidationResultsData(ukprn, jobId);
             if (validationResult == null)
@@ -89,7 +89,7 @@ namespace DC.Web.Ui.Services.Services
             return string.Format(reportFileName, jobDateTime);
         }
 
-        public async Task<decimal> GetFileSize(long ukprn, long jobId, JobType jobType, DateTime dateTimeUtc, ValidationResultsReportType whichReport)
+        public async Task<decimal> GetFileSize(long ukprn, long jobId, EnumJobType jobType, DateTime dateTimeUtc, ValidationResultsReportType whichReport)
         {
             var fileName = $"{GetStorageFileName(ukprn, jobId, dateTimeUtc, whichReport)}.csv";
             return await _reportService.GetReportFileSizeAsync(fileName, jobType);

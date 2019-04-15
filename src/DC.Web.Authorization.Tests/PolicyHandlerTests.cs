@@ -84,7 +84,6 @@ namespace DC.Web.Authorization.Tests
         }
 
         [Theory]
-        [InlineData("DAA")]
         [InlineData("DCS")]
         public void ValidClaims_Success_FileSubmission(string role)
         {
@@ -112,7 +111,6 @@ namespace DC.Web.Authorization.Tests
         }
 
         [Theory]
-        [InlineData("DAA")]
         [InlineData("DCS")]
         public void ValidClaims_Fail_AdminArea(string role)
         {
