@@ -23,7 +23,7 @@
     <PackageReference Include="ESFA.DC.Queueing.Interface" Version="0.1.14-beta0001" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="polly" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
